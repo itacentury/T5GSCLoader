@@ -3,7 +3,9 @@
 T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game scripts, call C functions from them and make possible connect to others players by patching client/server checksum.
 
 ## Build
-* Clone the project and open a terminal/cmd on it.
+### Windows
+* Install `PS3 4.75 SDK Offline Installer` & `MSYS2`.
+* Clone the project and open `MSYS2` on it.
 * Type `make release`.
 * The module will be created in `bin/release/`.
 
@@ -17,7 +19,7 @@ For a better experience with VS Code and use the tasks:
 
 * Install C/C++ Extension.
 * MSYS2 (unix tools).
-* Powershell 7.0 (support `&&` operator for tasks) or integrate msys2 shell in vscode.
+* Integrate msys2 shell in vscode.
 * Change the console IP in `.vscode/settings` by yours, and be sure you have a ftp server running on console (e.g webMAN).
 
 You can now open the folder in VS Code and press `Ctrl+Shift+B` to build or deploy the module to console, and deploy game scripts.
@@ -72,5 +74,3 @@ I made it for some people few months ago, to help and having some memories times
 Recently, by cleaning my desktop i came across that folder, I said to myself it would be a cool to share this, maybe some people are curious about how game scripts check is made.
 
 Maybe this code will be useful to someone, who knows?
-
-
