@@ -36,8 +36,7 @@
 #define SCRIPTS_PATH "/dev_hdd0/tmp/T5GSCLoader"
 
 // Game structs
-typedef union DvarValue
-{
+typedef union DvarValue {
     bool enabled;
     int integer;
     uint32_t unsignedInt;
@@ -49,15 +48,13 @@ typedef union DvarValue
     char color[4];
 } DvarValue;
 
-typedef enum scriptInstance_t
-{
+typedef enum scriptInstance_t {
     SCRIPTINSTANCE_SERVER = 0,
     SCRIPTINSTANCE_CLIENT = 1,
     SCRIPT_INSTANCE_MAX = 2
 } scriptInstance_t;
 
-typedef enum dvarType_t
-{
+typedef enum dvarType_t {
     DVAR_TYPE_BOOL = 0x0,
     DVAR_TYPE_FLOAT = 0x1,
     DVAR_TYPE_FLOAT_2 = 0x2,
@@ -73,8 +70,7 @@ typedef enum dvarType_t
     DVAR_TYPE_COUNT = 0xC
 } dvarType_t;
 
-typedef struct dvar_s
-{
+typedef struct dvar_s {
     const char *name;
     const char *description;
     int hash;
@@ -90,8 +86,7 @@ typedef struct dvar_s
     struct dvar_s *hashNext;
 } dvar_s;
 
-typedef struct scrVarPub_t
-{
+typedef struct scrVarPub_t {
     char _unsafe[0x38];
     int checksum;
     int entId;
@@ -102,39 +97,33 @@ typedef struct scrVarPub_t
     char _unsafe2[0x0C];
 } scrVarPub_t; // 0x58
 
-typedef struct scrCompilePub_t
-{
+typedef struct scrCompilePub_t {
     char _unsafe[0x20030];
     int programLen;
     char _unsafe2[0x1004];
 } scrCompilePub_t; // 0x21038
 
-typedef struct RawFile
-{
+typedef struct RawFile {
     char *name;
     int len;
     char *buffer;
 } RawFile;
 
-typedef enum XAssetType
-{
+typedef enum XAssetType {
     ASSET_TYPE_RAWFILE = 0x26
 } XAssetType;
 
-typedef union XAssetHeader
-{
+typedef union XAssetHeader {
     struct RawFile *rawFile;
     void *data;
 } XAssetHeader;
 
-typedef struct XAsset
-{
+typedef struct XAsset {
     enum XAssetType type;
     union XAssetHeader header;
 } XAsset;
 
-typedef struct XAssetEntry
-{
+typedef struct XAssetEntry {
     XAsset asset;
     char zoneIndex;
     bool inuse;
@@ -144,51 +133,44 @@ typedef struct XAssetEntry
     char margin[0x10];
 } XAssetEntry;
 
-typedef union XAssetEntryPoolEntry
-{
+typedef union XAssetEntryPoolEntry {
     struct XAssetEntry entry;
     union XAssetEntryPoolEntry *next;
 } XAssetEntryPoolEntry;
 
 // Customs
-typedef struct InflateData
-{
+typedef struct InflateData {
     char *deflatedBuffer;
     char *hunkMemoryBuffer;
     char _unsafe[0x18];
 } InflateData; // 0x20? (unknown structure, ps3 only)
 
-typedef struct opd32
-{
+typedef struct opd32 {
     void *function;
     int toc;
 } opd32;
 typedef struct opd32 *popd32;
 
-typedef struct scrChecksum_t
-{
+typedef struct scrChecksum_t {
     int checksum;
     int programLen;
     int substract;
 } scrChecksum_t; // 0xC (unknown struct not in pdb)
 
-typedef struct RawFileData
-{
+typedef struct RawFileData {
     char name[100];
     int inflatedSize;
     int size;
     char buffer[0x20];
 } RawFileData;
 
-typedef struct GSCLoaderRawfile
-{
+typedef struct GSCLoaderRawfile {
     XAssetEntry entry;
     RawFile asset;
     RawFileData data;
 } GSCLoaderRawfile;
 
-typedef struct GSCLoader
-{
+typedef struct GSCLoader {
     char currentModName[256];
     GSCLoaderRawfile rawFiles[MAX_GSC_COUNT];
 } GSCLoader;

@@ -5,26 +5,22 @@
 #include <string.h>
 #include <cell/fs/cell_fs_file_api.h>
 
-int sys_dbg_process_write(uint64_t address, const void *data, size_t size)
-{
+int sys_dbg_process_write(uint64_t address, const void *data, size_t size) {
     system_call_4(905, sys_process_getpid(), address, size, (uintptr_t)data);
     return_to_user_prog(int);
 }
 
-size_t get_file_size(char *filePath)
-{
+size_t get_file_size(char *filePath) {
     int size = 0;
     CellFsStat fstat;
     CellFsErrno err = cellFsStat(filePath, &fstat);
-    if (err != CELL_FS_SUCCEEDED)
-    {
+    if (err != CELL_FS_SUCCEEDED) {
         return err;
     }
     return fstat.st_size;
 }
 
-void set_empty_deflated_data(char *buffer)
-{
+void set_empty_deflated_data(char *buffer) {
     int op[7];
     op[0] = 0x789C05B0;
     op[1] = 0xB1110000;
@@ -36,8 +32,7 @@ void set_empty_deflated_data(char *buffer)
     sys_dbg_process_write((uintptr_t)buffer, &op, 7 * 4);
 }
 
-void hex_str_to_padded_hex_str(char *out, char *hexStr)
-{
+void hex_str_to_padded_hex_str(char *out, char *hexStr) {
     char *outPtr;
     char *tmp = hexStr;
 
@@ -49,8 +44,7 @@ void hex_str_to_padded_hex_str(char *out, char *hexStr)
 
     int hexLen = strlen(tmp);
 
-    if ((hexLen % 2) != 0) // must be even
-    {
+    if ((hexLen % 2) != 0) { // must be even
         hexLen++;
         out[0] = '0';
         outPtr = &out[1];
@@ -61,14 +55,12 @@ void hex_str_to_padded_hex_str(char *out, char *hexStr)
     strcpy(outPtr, tmp);
 }
 
-void hex_str_to_buffer(char *out, char *hexStr, size_t hexLen)
-{
+void hex_str_to_buffer(char *out, char *hexStr, size_t hexLen) {
     if (!out || !hexStr || hexLen < 1)
         return;
 
     size_t index = 0;
-    while (index < (hexLen * 2))
-    {
+    while (index < (hexLen * 2)) {
         char c = hexStr[index];
         int value = 0;
         if (c >= '0' && c <= '9')
@@ -85,8 +77,7 @@ void hex_str_to_buffer(char *out, char *hexStr, size_t hexLen)
     }
 }
 
-int hex_str_to_int32(char *hexStr, size_t hexLen)
-{
+int hex_str_to_int32(char *hexStr, size_t hexLen) {
     char out[4];
     memset(out, 0, 4);
     int start = (4 - hexLen);

@@ -13,12 +13,10 @@ cs_hook_info hooksInfo[MAX_HOOKS_FUNCTIONS];
 __attribute__((section(".text#"))) cs_hook_prehook prehooks[MAX_HOOKS_FUNCTIONS];
 __attribute__((section(".text#"))) cs_hook_trampoline trampolines[MAX_HOOKS_FUNCTIONS];
 
-int cs_hook_process_write(uint64_t address, const void *data, size_t size)
-{
+int cs_hook_process_write(uint64_t address, const void *data, size_t size) {
     int res = sys_dbg_process_write(address, data, size);
 
-    if (res == ENOSYS || res != CELL_OK)
-    {
+    if (res == ENOSYS || res != CELL_OK) {
         /*
             // Put here a different methods to write to process in case of CEX console.
             // memcpy is not the best way since the function will crash if your firmware hasn't page restrictions patched (some cobra fw should support it).
@@ -31,8 +29,7 @@ int cs_hook_process_write(uint64_t address, const void *data, size_t size)
     return CELL_OK;
 }
 
-int cs_hook_create_prehook(cs_hook_info *hookInfo)
-{
+int cs_hook_create_prehook(cs_hook_info *hookInfo) {
     if (!hookInfo)
         return -1;
     if (hookInfo->type != CS_HOOK_TYPE_CTR)
@@ -59,8 +56,7 @@ int cs_hook_create_prehook(cs_hook_info *hookInfo)
     return 0;
 }
 
-int cs_hook_create_trampoline(cs_hook_info *hookInfo)
-{
+int cs_hook_create_trampoline(cs_hook_info *hookInfo) {
     if (!hookInfo)
         return -1;
     if (hookInfo->type != CS_HOOK_TYPE_CTR)
@@ -87,8 +83,7 @@ int cs_hook_create_trampoline(cs_hook_info *hookInfo)
     return 0;
 }
 
-int cs_hook_resolve_import_opd(cs_hook_info *hookInfo)
-{
+int cs_hook_resolve_import_opd(cs_hook_info *hookInfo) {
     if (!hookInfo)
         return -1;
     if (hookInfo->type != CS_HOOK_TYPE_IMPORT)
@@ -105,8 +100,7 @@ int cs_hook_resolve_import_opd(cs_hook_info *hookInfo)
     return 0;
 }
 
-cs_hook_info *cs_hook_get_info_from_source(popd32 source)
-{
+cs_hook_info *cs_hook_get_info_from_source(popd32 source) {
     for (int i = 0; i < MAX_HOOKS_FUNCTIONS; i++)
         if (hooksInfo[i].source == source)
             return &hooksInfo[i];
@@ -114,14 +108,12 @@ cs_hook_info *cs_hook_get_info_from_source(popd32 source)
     return 0;
 }
 
-int cs_hook_enable(popd32 source)
-{
+int cs_hook_enable(popd32 source) {
     cs_hook_info *hookInfo = cs_hook_get_info_from_source(source);
     if (hookInfo == 0)
         return -1;
 
-    if (hookInfo->type == CS_HOOK_TYPE_CTR)
-    {
+    if (hookInfo->type == CS_HOOK_TYPE_CTR) {
         int op[4];
         op[0] = 0x3D800000 + (((int)&prehooks[hookInfo->index] >> 16) & 0xFFFF);
         op[1] = 0x618C0000 + ((int)&prehooks[hookInfo->index] & 0xFFFF);
@@ -130,8 +122,7 @@ int cs_hook_enable(popd32 source)
         if (cs_hook_process_write((uintptr_t)hookInfo->source->function, &op, 4 * 4) != CELL_OK)
             return -2;
     }
-    else if (hookInfo->type == CS_HOOK_TYPE_IMPORT)
-    {
+    else if (hookInfo->type == CS_HOOK_TYPE_IMPORT) {
         int op[2];
         op[0] = 0x658C0000 + (((int)&hookInfo->detour >> 16) & 0xFFFF);
         op[1] = 0x818C0000 + ((int)&hookInfo->detour & 0xFFFF);
@@ -141,14 +132,12 @@ int cs_hook_enable(popd32 source)
     return 0;
 }
 
-int cs_hook_disable(popd32 source)
-{
+int cs_hook_disable(popd32 source) {
     cs_hook_info *hookInfo = cs_hook_get_info_from_source(source);
     if (hookInfo == 0)
         return -1;
 
-    if (hookInfo->type == CS_HOOK_TYPE_CTR)
-    {
+    if (hookInfo->type == CS_HOOK_TYPE_CTR) {
         int op[4];
         op[0] = *(int*)(&trampolines[hookInfo->index] + 4 * 4);
         op[1] = *(int*)(&trampolines[hookInfo->index] + 5 * 4);
@@ -157,19 +146,16 @@ int cs_hook_disable(popd32 source)
         if (cs_hook_process_write((uintptr_t)hookInfo->source->function, &op, 4 * 4) != CELL_OK)
             return -2;
     }
-    else if (hookInfo->type == CS_HOOK_TYPE_IMPORT)
-    {
+    else if (hookInfo->type == CS_HOOK_TYPE_IMPORT) {
         if (cs_hook_process_write((uintptr_t)hookInfo->source->function + 4, &hookInfo->opd_import, 4 * 2) != CELL_OK)
             return -2;
     }
     return 0;
 }
 
-int cs_hook_create(popd32 source, popd32 detour, popd32 *trampoline, bool enable, cs_hook_type type)
-{
+int cs_hook_create(popd32 source, popd32 detour, popd32 *trampoline, bool enable, cs_hook_type type) {
     int err = 0;
-    if (cs_hook_get_info_from_source(source) != 0)
-    {
+    if (cs_hook_get_info_from_source(source) != 0) {
         return 1;
     }
 
@@ -182,29 +168,22 @@ int cs_hook_create(popd32 source, popd32 detour, popd32 *trampoline, bool enable
     hookInfo->type = type;
     hooksInfoCount++;
 
-    if (type == CS_HOOK_TYPE_CTR)
-    {
-        if ((err = cs_hook_create_prehook(hookInfo) < 0))
-        {
+    if (type == CS_HOOK_TYPE_CTR) {
+        if ((err = cs_hook_create_prehook(hookInfo) < 0)) {
             return CS_HOOK_CREATE_ERROR(1, err);
         }
-        if ((err = cs_hook_create_trampoline(hookInfo) < 0))
-        {
+        if ((err = cs_hook_create_trampoline(hookInfo) < 0)) {
             return CS_HOOK_CREATE_ERROR(2, err);
         }
     }
-    else if (type == CS_HOOK_TYPE_IMPORT)
-    {
-        if ((err = cs_hook_resolve_import_opd(hookInfo) < 0))
-        {
+    else if (type == CS_HOOK_TYPE_IMPORT) {
+        if ((err = cs_hook_resolve_import_opd(hookInfo) < 0)) {
             return CS_HOOK_CREATE_ERROR(3, err);
         }
     }
 
-    if (enable)
-    {
-        if (cs_hook_enable(hookInfo->source) < 0)
-        {
+    if (enable) {
+        if (cs_hook_enable(hookInfo->source) < 0) {
             return CS_HOOK_CREATE_ERROR(4, err);
         }
     }

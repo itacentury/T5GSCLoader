@@ -4,26 +4,24 @@
 
 #include maps\mp\mod\utils;
 
-main()
-{
+main() {
     applyPatches();
+    
     level thread onPlayerConnect();
 }
 
-onPlayerConnect()
-{
-    for(;;)
-    {
+onPlayerConnect() {
+    for(;;) {
         level waittill("connected", player);
+
         player thread onPlayerSpawned();
     }
 }
 
-onPlayerSpawned()
-{
+onPlayerSpawned() {
     self endon("disconnect");
-    for(;;)
-    {
+
+    for(;;) {
         self waittill("spawned_player");
         self iprintln("Hello from ^1injected ^7GSC");
     }

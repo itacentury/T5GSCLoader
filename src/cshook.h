@@ -13,24 +13,20 @@
 
 #define cs_hook_install(name, type) cs_hook_create((popd32)name, (popd32)name##_Hook, (popd32*)&name##_Trampoline, true, type)
 
-typedef struct cs_hook_trampoline
-{
+typedef struct cs_hook_trampoline {
     char opcodes[TRAMPOLINE_INSTRUCTIONS_COUNT * 4];
 } cs_hook_trampoline;
 
-typedef struct cs_hook_prehook
-{
+typedef struct cs_hook_prehook {
     char opcodes[PREHOOK_INSTRUCTIONS_COUNT * 4];
 } cs_hook_prehook;
 
-typedef enum cs_hook_type
-{
+typedef enum cs_hook_type {
     CS_HOOK_TYPE_CTR,
     CS_HOOK_TYPE_IMPORT
 } cs_hook_type;
 
-typedef struct cs_hook_info
-{
+typedef struct cs_hook_info {
     popd32 source;
     popd32 detour;
     popd32 *tramp;

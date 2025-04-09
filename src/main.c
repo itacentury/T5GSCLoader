@@ -9,30 +9,26 @@
 SYS_MODULE_INFO(T5GSCLoader, 0, 1, 1);
 SYS_MODULE_START(start);
 
-void launcher()
-{
+void launcher() {
     sys_prx_get_module_list_t pInfo;
     pInfo.max = 25;
     sys_prx_id_t ids[pInfo.max];
     pInfo.idlist = ids;
     pInfo.size = sizeof(pInfo);
 
-    while (pInfo.count < 18)
-    {
+    while (pInfo.count < 18) {
         sys_prx_get_module_list(0, &pInfo);
         sys_timer_sleep(1);
     }
 
-    if (init_game() == 0)
-    {
+    if (init_game() == 0) {
         printf(T5INFO "GSC Loader ready.");
     }
 
     sys_ppu_thread_exit(0);
 }
 
-int start(void)
-{
+int start(void) {
     printf("\n********************************************");
     printf("           T5 GSC Loader by iMCSx           ");
     printf("********************************************\n");

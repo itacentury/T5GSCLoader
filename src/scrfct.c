@@ -5,17 +5,14 @@
 #include "utils.h"
 #include "t5.h"
 
-void scrfct_setmemory()
-{
+void scrfct_setmemory() {
     // Verify that we have 2 parameters for this function.
-    if (Scr_GetNumParam(0) == 2)
-    {
+    if (Scr_GetNumParam(0) == 2) {
         // Getting parameters, we don't check the type using a function again here but we could have did it.
         char *hexAddress = Scr_GetString(0, 0);
         char *hexData = Scr_GetString(1, 0);
 
-        if (hexAddress && hexData)
-        {
+        if (hexAddress && hexData) {
             // Allocate input size +2 in case to handle zero padding and null terminated char.
             char hexAddressFixed[strlen(hexAddress) + 2];
             char hexDataFixed[strlen(hexData) + 2];
