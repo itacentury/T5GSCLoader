@@ -3,7 +3,8 @@
         "bin": true,
         "objs": true,
     },
-    "consoleIp": "192.168.1.100",
+    "consoleIp": "192.168.0.127",
+    "gameVersion": "BLES01033",
     "C_Cpp.errorSquiggles":"disabled",
     "terminal.integrated.defaultProfile.windows": "MSYS2"
 }

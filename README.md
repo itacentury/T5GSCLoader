@@ -20,7 +20,7 @@ For a better experience with VS Code and use the tasks:
 * Install C/C++ Extension.
 * MSYS2 (unix tools).
 * Integrate msys2 shell in vscode.
-* Change the console IP in `.vscode/settings` by yours, and be sure you have a ftp server running on console (e.g webMAN).
+* Change the console IP and game version in `.vscode/settings`, and be sure you have a ftp server running on console (e.g webMAN).
 
 You can now open the folder in VS Code and press `Ctrl+Shift+B` to build or deploy the module to console, and deploy game scripts.
 

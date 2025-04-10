@@ -20,7 +20,7 @@
             "label": "Deploy Debug",
             "type": "shell",
             "windows": {
-                "command": "curl -T bin/debug/${workspaceFolderBasename}.sprx --ftp-create-dirs ftp://${config:consoleIp}/dev_hdd0/tmp/SprxLoader/BLES01031/${workspaceFolderBasename}.sprx"
+                "command": "curl -T bin/debug/${workspaceFolderBasename}.sprx --ftp-create-dirs ftp://${config:consoleIp}/dev_hdd0/tmp/SprxLoader/${config:gameVersion}/${workspaceFolderBasename}.sprx"
             },
             "options": {},
             "problemMatcher": [],
@@ -46,7 +46,7 @@
             "label": "Deploy Release",
             "type": "shell",
             "windows": {
-                "command": "curl -T bin/release/${workspaceFolderBasename}.sprx --ftp-create-dirs ftp://${config:consoleIp}/dev_hdd0/tmp/SprxLoader/BLES01031/${workspaceFolderBasename}.sprx"
+                "command": "curl -T bin/release/${workspaceFolderBasename}.sprx --ftp-create-dirs ftp://${config:consoleIp}/dev_hdd0/tmp/SprxLoader/${config:gameVersion}/${workspaceFolderBasename}.sprx"
             },
             "options": {},
             "problemMatcher": [],
