@@ -1,12 +1,7 @@
-#include "t5.h"
+#include "hooks.h"
 
 #include "stdio.h"
 #include "string.h"
-#include "utils.h"
-#include "scrfct.h"
-
-#include <cell/cell_fs.h>
-#include <sys/fs_external.h>
 
 int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
     int res = Scr_LoadScript_Trampoline(inst, scriptName);
@@ -26,10 +21,9 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
 
     sprintf(buffer, isMultiplayer ? "maps/mp/%s" : "maps/%s", mapname->current.string);
 
-    // Checking the current gsc loaded was the one for the current map.
+    // Checking if the current gsc loaded is the one for the current map.
     if (strcmp(scriptName, buffer) == 0) {
-
-        // We can safely now save the checksum data, we will return this one later in a different hook once we loaded our scripts.
+        // Save the checksum data, to be returned later from a different hook.
         checksums[inst].checksum = scrVarPub[inst].checksum;
         checksums[inst].programLen = scrCompilePub[inst].programLen;
         checksums[inst].substract = (int)scrVarPub[inst].endScriptBuffer - (int)scrVarPub[inst].programBuffer;
@@ -44,7 +38,7 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
         if (*modPath) {
             // Create asset entry for each file in our mod directory.
             if (create_assets_from_scripts(modPath)) {
-                // Load the main file, any gsc used as include inside will be loaded too.
+                // Load the main file; any gsc used as include inside will be loaded too.
                 char *mainMod = isMultiplayer ? "maps/mp/mod/main" : "maps/zm/mod/main";
                 Scr_LoadScript_Trampoline(inst, mainMod);
 
@@ -52,20 +46,19 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
                 modHandle = Scr_GetFunctionHandle(0, mainMod, "main");
 
                 printf(T5INFO "Main function handle of '%s' is 0x%08X.", mainMod, modHandle);
-            }
-            else
+            } else {
                 printf(T5ERROR "Couldn't load mod files from '%s'.", modPath);
-        }
-        else
+            }
+        } else {
             printf(T5WARNING "Nothing to load.");
+        }
     }
 
     return res;
 }
 
 int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer, unsigned int isBlocking) {
-    // Hooked by replacing popd import because using CTR an instruction of the source function will overwrite toc in stack and cause crashs.
-
+    // Hooked by replacing a popd import since using CTR an instruction of the source function will overwrite toc in stack and cause crashes.
     InflateData *data = (InflateData*)(buffer);
     int ret = cellSpursLFQueuePushBody_Trampoline(lfqueue, buffer, isBlocking);
     GSCLoaderRawfile *lrf = get_loader_rawfile_from_deflated_buffer(data->deflatedBuffer);
@@ -77,7 +70,9 @@ int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer,
         printf(T5INFO "Injecting '%s' data.", lrf->data.name);
         char *name = strrchr(lrf->data.name, '/');
 
-        if (*name++ && *modPath) {
+        if (name && *modPath) {
+            // Advance pointer past '/'
+            name++;
             char filePath[CELL_FS_MAX_FS_PATH_LENGTH];
             sprintf(filePath, "%s/%s", modPath, name);
 
@@ -100,12 +95,12 @@ int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer,
                     printf(T5ERROR "Failed to read '%s' file.", filePath);
 
                 cellFsClose(fd);
-            }
-            else
+            } else {
                 printf(T5ERROR "Cannot open '%s' file.", filePath);
-        }
-        else
+            }
+        } else {
             printf(T5ERROR "Cannot get the current mod path or asset name is wrong.");
+        }
     }
 
     return ret;
@@ -125,7 +120,7 @@ void Scr_LoadGameType_Hook(void) {
     // Start the gametype entry function by calling the default function.
     Scr_LoadGameType_Trampoline();
 
-    // Start our main function from our handle
+    // Start our main function from our handle if modHandle is valid.
     if (modHandle > 0) {
         unsigned short handle = Scr_ExecThread(0, modHandle, 0);
         Scr_FreeThread(handle, 0);
@@ -136,7 +131,7 @@ void Scr_LoadGameType_Hook(void) {
 popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
     popd32 opd = Scr_GetFunction_Trampoline(pName, type);
     if (opd == 0) {
-        // Function name are always in lowercase, we should return an opd pointer.
+        // Function names are always in lowercase; return an opd pointer if appropriate.
         if (strcmp(*pName, "setmemory") == 0) {
             printf(T5INFO "Function 'setmemory' found.");
             return (popd32)&scrfct_setmemory;
@@ -144,4 +139,13 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
         return 0;
     }
     return opd;
+}
+
+void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
+    Menu_PaintAll_Trampoline(localClientNum, dc);
+
+    if (!firstStart) {
+        displayWelcomePopup();
+        firstStart = 1;
+    }
 }

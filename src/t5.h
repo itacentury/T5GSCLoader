@@ -32,6 +32,7 @@ t5nhd(int, Scr_LoadScript, (scriptInstance_t inst, const char *scriptName));
 t5nhd(void, Scr_GetChecksum, (scrChecksum_t *vmChecksum, scriptInstance_t inst));
 t5nhd(void, Scr_LoadGameType, (void));
 t5nhd(popd32, Scr_GetFunction, (const char **pName, int *type));
+t5nhd(void, Menu_PaintAll, (int localClientNum, UiContext *dc));
 
 GSCLoaderRawfile *get_loader_rawfile_from_deflated_buffer(char *inflatedBuffer);
 void get_or_create_mod_path(char *path);

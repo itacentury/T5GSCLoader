@@ -10,6 +10,8 @@
 #define T5_DB_LinkXAssetEntry_ZM 0x1B0AC0
 #define T5_Dvar_FindVar 0x4C55A0
 #define T5_Dvar_FindVar_ZM 0x452AA0
+#define T5_Menu_PaintAll 0x465368
+#define T5_Menu_PaintAll_ZM 0x465368 // Using MP offset for now
 #define T5_Scr_ExecThread 0x5DD580
 #define T5_Scr_ExecThread_ZM 0x05C7670
 #define T5_Scr_FreeThread 0x5CB2C0

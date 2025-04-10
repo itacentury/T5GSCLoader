@@ -8,7 +8,7 @@ include 			$(CELL_MK_DIR)/sdk.makedef.mk
 PPU_SRCS 			:= $(shell find $(SOURCES_DIR) -name "*.c")
 PPU_PRX_LDFLAGS 	+= $(PRX_LDFLAGS_EXTRA)
 PPU_PRX_TARGET 		=  $(OUTPUT_DIR)/$(BUILD_TYPE)/$(notdir $(CURDIR)).prx
-PPU_PRX_LDLIBS 		+= -lc -lfs_stub
+PPU_PRX_LDLIBS 		+= -lc -lfs_stub -lsysutil_np_stub -lsysutil_stub -lsysutil_userinfo_stub
 
 ifeq ($(BUILD_TYPE),release)
 PPU_CFLAGS 			= -O2

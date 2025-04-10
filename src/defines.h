@@ -175,4 +175,6 @@ typedef struct GSCLoader {
     GSCLoaderRawfile rawFiles[MAX_GSC_COUNT];
 } GSCLoader;
 
+typedef void UiContext;
+
 #endif

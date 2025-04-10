@@ -34,6 +34,7 @@ int init_hooks() {
     t5nhi(Scr_LoadGameType);
     t5nhi(Scr_LoadScript);
     t5nhi(Scr_GetFunction);
+    t5nhi(Menu_PaintAll);
 
     // Create and enable hooks
     int res;
@@ -47,6 +48,8 @@ int init_hooks() {
         return res;
     if ((res = cs_hook_install(Scr_GetFunction, CS_HOOK_TYPE_CTR)) < 0)
         return res;
+    if ((res = cs_hook_install(Menu_PaintAll, CS_HOOK_TYPE_CTR)) < 0)
+        return res;
 
     return 0;
 }
@@ -56,6 +59,7 @@ GSCLoaderRawfile *get_loader_rawfile_from_deflated_buffer(char *deflatedBuffer) 
         if ((uintptr_t)deflatedBuffer == (uintptr_t)(loader.rawFiles[i].data.buffer + 2))
             return &loader.rawFiles[i];
     }
+    
     return NULL;
 }
 
@@ -152,6 +156,7 @@ bool create_assets_from_scripts(char *path) {
             }
         }
     }
+
     cellFsClosedir(fd);
     return mainLinked && (assetIndex > 0);
 }
@@ -168,8 +173,8 @@ int init_game() {
     }
 
     // Init offsets / hooks according MP/ZM
-    int err;
     init_offsets();
+    int err;
     if ((err = init_hooks()) < 0) {
         printf(T5ERROR "Hooks install failed (0x%08X).", err);
         return -2;
@@ -181,5 +186,6 @@ int init_game() {
     if (!*modPath) {
         printf(T5WARNING "Mod file not found, create a .mod file in '%s/%s' with a name that is equal to a mod folder to load it (no game restart required using ftp).", SCRIPTS_PATH, isMultiplayer ? "mp" : "zm");
     }
+
     return 0;
 }
