@@ -1,6 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#include <wchar.h>
 #include <stdbool.h>
 
 // Macros to automate naming/setting variables for natives/hooks
@@ -177,4 +178,56 @@ typedef struct GSCLoader {
 
 typedef void UiContext;
 
-#endif
+typedef void(*UI_KeyboardCallback)(int localClientNum, const wchar_t *text, size_t size);
+
+typedef struct VariableStackBuffer {
+	const char *pos;
+	unsigned short size;
+	unsigned short bufLen;
+	unsigned int localId;
+	char time;
+	char buf[1];
+} VariableStackBuffer;
+
+typedef union VariableUnion {
+	int intValue;
+	float floatValue;
+	unsigned int stringValue;
+	float *vectorValue;
+	const char *codePosValue;
+	unsigned int pointerValue;
+	VariableStackBuffer *stackValue;
+	unsigned int entityOffset;
+} VariableUnion;
+
+typedef struct VariableValue {
+	VariableUnion u;
+	int type;
+} VariableValue;
+
+typedef struct function_stack_t {
+	const char *pos;
+	unsigned int localId;
+	unsigned int localVarCount;
+	VariableValue *top;
+	VariableValue *startTop;
+} function_stack_t;
+
+typedef struct function_frame_t {
+	function_stack_t fs;
+	int topType;
+} function_frame_t;
+
+typedef struct scrVmPub_t {
+	unsigned int *localVars;
+	VariableValue *maxstack;
+	int function_count;
+	function_frame_t *function_frame;
+	VariableValue *top;
+	unsigned int inparamcount;
+	unsigned int outparamcount;
+	function_frame_t function_frame_start[32];
+	VariableValue stack[2048];
+} scrVmPub_t;
+
+#endif /* DEFINES_H */

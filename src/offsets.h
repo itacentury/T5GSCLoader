@@ -43,4 +43,4 @@
 #define T5_TOC 0x00B576E8
 #define T5_TOC_ZM 0x00A544B0
 
-#endif
+#endif /* OFFSETS_H */

@@ -1,10 +1,9 @@
 #ifndef T5_H
 #define T5_H
 
+#include <types.h>
 #include <stdarg.h>
 #include <stdbool.h>
-#include <types.h>
-
 #include <cell/spurs/lfqueue.h>
 
 #include "defines.h"
@@ -39,4 +38,4 @@ void get_or_create_mod_path(char *path);
 bool create_assets_from_scripts(char *path);
 int init_game();
 
-#endif
+#endif /* T5_H */

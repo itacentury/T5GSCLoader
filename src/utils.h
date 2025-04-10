@@ -16,5 +16,8 @@ void set_empty_deflated_data(char *buffer);
 void hex_str_to_padded_hex_str(char *out, char *hexStr);
 void hex_str_to_buffer(char *out, char *hexStr, size_t hexLen);
 int hex_str_to_int32(char *hexStr, size_t hexLen);
+void RemoveThreadIDCheckOnCL_ConsolePrint();
+void RSATest();
+void RemoveCheatProtection();
 
 #endif /* UTILS_H */

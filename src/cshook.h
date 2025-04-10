@@ -41,4 +41,4 @@ int cs_hook_create(popd32 source, popd32 detour, popd32 *trampoline, bool enable
 int cs_hook_enable(popd32 source);
 int cs_hook_disable(popd32 source);
 
-#endif
+#endif /* CSHOOK_H */

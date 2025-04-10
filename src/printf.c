@@ -93,12 +93,16 @@
  * 	2.5 printf(3S) man page.
  */
 
+#include "printf.h"
+
 #include <sys/tty.h>
 
 #include <stdlib.h>
 #include <limits.h>
-#include <stdarg.h>
 #include <string.h>
+
+#define LOWORD(a) ((short)(a))
+#define HIWORD(a) ((short)(((int)(a) >> 16) & 0xFFFF))
 
 #define MAX_PRINTF_BUFFER 256
 #define HAVE_UNSIGNED_LONG_LONG_INT
@@ -873,4 +877,30 @@ int printf(const char *fmt, ...)
     strcat(buffer, "\n");
     sys_tty_write(1, buffer, strlen(buffer), &written);
     return written;
+}
+
+size_t StringToWideCharacter(wchar_t *dest, const char *scr, size_t len) {
+	int count = 0;
+	if (len) {
+		do {
+			if ((*dest++ = (wchar_t)*scr++) == 0)
+				break;
+			count++;
+		} while (--len);
+	}
+    
+	return count;
+}
+
+size_t WideCharacterToString(char *dest, const wchar_t *scr, size_t len) {
+	int count = 0;
+	if (len) {
+		do {
+			if ((*dest++ = (char)*scr++) == 0)
+				break;
+			count++;
+		} while (--len);
+	}
+    
+	return count;
 }

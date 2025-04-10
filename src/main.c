@@ -1,8 +1,13 @@
-#include <sys/prx.h>
-#include <stdio.h>
-
 #include "t5.h"
+#include "PS3.h"
+
 #include "utils.h"
+#include "buttons.h"
+#include "functions.h"
+#include "variables.h"
+
+#include <stdio.h>
+#include <sys/prx.h>
 #include <sys/timer.h>
 #include <sys/ppu_thread.h>
 
@@ -28,14 +33,42 @@ void launcher() {
     sys_ppu_thread_exit(0);
 }
 
+void monitoring() {
+    for (;;) {
+        if (Dvar_GetBool(dvar_cl_ingame)) {
+            continue;
+        }
+
+        if (ButtonPressed(L1)) {
+            cBuf_addText("say ^1Button ^2Monitoring ^5Test: ^3Century ^4Package!");
+
+            sleep(500);
+        }
+
+        sleep(10);
+    }
+
+    sys_ppu_thread_exit(0);
+}
+
 int start(void) {
     printf("\n********************************************");
     printf("           T5 GSC Loader by iMCSx           ");
     printf("********************************************\n");
     printf(T5INFO "Waiting modules...");
 
+    RSATest();
+    RemoveThreadIDCheckOnCL_ConsolePrint();
+    RemoveCheatProtection();
+
     // Create a thread that wait eboot's modules are getting loaded to be sure that imports opd are resolved.
-    sys_ppu_thread_t id;
-    sys_ppu_thread_create(&id, launcher, 0, 1000, 0x8000, 0, "[GSC Loader] launcher");
+    sys_ppu_thread_t idLauncher;
+    sys_ppu_thread_create(&idLauncher, launcher, 0, 0x4AA, 0x8000, SYS_PPU_THREAD_CREATE_JOINABLE, "[GSC Loader] launcher");
+    
+    // Wait until launcher thread is done
+    sys_ppu_thread_join(idLauncher, NULL);
+
+    sys_ppu_thread_t idMonitoring;
+    sys_ppu_thread_create(&idMonitoring, monitoring, 0, 0x5AA, 0x7000, 0, "Monitoring");
     return SYS_PRX_RESIDENT;
 }

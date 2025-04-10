@@ -1,9 +1,12 @@
+#include "t5.h"
+#include "utils.h"
 #include "scrfct.h"
+#include "variables.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "utils.h"
-#include "t5.h"
+#include <sysutil/sysutil_oskdialog.h>
 
 void scrfct_setmemory() {
     // Verify that we have 2 parameters for this function.
@@ -36,4 +39,35 @@ void scrfct_setmemory() {
         else
             printf(T5ERROR "Cannot resolve setmemory parameters call from gsc.");
     }
+}
+
+void scrfct_ps3_keyboard() {
+    if (Scr_GetNumParam(0) == 2) {
+		char* title = Scr_GetString(0, SCRIPTINSTANCE_SERVER);
+        int size = Scr_GetInt(1, SCRIPTINSTANCE_SERVER);
+
+		if (size) {
+            if (!GSC_Keyboardbool) {
+                GSC_Keyboardbool = true;
+                DrawKeyboard(title,"", size, CELL_OSKDIALOG_PANELMODE_ALPHABET, GSC_KeyboardCallback);
+                Scr_AddInt(1, SCRIPTINSTANCE_SERVER);
+            } else {
+                Scr_AddInt(0, SCRIPTINSTANCE_SERVER);
+            }
+		} else {
+            Scr_AddInt(0, SCRIPTINSTANCE_SERVER);
+        }
+    }
+}
+
+void GSC_KeyboardCallback(int localClientNum, const wchar_t *text, size_t size) {
+	if (size) {
+		if (WideCharacterToString(GSC_Keyboardbuffer, text, size)) {
+			Scr_ClearOutParams();
+			Scr_AddString(GSC_Keyboardbuffer, SCRIPTINSTANCE_SERVER);
+			// scr_Notify( 0x012AB290 + (HostNum * 0x2F8),SL_GetString("JM_Keyboard",0,SCRIPTINSTANCE_SERVER),1);
+			memset(GSC_Keyboardbuffer, 0, MAX_STRING_CHARS);
+			GSC_Keyboardbool = false;
+		}
+	}
 }

@@ -88,3 +88,28 @@ int hex_str_to_int32(char *hexStr, size_t hexLen) {
 
     return *(int*)(&out);
 }
+
+void RemoveThreadIDCheckOnCL_ConsolePrint() { // allows iPrintln_GameMessage and iPrintlnBold_GameMessage by noping Com_GetParseThreadInfo in 0x001AF228 CL_ConsolePrint
+    uint32_t PPC[] = {0x60000000};
+	for (int i = 0; i < 0x4; i++)
+        sys_dbg_process_write(0x1AF264 + (i * 4), &PPC[0], 4);
+}
+
+void RSATest() {
+    uint32_t PPC[] = {0x60000000};
+	sys_dbg_process_write(0x230258, &PPC[0], 4);
+    sys_dbg_process_write(0x23025C, &PPC[0], 4);
+    sys_dbg_process_write(0x230260, &PPC[0], 4);
+	sys_dbg_process_write(0x230264, &PPC[0], 4);
+	sys_dbg_process_write(0x230268, &PPC[0], 4);
+}
+
+void RemoveCheatProtection() { //can use some cheat protected dvars
+	uint32_t PPC[] = { 0x60000000, 0x3B200000 };
+	sys_dbg_process_write(0x4C8EC4, &PPC[0], 4);
+	sys_dbg_process_write(0x4C8ED0, &PPC[0], 4);
+	sys_dbg_process_write(0x4C8ED4, &PPC[1], 4);
+	
+	//TEST
+	sys_dbg_process_write(0x3E013C, &PPC[0], 4);
+}

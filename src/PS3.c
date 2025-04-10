@@ -102,3 +102,7 @@ void fixSpaces(char** szReturn) {
 
     *szReturn = _returnStr;
 }
+
+void WriteProcessMemory(uint32_t address, const uint16_t value, size_t size) {
+	sys_dbg_process_write(address, &value, size);
+}
