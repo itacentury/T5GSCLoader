@@ -1,6 +1,8 @@
-# T5GSCLoader
+# Century Package + T5GSCLoader
 
 T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game scripts, call C functions from them and make possible connect to others players by patching client/server checksum.
+
+Additionally a pregame menu was added to be able to use force host and other functions.
 
 ## Build
 ### Windows
@@ -11,6 +13,8 @@ T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game 
 
 ## Usage
 Create a folder in `/dev_hdd0/tmp/T5GSCLoader/mp` or `/dev_hdd0/tmp/T5GSCLoader/zm` and put your script in it. Beside your created folder create a .mod file that has the same name than your mod to enable it. You need to have a file in your mod folder named `main.gsc` with a `main()` function inside to get it load and started (see tmp directory for structure/examples).
+
+The pregame menu can be opened with L1 + R3.
 
 ## Development
 VS Code is used for this project, you can also use Visual Studio if you prefer but you'll need to created a new solution using the VSIX from the SDK and make sure to don't forget to include the required libraries `libc.a libfs_stub.a`.
