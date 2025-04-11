@@ -36,10 +36,11 @@ void launcher() {
 void monitoring() {
     for (;;) {
         if (Dvar_GetBool(dvar_cl_ingame)) {
+            menuOpen = false;
             continue;
         }
 
-        if (ButtonPressed(L1) && ButtonPressed(R3)) {
+        if (ButtonPressed(BTN_L1) && ButtonPressed(BTN_R3)) {
             menuOpen = !menuOpen;
 
             sleep(500);

@@ -10,6 +10,7 @@ extern float ColorMutedTeal[4];
 extern float ColorWhite[4];
 extern float ColorBackground[4];
 extern float ColorBlack[4];
+extern float ColorMenuTitle[4];
 
 extern opd_s R_AddCmdDrawStretchPic_t;
 extern opd_s Material_RegisterHandle_t;

@@ -9,6 +9,7 @@ float ColorMutedTeal[4] = {0.0f, 0.7f, 0.7f, 0.0f};
 float ColorWhite[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 float ColorBackground[4] = {0.0f, 0.0f, 0.0f, 0.7f};
 float ColorBlack[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+float ColorMenuTitle[4] = {0.9882f, 0.6667f, 0.4549f, 1.0f};
 
 opd_s R_AddCmdDrawStretchPic_t = { 0x751940, T5_TOC };
 opd_s Material_RegisterHandle_t = { 0x7458D8, T5_TOC };
