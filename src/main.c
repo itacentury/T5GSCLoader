@@ -1,10 +1,10 @@
 #include "t5.h"
 #include "PS3.h"
-
+#include "hud.h"
 #include "utils.h"
 #include "buttons.h"
-#include "functions.h"
 #include "globals.h"
+#include "functions.h"
 
 #include <stdio.h>
 #include <sys/prx.h>
@@ -40,7 +40,7 @@ void monitoring() {
         }
 
         if (ButtonPressed(L1) && ButtonPressed(R3)) {
-            cBuf_addText("say ^1Button ^2Monitoring ^5Test: ^3Century ^4Package!");
+            menuOpen = !menuOpen;
 
             sleep(500);
         }

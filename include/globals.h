@@ -6,9 +6,12 @@
 #include <stdbool.h>
 
 #define MAX_STRING_CHARS 1024
+#define SCREEN_CENTER_Y 640
+#define SCREEN_CENTER_X 360
 
 extern int firstStart;
 extern char* dvar_cl_ingame;
+extern bool menuOpen;
 
 extern bool GSC_Keyboardbool;
 extern int HostNum;
@@ -23,6 +26,6 @@ typedef enum Addies
     PRECACHE_SHADER = 0x1213800 + 0x3C,
     DVAR_GETBOOL = 0x4C7BF0,
     SV_GAMESENDSERVERCOMMAND = 0x3E95F0,
-};
+} Addies;
 
 #endif /* GLOBALS_H */

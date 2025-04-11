@@ -1,3 +1,4 @@
+#include "hud.h"
 #include "hooks.h"
 #include "buttons.h"
 
@@ -148,5 +149,10 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     if (!firstStart) {
         displayWelcomePopup();
         firstStart = 1;
+    }
+
+    if (menuOpen) {
+        R_AddCmdDrawStretchPic(SCREEN_CENTER_Y - (260 / 2), SCREEN_CENTER_X - (354 / 2), 260, 354, 0.0f, 0.0f, 1.0f, 1.0f, ColorBackground, Material_RegisterHandle("white", 7));
+        R_AddCmdDrawText("Century Package: Pregame Version", 0xFF, R_RegisterFont("fonts/normalfont", 1), (SCREEN_CENTER_Y - (260 / 2)) + 16, (SCREEN_CENTER_X - (354 / 2)) + 34, 0.78f, 0.78f, 0.0f, ColorWhite, 0);    
     }
 }
