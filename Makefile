@@ -19,6 +19,7 @@ PRX_LDFLAGS_EXTRA	=
 endif
 
 PPU_CFLAGS 			+= -std=c99 -ffunction-sections -fdata-sections -fno-builtin-printf -nodefaultlibs -Wno-shadow -Wno-unused-parameter
+PPU_CFLAGS         	+= -Iinclude/
 
 CLEANFILES 			= $(PRX_DIR)/$(PPU_SPRX_TARGET)
 

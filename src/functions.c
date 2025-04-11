@@ -1,6 +1,6 @@
 #include "printf.h"
 #include "functions.h"
-#include "variables.h"
+#include "globals.h"
 
 opd_s Scr_AddInt_t = { 0x5DF2A0, T5_TOC };
 void(*Scr_AddInt)(int value, scriptInstance_t inst) = 

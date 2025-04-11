@@ -1,7 +1,7 @@
 #include "t5.h"
 #include "utils.h"
 #include "scrfct.h"
-#include "variables.h"
+#include "globals.h"
 
 #include <stdio.h>
 #include <stdlib.h>

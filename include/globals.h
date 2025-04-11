@@ -1,5 +1,5 @@
-#ifndef VARIABLES_H
-#define VARIABLES_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
 #include "defines.h"
 
@@ -16,4 +16,4 @@ extern scrVmPub_t *scrVmPub;
 
 extern char GSC_Keyboardbuffer[MAX_STRING_CHARS];
 
-#endif /* VARIABLES_H */
+#endif /* GLOBALS_H */

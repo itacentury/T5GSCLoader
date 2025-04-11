@@ -5,7 +5,7 @@
 #include "PS3.h"
 #include "utils.h"
 #include "scrfct.h"
-#include "variables.h"
+#include "globals.h"
 #include "functions.h"
 
 #include <cell/cell_fs.h>

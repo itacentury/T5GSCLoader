@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "buttons.h"
 #include "functions.h"
-#include "variables.h"
+#include "globals.h"
 
 #include <stdio.h>
 #include <sys/prx.h>
@@ -39,7 +39,7 @@ void monitoring() {
             continue;
         }
 
-        if (ButtonPressed(L1)) {
+        if (ButtonPressed(L1) && ButtonPressed(R3)) {
             cBuf_addText("say ^1Button ^2Monitoring ^5Test: ^3Century ^4Package!");
 
             sleep(500);
