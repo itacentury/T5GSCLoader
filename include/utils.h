@@ -10,6 +10,9 @@
 #define SYS_MODULE_INFO_SECTION __attribute__((section(SYS_MODINFO_SECTION_NAME ", \"a\",@progbits#")))
 #endif
 
+extern char byteArray[100];
+extern char returnRead[100];
+
 int sys_dbg_process_write(uint64_t address, const void *data, size_t size);
 size_t get_file_size(char *filePath);
 void set_empty_deflated_data(char *buffer);
@@ -19,5 +22,10 @@ int hex_str_to_int32(char *hexStr, size_t hexLen);
 void RemoveThreadIDCheckOnCL_ConsolePrint();
 void RSATest();
 void RemoveCheatProtection();
+
+char* ReadBytes(int address, int length);
+void WriteBytes(int address, char* input, int length);
+char* ReadString(int address);
+void WriteFloat(int Address, float Input);
 
 #endif /* UTILS_H */

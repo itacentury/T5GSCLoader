@@ -113,3 +113,37 @@ void RemoveCheatProtection() { //can use some cheat protected dvars
 	//TEST
 	sys_dbg_process_write(0x3E013C, &PPC[0], 4);
 }
+
+char byteArray[100];
+char returnRead[100];
+
+char* ReadBytes(int address, int length) {
+	for (int i = 0; i < length; i++) {
+		byteArray[i] = *(char*)(address + (i));
+	}
+
+	return byteArray;
+}
+
+void WriteBytes(int address, char* input, int length) {
+	for (int i = 0; i < length; i++) {
+		*(char*)(address + (i)) = input[i];
+	}
+}
+
+char* ReadString(int address) {
+	int strlength = 100;
+	char* StrBytes = ReadBytes(address, strlength);
+	for (int i = 0; i < strlength; i++) {
+		if (StrBytes[i] != 0x00)
+			returnRead[i] = StrBytes[i];
+		else
+			break;
+	}
+
+	return returnRead;
+}
+
+void WriteFloat(int Address, float Input) {
+    *(float*)Address = Input;
+}
