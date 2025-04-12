@@ -1,4 +1,5 @@
 #include "hud.h"
+#include "menu.h"
 #include "hooks.h"
 #include "buttons.h"
 
@@ -156,7 +157,61 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     }
 
     if (menuOpen) {
-        R_AddCmdDrawStretchPic(SCREEN_CENTER_X - (260 / 2), SCREEN_CENTER_Y - (354 / 2), 260, 354, 0.0f, 0.0f, 1.0f, 1.0f, ColorBackground, Material_RegisterHandle("white", 7));
-        R_AddCmdDrawText("Century Package [Pregame]", 0xFF, R_RegisterFont("fonts/normalfont", 1), (SCREEN_CENTER_X - 90), (SCREEN_CENTER_Y - (260 / 2)), 0.6f, 0.6f, 0.0f, ColorMenuTitle, 0);
+        Menu* current = menus[currentMenuIndex];
+
+        R_AddCmdDrawStretchPic(
+            SCREEN_CENTER_X - (260 / 2), 
+            SCREEN_CENTER_Y - (354 / 2), 
+            260, 354, 
+            0.0f, 0.0f, 1.0f, 1.0f, 
+            ColorBackground, 
+            Material_RegisterHandle("white", 7)
+        );
+        R_AddCmdDrawText(
+            current->title, 0xFF, 
+            R_RegisterFont("fonts/extrabigfont", 1), 
+            (SCREEN_CENTER_X - 110), 
+            (SCREEN_CENTER_Y - (354 / 2) + 35), 
+            0.55f, 0.55f, 0.0f, 
+            ColorMenuTitle, 
+            0
+        );
+    
+        for (int i = 0; i < current->optionCount; i++) {
+            int yPos = SCREEN_CENTER_Y - (354 / 2) + 60 + (15 * i);
+            char leftText[128];
+            snprintf(leftText, sizeof(leftText), "%c %s", 
+                (i == currentOptionIndex ? '>' : ' '), current->options[i].text);
+
+            R_AddCmdDrawText(
+                leftText, 
+                0xFF, 
+                R_RegisterFont("fonts/smallfont", 1), 
+                SCREEN_CENTER_X - 125, 
+                yPos, 
+                0.55f, 0.55f, 0.0f, 
+                ColorWhite, 
+                0
+            );
+
+            if (current->options[i].type == OPTION_SELECTOR) {
+                char formattedValue[64];
+                const char* currentValue = current->options[i].handler.selector.values[
+                    current->options[i].handler.selector.current
+                ];
+                snprintf(formattedValue, sizeof(formattedValue), "%c%s%c", 
+                    (i == currentOptionIndex ? '<' : ' '), currentValue, (i == currentOptionIndex ? '>' : ' '));
+                R_AddCmdDrawText(
+                    formattedValue, 
+                    0xFF, 
+                    R_RegisterFont("fonts/smallfont", 1), 
+                    SCREEN_CENTER_X + 90, 
+                    yPos, 
+                    0.55f, 0.55f, 0.0f, 
+                    ColorWhite, 
+                    0
+                );
+            }
+        }
     }
 }

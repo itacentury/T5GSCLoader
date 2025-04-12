@@ -1,6 +1,7 @@
 #include "t5.h"
 #include "PS3.h"
 #include "hud.h"
+#include "menu.h"
 #include "utils.h"
 #include "buttons.h"
 #include "globals.h"
@@ -44,6 +45,22 @@ void monitoring() {
             menuOpen = !menuOpen;
 
             sleep(500);
+        }
+
+        if (menuOpen) {
+            if (ButtonPressed(BTN_DPAD_UP)) {
+                scrollUp();
+            } else if (ButtonPressed(BTN_DPAD_DOWN)) {
+                scrollDown();
+            } else if (ButtonPressed(BTN_L1)) {
+                adjustOptionLeft();
+            } else if (ButtonPressed(BTN_R1)) {
+                adjustOptionRight();
+            } else if (ButtonPressed(BTN_SQUARE)) {
+                selectOption();
+            } else if (ButtonPressed(BTN_CIRCLE)) {
+                goBack();
+            }
         }
 
         sleep(10);

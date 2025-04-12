@@ -40,8 +40,11 @@ extern opd_s Dvar_GetBool_t;
 extern bool (*Dvar_GetBool)(const char *);
 extern opd_s cb1;
 extern void(*Cbuf)(int client, char* cmd);
+extern opd_s NTFY;
+extern void(*scr_Notify)(int ent, short stringValue, unsigned int paramcount);
 
 void Scr_ClearOutParams();
+void cBuf_addTextf(const char* format, ...);
 void cBuf_addText(char* text);
 void setDvar(const char *dvarName, const char *value);
 void drawOkayPopup(const char *title, const char *message);

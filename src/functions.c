@@ -40,6 +40,9 @@ bool (*Dvar_GetBool)(const char *) =
     (bool (*)(const char *))&Dvar_GetBool_t;
 opd_s cb1 = { 0x399CC8, T5_TOC };
 void(*Cbuf)(int client, char* cmd) = (void(*)(int, char*))&cb1;
+opd_s NTFY = { 0x354F08, T5_TOC };
+void(*scr_Notify)(int ent, short stringValue, unsigned int paramcount) = 
+    (void(*)(int, short, unsigned int))&NTFY;
 
 void Scr_ClearOutParams() {
     *(int*)(&scrVmPub->outparamcount) = 0;
@@ -47,6 +50,15 @@ void Scr_ClearOutParams() {
 
 void setDvar(const char *dvarName, const char *value) {
 	Dvar_SetFromStringByName(dvarName, value);
+}
+
+void cBuf_addTextf(const char* format, ...) {
+    char buffer[1024];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buffer, sizeof(buffer), format, args);
+    va_end(args);
+    Cbuf(0, buffer);
 }
 
 void cBuf_addText(char* text) {
