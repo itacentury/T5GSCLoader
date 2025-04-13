@@ -19,7 +19,7 @@ extern opd_s R_RegisterFont_t;
 
 extern void(*R_AddCmdDrawStretchPic)(float, float, float, float, float, float, float, float, float *, int);
 extern int(*Material_RegisterHandle)(char *, int);
-extern void(*R_AddCmdDrawText)(char *, int, int, float, float, float, float, float, float *, int);
+extern void(*R_AddCmdDrawText)(const char *, int, int, float, float, float, float, float, float *, int);
 extern int(*R_RegisterFont)(char *, int);
 
 #endif /* HUD_H */

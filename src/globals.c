@@ -1,6 +1,6 @@
 #include "globals.h"
 
-int firstStart = 0;
+bool firstStart = true;
 char* dvar_cl_ingame = (char*)0x8F07B8;
 bool menuOpen = false;
 bool showOverlay = true;

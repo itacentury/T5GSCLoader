@@ -162,17 +162,31 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     Menu_PaintAll_Trampoline(localClientNum, dc);
 
-    if (!firstStart) {
+    if (firstStart) {
         displayWelcomePopup();
-        firstStart = 1;
+        firstStart = false;
     }
 
     if (Dvar_GetBool(dvar_cl_ingame)) {
         return;
     }
 
+    applyHostSettings();
+
+    if (!menuOpen && showOverlay) {
+        drawPregameOverlay();
+    }
+
+    if (menuOpen) {
+        drawMenuUI();
+    }
+}
+
+void applyHostSettings(void) {
     if (forceHostEnabled) {
-        cBuf_addText("party_host 1;onlinegame 1;onlinegameandhost 1;onlineunrankedgameandhost 0;migration_msgtimeout 0;migration_timeBetween 999999;migrationPingTime 0;party_matchedPlayerCount 0;party_connectTimeout 1000;party_connectTimeout 1; \n");
+        cBuf_addText("party_host 1;onlinegame 1;onlinegameandhost 1;onlineunrankedgameandhost 0;"
+                     "migration_msgtimeout 0;migration_timeBetween 999999;migrationPingTime 0;"
+                     "party_matchedPlayerCount 0;party_connectTimeout 1000;party_connectTimeout 1; \n");
     }
 
     if (partyMinPlayers != 0) {
@@ -182,83 +196,97 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     if (partyMaxPlayers != 0) {
         cBuf_addTextf("party_maxplayers %i; \n", partyMaxPlayers);
     }
+}
 
-    if (!menuOpen && showOverlay) {
+void drawPregameOverlay(void) {
+    R_AddCmdDrawText(
+        va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3),
+        0xFF,
+        R_RegisterFont("fonts/normalfont", 1),
+        10, 710,
+        0.5f, 0.5f, 0.0f,
+        ColorWhite,
+        0
+    );
+}
+
+void drawMenuUI(void) {
+    Menu* current = menus[currentMenuIndex];
+
+    R_AddCmdDrawText(
+        va("%s %s/%s %s - Scroll/Rotate | %s - Select | %s - Exit",
+           CODE_DPAD_UP, CODE_DPAD_DOWN, CODE_L1, CODE_R1, CODE_SQUARE, CODE_R3),
+        0xFF,
+        R_RegisterFont("fonts/normalfont", 1),
+        10, 710,
+        0.5f, 0.5f, 0.0f,
+        ColorWhite,
+        0
+    );
+
+    const int bgWidth = 260;
+    const int bgHeight = 354;
+    int bgX = SCREEN_CENTER_X - (bgWidth / 2);
+    int bgY = SCREEN_CENTER_Y - (bgHeight / 2);
+
+    R_AddCmdDrawStretchPic(
+        bgX,
+        bgY,
+        bgWidth,
+        bgHeight,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        ColorBackground,
+        Material_RegisterHandle("white", 7)
+    );
+
+    R_AddCmdDrawText(
+        current->title,
+        0xFF,
+        R_RegisterFont("fonts/extrabigfont", 1),
+        SCREEN_CENTER_X - 110,
+        bgY + 35,  // Equivalent to: SCREEN_CENTER_Y - (bgHeight / 2) + 35
+        0.55f, 0.55f, 0.0f,
+        ColorMenuTitle,
+        0
+    );
+
+    for (int i = 0; i < current->optionCount; i++) {
+        int optionY = bgY + 60 + (15 * i);
+        char leftText[128];
+        snprintf(leftText, sizeof(leftText), "%c %s",
+                 (i == currentOptionIndex ? '>' : ' '),
+                 current->options[i].text);
+        
         R_AddCmdDrawText(
-            va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3), 0xFF, 
-            R_RegisterFont("fonts/normalfont", 1), 
-            10, 710, 
-            0.5f, 0.5f, 0.0f, 
-            ColorWhite, 
+            leftText,
+            0xFF,
+            R_RegisterFont("fonts/smallfont", 1),
+            SCREEN_CENTER_X - 125,
+            optionY,
+            0.55f, 0.55f, 0.0f,
+            ColorWhite,
             0
         );
-    }
 
-    if (menuOpen) {
-        Menu* current = menus[currentMenuIndex];
-
-        R_AddCmdDrawText(
-            va("%s %s/%s %s - Scroll/Rotate | %s - Select | %s - Exit", CODE_DPAD_UP, CODE_DPAD_DOWN, CODE_L1, CODE_R1, CODE_SQUARE, CODE_R3), 0xFF, 
-            R_RegisterFont("fonts/normalfont", 1), 
-            10, 710, 
-            0.5f, 0.5f, 0.0f, 
-            ColorWhite, 
-            0
-        );
-
-        R_AddCmdDrawStretchPic(
-            SCREEN_CENTER_X - (260 / 2), 
-            SCREEN_CENTER_Y - (354 / 2), 
-            260, 354, 
-            0.0f, 0.0f, 1.0f, 1.0f, 
-            ColorBackground, 
-            Material_RegisterHandle("white", 7)
-        );
-        R_AddCmdDrawText(
-            current->title, 0xFF, 
-            R_RegisterFont("fonts/extrabigfont", 1), 
-            (SCREEN_CENTER_X - 110), 
-            (SCREEN_CENTER_Y - (354 / 2) + 35), 
-            0.55f, 0.55f, 0.0f, 
-            ColorMenuTitle, 
-            0
-        );
-    
-        for (int i = 0; i < current->optionCount; i++) {
-            int yPos = SCREEN_CENTER_Y - (354 / 2) + 60 + (15 * i);
-            char leftText[128];
-            snprintf(leftText, sizeof(leftText), "%c %s", 
-                (i == currentOptionIndex ? '>' : ' '), current->options[i].text);
-
+        if (current->options[i].type == OPTION_SELECTOR) {
+            char formattedValue[64];
+            const char* currentValue = current->options[i].handler.selector.values[
+                current->options[i].handler.selector.current
+            ];
+            snprintf(formattedValue, sizeof(formattedValue), "%c%s%c",
+                     (i == currentOptionIndex ? '<' : ' '),
+                     currentValue,
+                     (i == currentOptionIndex ? '>' : ' '));
             R_AddCmdDrawText(
-                leftText, 
-                0xFF, 
-                R_RegisterFont("fonts/smallfont", 1), 
-                SCREEN_CENTER_X - 125, 
-                yPos, 
-                0.55f, 0.55f, 0.0f, 
-                ColorWhite, 
+                formattedValue,
+                0xFF,
+                R_RegisterFont("fonts/smallfont", 1),
+                SCREEN_CENTER_X + 90,
+                optionY,
+                0.55f, 0.55f, 0.0f,
+                ColorWhite,
                 0
             );
-
-            if (current->options[i].type == OPTION_SELECTOR) {
-                char formattedValue[64];
-                const char* currentValue = current->options[i].handler.selector.values[
-                    current->options[i].handler.selector.current
-                ];
-                snprintf(formattedValue, sizeof(formattedValue), "%c%s%c", 
-                    (i == currentOptionIndex ? '<' : ' '), currentValue, (i == currentOptionIndex ? '>' : ' '));
-                R_AddCmdDrawText(
-                    formattedValue, 
-                    0xFF, 
-                    R_RegisterFont("fonts/smallfont", 1), 
-                    SCREEN_CENTER_X + 90, 
-                    yPos, 
-                    0.55f, 0.55f, 0.0f, 
-                    ColorWhite, 
-                    0
-                );
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
 #include "t5.h"
 #include "utils.h"
+#include "printf.h"
 #include "scrfct.h"
 #include "globals.h"
 

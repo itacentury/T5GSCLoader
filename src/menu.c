@@ -4,6 +4,8 @@
 #include "globals.h"
 #include "functions.h"
 
+#include <string.h>
+
 /* --- Menu definition --- */
 MenuOption mainMenuOptions[] = {
     { "Force Host",      OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
@@ -42,7 +44,7 @@ void toggleOverlay(const char* val) {
     showOverlay = (strcmp(val, "ON") == 0);
 }
 
-/* --- Menu usage --- */
+/* --- Menu structure --- */
 int currentMenuIndex = 0;
 int currentOptionIndex = 0;
 

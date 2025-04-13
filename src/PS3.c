@@ -1,4 +1,5 @@
 #include "PS3.h"
+#include "utils.h"
 
 #include <string.h>
 #include <sys/timer.h>

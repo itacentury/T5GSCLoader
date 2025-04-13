@@ -9,7 +9,7 @@
 #define SCREEN_CENTER_X 640
 #define SCREEN_CENTER_Y 360
 
-extern int firstStart;
+extern bool firstStart;
 extern char* dvar_cl_ingame;
 extern bool menuOpen;
 extern bool showOverlay;
