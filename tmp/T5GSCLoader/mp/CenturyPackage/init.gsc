@@ -14,8 +14,8 @@ initLevelVars() {
 
     level.xAxis = 0;
 	if (level.console) {
-		level.yAxis = 150;
-        level.yAxisOverlayPlacement = 444; // needs testing on console!
+		level.yAxis = 165;
+        level.yAxisOverlayPlacement = 434;
 	} else {
 		level.yAxis = 200;
         level.yAxisOverlayPlacement = 474;
@@ -47,8 +47,8 @@ initLevelVars() {
 	}
 
     level.timeExtensionPerformed = false;
-	// level.onPlayerDamageStub = level.callbackPlayerDamage;
-	// level.callbackPlayerDamage = ::onPlayerDamageHook;
+	level.onPlayerDamageStub = level.callbackPlayerDamage;
+	level.callbackPlayerDamage = ::onPlayerDamageHook;
 }
 
 initDvars() {
@@ -233,4 +233,32 @@ initPlayerDvars() {
     if (getDvarInt("killcam_final") == 1) {
         self setClientDvar("killcam_final", 1);
     }
+}
+
+onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {
+	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") {
+		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon)) {
+			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.unlimitedSniperDmg || eAttacker.hasUnlimitedDamage) {
+				iDamage = 10000000;
+			}
+		}
+
+        if (level.currentGametype == "sd") {
+            if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH") {
+                iDamage = 1;
+            }
+        }
+	}
+
+	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
+}
+
+isM14FnFalAndHostTeam(sWeapon) {
+	if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))) {
+		if (self.pers["team"] == getHostPlayer().pers["team"]) {
+			return true;
+		}
+	}
+
+	return false;
 }

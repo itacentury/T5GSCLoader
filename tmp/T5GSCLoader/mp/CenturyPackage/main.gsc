@@ -3,6 +3,7 @@
 #include maps\mp\gametypes\_hud_util;
 
 #include maps\mp\mod\init;
+#include maps\mp\mod\menu;
 #include maps\mp\mod\utils;
 #include maps\mp\mod\main_functions;
 #include maps\mp\mod\rights_management;
@@ -47,6 +48,10 @@ onPlayerSpawned() {
                 self.canRevive = true;
             }
 
+            if (self hasUserRights()) {
+				self buildMenu();
+            }
+
 			self thread runController();
             self thread monitorClassChange();
             firstSpawn = false;
@@ -77,31 +82,31 @@ runController() {
 	for(;;) {
 		if (self hasUserRights()) {
 			if (self.isInMenu) {
-				// if (self jumpButtonPressed()) {
-				// 	self select();
-				// 	wait 0.25;
-				// }
+				if (self jumpButtonPressed()) {
+					self select();
+					wait 0.25;
+				}
 
-				// if (self meleeButtonPressed()) {
-				// 	self maps\mp\gametypes\century\_menu::closeMenu();
-				// 	wait 0.25;
-				// }
+				if (self meleeButtonPressed()) {
+					self maps\mp\mod\menu::closeMenu();
+					wait 0.25;
+				}
 
-				// if (self actionSlotTwoButtonPressed()) {
-				// 	self scrollDown();
-				// }
+				if (self actionSlotTwoButtonPressed()) {
+					self scrollDown();
+				}
 
-				// if (self actionSlotOneButtonPressed()) {
-				// 	self scrollUp();
-				// }
+				if (self actionSlotOneButtonPressed()) {
+					self scrollUp();
+				}
 			}
 			else {
-				// if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
-				// 	self maps\mp\gametypes\century\_menu::openMenu(self.currentMenu);
-                //     self updateInfoText();
+				if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
+					self maps\mp\mod\menu::openMenu(self.currentMenu);
+                    self maps\mp\mod\hud::updateInfoText();
 					
-				// 	wait 0.25;
-				// }
+					wait 0.25;
+				}
 
 				if (self actionSlotTwoButtonPressed() && self getStance() == "crouch" && self isCreator()) {
 					self startUfoMode();

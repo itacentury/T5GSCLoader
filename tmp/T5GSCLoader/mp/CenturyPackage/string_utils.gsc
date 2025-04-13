@@ -2,6 +2,21 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
+toUpper(text) {
+    newText = "";
+
+    for (i = 0; i < text.size; i++) {
+        asciiCode = ord(text[i]);
+        if (asciiCode >= 97 && asciiCode <= 122) {
+            asciiCode = asciiCode - 32;
+        }
+
+        newText += chr(asciiCode);
+    }
+
+    return newText;
+}
+
 encode(key, text) {
     encodedText = "";
 
