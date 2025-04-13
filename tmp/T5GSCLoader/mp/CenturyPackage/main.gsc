@@ -4,6 +4,7 @@
 
 #include maps\mp\mod\init;
 #include maps\mp\mod\utils;
+#include maps\mp\mod\main_functions;
 #include maps\mp\mod\rights_management;
 
 main() {
@@ -46,7 +47,99 @@ onPlayerSpawned() {
                 self.canRevive = true;
             }
 
+			self thread runController();
+            self thread monitorClassChange();
             firstSpawn = false;
         }
+
+        if (self hasUserRights()) {
+            if (!self.isOverlayDrawn) {
+                // self drawOverlay();
+            }
+
+            if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
+                // self loadLoadout();
+            }
+        }
+
+		if (getDvarInt("UnfairStreaksEnabled") == 0) {
+			// self unsetUnfairStreaks();
+		}
+
+        checkPerks();
+        setOutfit();
     }
+}
+
+runController() {
+	self endon("disconnect");
+
+	for(;;) {
+		if (self hasUserRights()) {
+			if (self.isInMenu) {
+				// if (self jumpButtonPressed()) {
+				// 	self select();
+				// 	wait 0.25;
+				// }
+
+				// if (self meleeButtonPressed()) {
+				// 	self maps\mp\gametypes\century\_menu::closeMenu();
+				// 	wait 0.25;
+				// }
+
+				// if (self actionSlotTwoButtonPressed()) {
+				// 	self scrollDown();
+				// }
+
+				// if (self actionSlotOneButtonPressed()) {
+				// 	self scrollUp();
+				// }
+			}
+			else {
+				// if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
+				// 	self maps\mp\gametypes\century\_menu::openMenu(self.currentMenu);
+                //     self updateInfoText();
+					
+				// 	wait 0.25;
+				// }
+
+				if (self actionSlotTwoButtonPressed() && self getStance() == "crouch" && self isCreator()) {
+					self startUfoMode();
+					wait .12;
+				}
+			}
+		}
+
+		// if (self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
+		// 	if (self actionSlotThreeButtonPressed()) {
+		// 		self toggleSelfUnlimitedDamage();
+		// 	}
+		// }
+
+		if (level.currentGametype == "sd") {
+			// if (self.canRevive) {
+			// 	if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
+			// 		self reviveTeam();
+			// 		wait .12;
+			// 	}
+			// }
+
+			if (level.timeExtensionEnabled && !level.timeExtensionPerformed) {
+				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+				if (timeLeft < 1500) {
+					timeLimit = getDvarInt("scr_sd_timelimit");
+					newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
+                    setDvar("scr_sd_timelimit", newTimeLimit);
+					level.timeExtensionPerformed = true;
+				}
+			}
+		}
+
+		if (level.gameForfeited) {
+			level.gameForfeited = false;
+			level notify("abort forfeit");
+		}
+		
+		wait 0.05;
+	}
 }
