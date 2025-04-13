@@ -27,5 +27,6 @@ char* ReadBytes(int address, int length);
 void WriteBytes(int address, char* input, int length);
 char* ReadString(int address);
 void WriteFloat(int Address, float Input);
+int simpleAtoi(const char *str);
 
 #endif /* UTILS_H */

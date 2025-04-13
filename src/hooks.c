@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "hooks.h"
 #include "buttons.h"
+#include "functions.h"
 
 #include "stdio.h"
 #include "string.h"
@@ -152,12 +153,44 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
         firstStart = 1;
     }
 
-    if (showOverlay) {
-        R_AddCmdDrawText(va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3), 0xFF, R_RegisterFont("fonts/normalfont", 1), 25, 700, 0.5f, 0.5f, 0.0f, ColorWhite, 0);
+    if (Dvar_GetBool(dvar_cl_ingame)) {
+        return;
+    }
+
+    if (forceHostEnabled) {
+        cBuf_addText("party_host 1;onlinegame 1;onlinegameandhost 1;onlineunrankedgameandhost 0;migration_msgtimeout 0;migration_timeBetween 999999;migrationPingTime 0;party_matchedPlayerCount 0;party_connectTimeout 1000;party_connectTimeout 1; \n");
+    }
+
+    if (partyMinPlayers != 0) {
+        cBuf_addTextf("party_minplayers %i; \n", partyMinPlayers);
+    }
+
+    if (partyMaxPlayers != 0) {
+        cBuf_addTextf("party_maxplayers %i; \n", partyMaxPlayers);
+    }
+
+    if (!menuOpen && showOverlay) {
+        R_AddCmdDrawText(
+            va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3), 0xFF, 
+            R_RegisterFont("fonts/normalfont", 1), 
+            10, 710, 
+            0.5f, 0.5f, 0.0f, 
+            ColorWhite, 
+            0
+        );
     }
 
     if (menuOpen) {
         Menu* current = menus[currentMenuIndex];
+
+        R_AddCmdDrawText(
+            va("%s %s/%s %s - Scroll/Rotate | %s - Select | %s - Exit", CODE_DPAD_UP, CODE_DPAD_DOWN, CODE_L1, CODE_R1, CODE_SQUARE, CODE_R3), 0xFF, 
+            R_RegisterFont("fonts/normalfont", 1), 
+            10, 710, 
+            0.5f, 0.5f, 0.0f, 
+            ColorWhite, 
+            0
+        );
 
         R_AddCmdDrawStretchPic(
             SCREEN_CENTER_X - (260 / 2), 

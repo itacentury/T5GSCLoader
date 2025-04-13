@@ -14,6 +14,10 @@ extern char* dvar_cl_ingame;
 extern bool menuOpen;
 extern bool showOverlay;
 
+extern bool forceHostEnabled;
+extern int partyMinPlayers;
+extern int partyMaxPlayers;
+
 extern bool GSC_Keyboardbool;
 extern int HostNum;
 extern scrVmPub_t *scrVmPub;

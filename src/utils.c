@@ -147,3 +147,13 @@ char* ReadString(int address) {
 void WriteFloat(int Address, float Input) {
     *(float*)Address = Input;
 }
+
+int simpleAtoi(const char *str) {
+    int result = 0;
+    while (*str != '\0') {
+        result = result * 10 + (*str - '0');
+        str++;
+    }
+    
+    return result;
+}

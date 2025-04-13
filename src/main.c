@@ -41,10 +41,12 @@ void monitoring() {
             continue;
         }
 
-        if (ButtonPressed(BTN_L1) && ButtonPressed(BTN_R3)) {
-            menuOpen = !menuOpen;
-
-            sleep(500);
+        if (!menuOpen) {
+            if (ButtonPressed(BTN_L1) && ButtonPressed(BTN_R3)) {
+                menuOpen = true;
+    
+                sleep(500);
+            }    
         }
 
         if (menuOpen) {
@@ -60,6 +62,8 @@ void monitoring() {
                 selectOption();
             } else if (ButtonPressed(BTN_CIRCLE)) {
                 goBack();
+            } else if(ButtonPressed(BTN_R3)) {
+                menuOpen = false;
             }
         }
 

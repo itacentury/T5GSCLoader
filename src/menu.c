@@ -1,13 +1,14 @@
 #include "PS3.h"
 #include "menu.h"
+#include "utils.h"
 #include "globals.h"
 #include "functions.h"
 
 /* --- Menu definition --- */
 MenuOption mainMenuOptions[] = {
     { "Force Host",      OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
-    { "Players to start",      OPTION_SELECTOR, { .selector = {3, 18, numberValues, toggleForceHost} } },
-    { "Max players",      OPTION_SELECTOR, { .selector = {11, 18, numberValues, toggleForceHost} } },
+    { "Players to start",      OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
+    { "Max players",      OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
     { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
     { "Controls overlay",OPTION_SELECTOR, { .selector = {1, 2, toggleValues, toggleOverlay} } }
 };
@@ -18,39 +19,19 @@ Menu* menus[MENU_COUNT] = {&mainMenu};
 /* --- Menu functions --- */
 void toggleForceHost(const char* val) {
     if (strcmp(val, "ON") == 0) {
-        cBuf_addText("party_host 1; onlinegame 1; onlinegameandhost 1; "
-            "party_connectToOthers 0; party_pregameStartTimerLength 0; "
-            "party_connectTimeOut 9999; partyMigrate_disabled 1; party_maxTeamDiff 18; "
-            "party_mergingEnabled 0; \n");
+        forceHostEnabled = true;
     } else {
-        cBuf_addText("party_host 0; onlinegame 1; onlinegameandhost 0; "
-            "party_connectToOthers 1; party_pregameStartTimerLength 60; "
-            "party_connectTimeOut 60; partyMigrate_disabled 0; party_maxTeamDiff 4; "
-            "party_mergingEnabled 1; \n");
+        forceHostEnabled = false;
+		cBuf_addText("party_host 0;onlinegame 1;onlinegameandhost 0;onlineunrankedgameandhost 0;migration_msgtimeout 500;migration_timeBetween 30000;migrationPingTime 10;party_matchedPlayerCount 4;party_connectTimeout 8000;\n");
     }
 }
 
 void changeMinPlayers(const char* val) {
-    cBuf_addTextf("party_minPlayers %s; \n", val);
+    partyMinPlayers = simpleAtoi(val);
 }
 
 void changeMaxPlayers(const char* val) {
-    cBuf_addTextf(
-        "party_maxPlayers %s; "
-        "party_maxlocalplayers_basictraining %s; "
-        "party_maxlocalplayers_playermatch %s; "
-        "party_maxlocalplayers_theater %s; "
-        "party_maxlocalplayers_wagermatch %s; "
-        "party_maxplayers_basictraining %s; "
-        "party_maxplayers_playermatch %s; "
-        "party_maxplayers_theater %s; "
-        "party_maxplayers_wagermatch %s; "
-        "party_maxplayers_lobby %s; "
-        "party_maxplayers_partybasictraining %s; "
-        "party_maxplayers_partylobby %s; "
-        "\n",
-        val, val, val, val, val, val, val, val, val, val, val, val 
-    );
+    partyMaxPlayers = simpleAtoi(val);
 }
 
 void changeGametype(const char* gametype) {
@@ -89,6 +70,8 @@ void adjustOptionLeft() {
             opt->handler.selector.current = opt->handler.selector.count - 1;
         else
             opt->handler.selector.current--;
+        
+        selectOption();
         sleep(200);
     }
 }
@@ -98,6 +81,8 @@ void adjustOptionRight() {
     MenuOption* opt = &current->options[currentOptionIndex];
     if (opt->type == OPTION_SELECTOR) {
         opt->handler.selector.current = (opt->handler.selector.current + 1) % opt->handler.selector.count;
+        
+        selectOption();
         sleep(200);
     }
 }
@@ -111,7 +96,6 @@ void selectOption() {
             currentOptionIndex = 0;
         }
     } else if (opt->type == OPTION_SELECTOR) {
-        // Aktion beim Bestätigen der Option ausführen:
         if (opt->handler.selector.action) {
             const char* currentValue = opt->handler.selector.values[opt->handler.selector.current];
             opt->handler.selector.action(currentValue);
