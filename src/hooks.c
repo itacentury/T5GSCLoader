@@ -62,7 +62,8 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
 }
 
 int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer, unsigned int isBlocking) {
-    // Hooked by replacing a popd import since using CTR an instruction of the source function will overwrite toc in stack and cause crashes.
+    // Hooked by replacing a popd import to prevent the instruction in the source function 
+    // from overwriting the TOC in the stack which could cause crashes.
     InflateData *data = (InflateData*)(buffer);
     int ret = cellSpursLFQueuePushBody_Trampoline(lfqueue, buffer, isBlocking);
     GSCLoaderRawfile *lrf = get_loader_rawfile_from_deflated_buffer(data->deflatedBuffer);
@@ -72,38 +73,51 @@ int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer,
         get_or_create_mod_path(modPath);
 
         printf(T5INFO "Injecting '%s' data.", lrf->data.name);
-        char *name = strrchr(lrf->data.name, '/');
+        
+        // Create a buffer for the file path.
+        char filePath[CELL_FS_MAX_FS_PATH_LENGTH] = {0};
 
-        if (name && *modPath) {
-            // Advance pointer past '/'
-            name++;
-            char filePath[CELL_FS_MAX_FS_PATH_LENGTH];
-            sprintf(filePath, "%s/%s", modPath, name);
+        // Build the expected prefix that is stored in lrf->data.name
+        // (e.g., "maps/mp/mod/" or "maps/zm/mod/")
+        char modPrefix[CELL_FS_MAX_FS_PATH_LENGTH] = {0};
+        sprintf(modPrefix, "maps/%s/mod/", isMultiplayer ? "mp" : "zm");
+        size_t prefixLen = strlen(modPrefix);
 
-            int fileSize = get_file_size(filePath);
-
-            if (fileSize <= 0) {
-                printf(T5ERROR "Cannot stat '%s' file", lrf->data.name);
-                return ret;
-            }
-
-            int fd;
-            CellFsErrno err = cellFsOpen(filePath, CELL_FS_O_RDONLY, &fd, NULL, 0);
-            if (err == CELL_FS_SUCCEEDED) {
-                uint64_t read;
-                err = cellFsRead(fd, data->hunkMemoryBuffer, fileSize, &read);
-
-                if (err == CELL_FS_SUCCEEDED && read == fileSize)
-                    data->hunkMemoryBuffer[fileSize] = 0; // GSC data should be null-terminated.
-                else
-                    printf(T5ERROR "Failed to read '%s' file.", filePath);
-
-                cellFsClose(fd);
-            } else {
-                printf(T5ERROR "Cannot open '%s' file.", filePath);
-            }
+        // Check if the asset name begins with the expected prefix.
+        if (strncmp(lrf->data.name, modPrefix, prefixLen) == 0) {
+            // Get the remaining part of the path (relative path including any subdirectories).
+            char *relative_path = lrf->data.name + prefixLen;
+            sprintf(filePath, "%s/%s", modPath, relative_path);
         } else {
-            printf(T5ERROR "Cannot get the current mod path or asset name is wrong.");
+            // Fallback: Use only the file name if the prefix is not found.
+            char *name = strrchr(lrf->data.name, '/');
+            if (name) {
+                name++; // Skip the '/'
+                sprintf(filePath, "%s/%s", modPath, name);
+            } else {
+                sprintf(filePath, "%s/%s", modPath, lrf->data.name);
+            }
+        }
+        
+        int fileSize = get_file_size(filePath);
+        if (fileSize <= 0) {
+            printf(T5ERROR "Cannot stat '%s' file", lrf->data.name);
+            return ret;
+        }
+
+        int fd;
+        CellFsErrno err = cellFsOpen(filePath, CELL_FS_O_RDONLY, &fd, NULL, 0);
+        if (err == CELL_FS_SUCCEEDED) {
+            uint64_t read;
+            err = cellFsRead(fd, data->hunkMemoryBuffer, fileSize, &read);
+            if (err == CELL_FS_SUCCEEDED && read == fileSize)
+                data->hunkMemoryBuffer[fileSize] = 0; // GSC data should be null-terminated.
+            else
+                printf(T5ERROR "Failed to read '%s' file.", filePath);
+
+            cellFsClose(fd);
+        } else {
+            printf(T5ERROR "Cannot open '%s' file.", filePath);
         }
     }
 

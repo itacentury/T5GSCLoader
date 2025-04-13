@@ -35,6 +35,7 @@ t5nhd(void, Menu_PaintAll, (int localClientNum, UiContext *dc));
 
 GSCLoaderRawfile *get_loader_rawfile_from_deflated_buffer(char *inflatedBuffer);
 void get_or_create_mod_path(char *path);
+static void create_assets_from_scripts_recursive(const char *path, const char *relative, int *assetIndex, bool *mainLinked);
 bool create_assets_from_scripts(char *path);
 int init_game();
 

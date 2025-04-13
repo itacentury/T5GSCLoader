@@ -99,64 +99,94 @@ void get_or_create_mod_path(char *path) {
     cellFsClosedir(fd);
 }
 
-bool create_assets_from_scripts(char *path) {
+static void create_assets_from_scripts_recursive(const char *path, const char *relative, int *assetIndex, bool *mainLinked) {
     int fd;
     CellFsErrno err = cellFsOpendir(path, &fd);
     if (err != CELL_FS_SUCCEEDED) {
-        cellFsClosedir(fd);
-        printf(T5ERROR "Cannot open '%s' directory (0x%08X).", path, err);
+        printf(T5ERROR "Cannot open '%s' directory (0x%08X).\n", path, err);
+        return;
     }
 
-    uint64_t read;
+    uint64_t read = sizeof(CellFsDirent);
     CellFsDirent ent;
-    read = sizeof(CellFsDirent);
-    int assetIndex = 0;
-    bool mainLinked = false;
+    char newRelative[CELL_FS_MAX_FS_PATH_LENGTH];
 
-    while (!cellFsReaddir(fd, &ent, &read) && assetIndex < MAX_GSC_COUNT) {
+    while (!cellFsReaddir(fd, &ent, &read) && *assetIndex < MAX_GSC_COUNT) {
         if (!read)
             break;
 
-        if (strstr(ent.d_name, ".gsc") != NULL) {
-            printf(T5INFO "Creating a new asset entry for '%s'.", ent.d_name);
+        char fullPath[CELL_FS_MAX_FS_PATH_LENGTH];
+        // Create the full path for the file or subdirectory
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", path, ent.d_name);
 
-            loader.rawFiles[assetIndex].asset.name = (char*)&loader.rawFiles[assetIndex].data.name;
-            loader.rawFiles[assetIndex].asset.buffer = (char*)&loader.rawFiles[assetIndex].data.inflatedSize;
-            loader.rawFiles[assetIndex].asset.len = 0xDEAD;
+        int testFd;
+        // Check if fullPath is a directory
+        if (cellFsOpendir(fullPath, &testFd) == CELL_FS_SUCCEEDED) {
+            cellFsClosedir(testFd);
+            // Skip special directories
+            if (strcmp(ent.d_name, ".") != 0 && strcmp(ent.d_name, "..") != 0) {
+                // If a relative path already exists, append the new subdirectory
+                if (strlen(relative) > 0) {
+                    snprintf(newRelative, sizeof(newRelative), "%s/%s", relative, ent.d_name);
+                } else {
+                    snprintf(newRelative, sizeof(newRelative), "%s", ent.d_name);
+                }
+                // Recursive call for the subdirectory
+                create_assets_from_scripts_recursive(fullPath, newRelative, assetIndex, mainLinked);
+            }
+        } else if (strstr(ent.d_name, ".gsc") != NULL) {
+            printf(T5INFO "Creating a new asset entry for '%s'.\n", fullPath);
+            int idx = *assetIndex;
+            // Set the pointers for name and buffer in the asset structure
+            loader.rawFiles[idx].asset.name = (char*)&loader.rawFiles[idx].data.name;
+            loader.rawFiles[idx].asset.buffer = (char*)&loader.rawFiles[idx].data.inflatedSize;
+            loader.rawFiles[idx].asset.len = 0xDEAD;
 
-            set_empty_deflated_data(loader.rawFiles[assetIndex].data.buffer);
+            set_empty_deflated_data(loader.rawFiles[idx].data.buffer);
 
-            sprintf(loader.rawFiles[assetIndex].data.name, "maps/%s/mod/%s", isMultiplayer ? "mp" : "zm", ent.d_name);
+            // Create the asset name taking into account the subdirectory, if present
+            if (strlen(relative) > 0) {
+                snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
+                         "maps/%s/mod/%s/%s", isMultiplayer ? "mp" : "zm", relative, ent.d_name);
+            } else {
+                snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
+                         "maps/%s/mod/%s", isMultiplayer ? "mp" : "zm", ent.d_name);
+            }
 
-            char filePath[CELL_FS_MAX_FS_PATH_LENGTH];
-            sprintf(filePath, "%s/%s", path, ent.d_name);
-            int fileSize = get_file_size(filePath);
-
-            loader.rawFiles[assetIndex].data.inflatedSize = fileSize + 1;
-            loader.rawFiles[assetIndex].data.size = 0x1B;
-            loader.rawFiles[assetIndex].entry.asset.type = ASSET_TYPE_RAWFILE;
-            loader.rawFiles[assetIndex].entry.asset.header.rawFile = &loader.rawFiles[assetIndex].asset;
+            int fileSize = get_file_size(fullPath);
+            loader.rawFiles[idx].data.inflatedSize = fileSize + 1;
+            loader.rawFiles[idx].data.size = 0x1B;
+            loader.rawFiles[idx].entry.asset.type = ASSET_TYPE_RAWFILE;
+            loader.rawFiles[idx].entry.asset.header.rawFile = &loader.rawFiles[idx].asset;
 
             XAssetEntryPoolEntry *entry = 0;
             XAssetHeader header;
-
-            DB_FindXAssetHeader(&header, ASSET_TYPE_RAWFILE, loader.rawFiles[assetIndex].asset.name, true, -1);
-            
-            if (header.rawFile != &loader.rawFiles[assetIndex].asset) {
-                entry = DB_LinkXAssetEntry(&loader.rawFiles[assetIndex].entry, 0);
+            DB_FindXAssetHeader(&header, ASSET_TYPE_RAWFILE, loader.rawFiles[idx].asset.name, true, -1);
+            if (header.rawFile != &loader.rawFiles[idx].asset) {
+                entry = DB_LinkXAssetEntry(&loader.rawFiles[idx].entry, 0);
                 if (!entry) {
-                    printf(T5ERROR "Linking asset '%s' failed.", loader.rawFiles[assetIndex].asset.name);
+                    printf(T5ERROR "Linking asset '%s' failed.\n", loader.rawFiles[idx].asset.name);
+                    // In case of an error, skip this entry without increasing assetIndex.
                     continue;
                 }
                 if (strcmp(ent.d_name, "main.gsc") == 0)
-                    mainLinked = true;
+                    *mainLinked = true;
 
-                assetIndex++;
+                (*assetIndex)++;
             }
         }
+        // Reset read size for the next iteration of the loop
+        read = sizeof(CellFsDirent);
     }
-
     cellFsClosedir(fd);
+}
+
+bool create_assets_from_scripts(char *path) {
+    int assetIndex = 0;
+    bool mainLinked = false;
+
+    create_assets_from_scripts_recursive(path, "", &assetIndex, &mainLinked);
+
     return mainLinked && (assetIndex > 0);
 }
 
