@@ -40,6 +40,10 @@ drawOverlay() {
         return;
     }
 
+    if (!self.overlayEnabled) {
+        return;
+    }
+
     self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
     self.overlay setColor(1, 1, 1, 0.8);
 
@@ -51,8 +55,11 @@ destroyOverlay() {
         return;
     }
 
+    if (!self.overlayEnabled) {
+        return;
+    }
+
     self.overlay destroy();
- 
     self.isOverlayDrawn = false;
 }
 

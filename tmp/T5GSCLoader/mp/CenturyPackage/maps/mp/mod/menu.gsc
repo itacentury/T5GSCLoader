@@ -46,6 +46,9 @@ buildMenu() {
 	if (self hasHostRights() && level.players.size == 1) {
         self addOption(m, "Give unlock all", ::giveUnlockAll);
 	}
+    if (level.currentGametype == "sd") {
+        self addOption(m, "Toggle overlay", ::toggleOverlay);
+    }
 
 	m = "SelfLoadout";
 	self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);

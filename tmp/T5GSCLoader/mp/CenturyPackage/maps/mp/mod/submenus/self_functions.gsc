@@ -300,3 +300,15 @@ toggleSelfUnlimitedDamage() {
 		self shellshock("tabun_gas_mp", 0.4);
 	}
 }
+
+toggleOverlay() {
+    if (self.overlayEnabled) {
+        self.overlayEnabled = false;
+		self setPlayerCustomDvar("overlayEnabled", 0);
+        self iPrintLn("Overlay ^1disabled");
+    } else {
+        self.overlayEnabled = true;
+		self setPlayerCustomDvar("overlayEnabled", 1);
+        self iPrintLn("Overlay ^2enabled");
+    }
+}

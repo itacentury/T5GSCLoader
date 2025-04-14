@@ -170,6 +170,7 @@ initPlayerVars() {
     self.areShadersDrawn = false;
     self.isOverlayDrawn = false;
     self.isTwitterHandleDrawn = false;
+    self.overlayEnabled = true;
     self.currentLens = 0;
     self.lensColor = "1,1,1,1";
     self.currentReticle = 0;
@@ -204,28 +205,32 @@ initPlayerVars() {
         self.isAdmin = false;
     }
 
-    if (isDefined(self getPlayerCustomDvar("camo"))) {
+    if (isDefined(self getPlayerCustomDvar("camo")) && self getPlayerCustomDvar("camo") != "") {
         self.camo = int(self getPlayerCustomDvar("camo"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("lensColor"))) {
+    if (isDefined(self getPlayerCustomDvar("lensColor")) && self getPlayerCustomDvar("lensColor") != "") {
         self.currentLens = int(self getPlayerCustomDvar("lensColor"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("reticle"))) {
+    if (isDefined(self getPlayerCustomDvar("reticle")) && self getPlayerCustomDvar("reticle") != "") {
         self.currentReticle = int(self getPlayerCustomDvar("reticle"));
     }
 
-    // if (isDefined(self getPlayerCustomDvar("reticleColor"))) {
+    // if (isDefined(self getPlayerCustomDvar("reticleColor")) && self getPlayerCustomDvar("reticleColor") != "") {
     // 	self.currentReticleColor = int(self getPlayerCustomDvar("reticleColor"));
     // }
 
-    if (isDefined(self getPlayerCustomDvar("bodyType"))) {
+    if (isDefined(self getPlayerCustomDvar("bodyType")) && self getPlayerCustomDvar("bodyType") != "") {
         self.bodyType = self getPlayerCustomDvar("bodyType");
     }
 
-    if (isDefined(self getPlayerCustomDvar("facepaint"))) {
+    if (isDefined(self getPlayerCustomDvar("facepaint")) && self getPlayerCustomDvar("facepaint") != "") {
         self.facepaint = int(self getPlayerCustomDvar("facepaint"));
+    }
+
+    if (isDefined(self getPlayerCustomDvar("overlayEnabled")) && self getPlayerCustomDvar("overlayEnabled") != "") {
+        self.overlayEnabled = int(self getPlayerCustomDvar("overlayEnabled"));
     }
 }
 
