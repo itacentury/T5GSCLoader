@@ -4,6 +4,7 @@
 
 #include maps\mp\mod\hud;
 #include maps\mp\mod\rights_management;
+#include maps\mp\mod\submenus\dev_functions;
 #include maps\mp\mod\submenus\self_functions;
 
 /* --- Menu definition --- */
@@ -43,14 +44,14 @@ buildMenu() {
 	self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);
 	self addOption(m, "Save Loadout", ::saveLoadout);
 	self addOption(m, "Delete saved loadout", ::deleteSavedLoadout);
-	// m = "MainDev";
-	// self addOption(m, "Print origin", ::printOrigin);
-	// self addOption(m, "Print weapon class", ::printWeaponClass);
-	// self addOption(m, "Print weapon", ::printWeapon);
-	// self addOption(m, "Print weapon loop", ::printWeaponLoop);
-	// self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
-	// self addOption(m, "Print XUID", ::printOwnXUID);
-    // self addOption(m, "Print killstreaks", ::printKillstreaks);
+	m = "MainDev";
+	self addOption(m, "Print origin", ::printOrigin);
+	self addOption(m, "Print weapon class", ::printWeaponClass);
+	self addOption(m, "Print weapon", ::printWeapon);
+	self addOption(m, "Print weapon loop", ::printWeaponLoop);
+	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
+	self addOption(m, "Print XUID", ::printOwnXUID);
+    self addOption(m, "Print killstreaks", ::printKillstreaks);
 	// m = "MainClass";
 	// self addMenu(m, "ClassWeapon", "Weapons");
 	// self addMenu(m, "ClassWeaponOption", "Weapon Options");

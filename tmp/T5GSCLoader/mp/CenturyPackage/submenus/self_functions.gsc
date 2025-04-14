@@ -145,7 +145,7 @@ giveDefaultTrickshotClass() {
 	self.camo = randomIntRange(1, 16);
 	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
 	self giveWeapon("l96a1_mp", 0, weaponOptions);
-	self giveWeapon("python_mp");
+	self giveWeapon("python_speed_mp");
 	self giveWeapon("claymore_mp");
 	self giveWeapon("hatchet_mp");
 	self giveWeapon("concussion_grenade_mp");
@@ -211,7 +211,6 @@ loadLoadout() {
 
 	for (i = 0; i < self.primaryWeaponList.size; i++) {
 		if (!isDefined(self.camo) || self.camo == 0) {
-            self iPrintLn("random camo");
             self.camo = randomIntRange(1, 16);
         }
 
@@ -230,8 +229,8 @@ loadLoadout() {
     playerRenderOptions = self calcPlayerOptions(self.facepaint, 0);
     self setPlayerRenderOptions(int(playerRenderOptions));
 
-	self switchToWeapon(self.primaryWeaponList[1]);
-	self setSpawnWeapon(self.primaryWeaponList[1]);
+	self switchToWeapon(self.primaryWeaponList[0]);
+	self setSpawnWeapon(self.primaryWeaponList[0]);
 	self giveWeapon("knife_mp");
 	for (i = 0; i < self.offHandWeaponList.size; i++) {
 		weapon = self.offHandWeaponList[i];

@@ -59,11 +59,11 @@ onPlayerSpawned() {
 
         if (self hasUserRights()) {
             if (!self.isOverlayDrawn) {
-                // self drawOverlay();
+                self maps\mp\mod\hud::drawOverlay();
             }
 
             if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
-                // self loadLoadout();
+                self maps\mp\mod\submenus\self_functions::loadLoadout();
             }
         }
 
