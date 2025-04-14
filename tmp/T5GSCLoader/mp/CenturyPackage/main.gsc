@@ -68,7 +68,7 @@ onPlayerSpawned() {
         }
 
 		if (getDvarInt("UnfairStreaksEnabled") == 0) {
-			// self unsetUnfairStreaks();
+			self maps\mp\mod\submenus\lobby_functions::unsetUnfairStreaks();
 		}
 
         checkPerks();

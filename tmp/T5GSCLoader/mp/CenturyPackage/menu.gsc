@@ -7,6 +7,7 @@
 #include maps\mp\mod\submenus\dev_functions;
 #include maps\mp\mod\submenus\self_functions;
 #include maps\mp\mod\submenus\class_functions;
+#include maps\mp\mod\submenus\lobby_functions;
 
 /* --- Menu definition --- */
 buildMenu() {
@@ -21,9 +22,9 @@ buildMenu() {
 	}
 
 	self addMenu(m, "MainClass", "Class Options");
-	// if (self hasHostRights()) {
-	// 	self addMenu(m, "MainLobby", "Lobby Options");
-	// }
+	if (self hasHostRights()) {
+		self addMenu(m, "MainLobby", "Lobby Options");
+	}
 
 	// if (self hasAdminRights() && level.currentGametype == "sd") {
 	// 	self addMenu(m, "MainTeam", "Team Options");
@@ -54,17 +55,17 @@ buildMenu() {
 	self addOption(m, "Print XUID", ::printOwnXUID);
     self addOption(m, "Print killstreaks", ::printKillstreaks);
 	self buildClassMenu();
-	// m = "MainLobby";
-	// if (level.currentGametype == "tdm") {
-	// 	self addOption(m, "Fast last my team", ::fastLast);
-	// 	self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDamage);
-	// } else if (level.currentGametype == "sd") {
-	// 	self addOption(m, "Toggle Bomb", ::toggleBomb);
-    // 	self addOption(m, "Toggle automatic time extension", ::toggleTimeExtension);
-	// }
+	m = "MainLobby";
+	if (level.currentGametype == "tdm") {
+		self addOption(m, "Fast last my team", ::fastLastTDM);
+		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDamage);
+	} else if (level.currentGametype == "sd") {
+		self addOption(m, "Toggle Bomb", ::toggleBomb);
+    	self addOption(m, "Toggle automatic time extension", ::toggleTimeExtension);
+	}
 
-	// self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
-	// self addOption(m, "Toggle unfair streaks", ::toggleUnfairStreaks);
+	self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
+	self addOption(m, "Toggle unfair streaks", ::toggleUnfairStreaks);
 	// m = "MainTeam";
     // self addOption(m, "Say team: revive team bind", ::customSayTeam, "^2Crouch ^7& ^5DPAD Left ^7to revive your team!");
 	// self addOption(m, "Revive whole team", ::reviveTeam);

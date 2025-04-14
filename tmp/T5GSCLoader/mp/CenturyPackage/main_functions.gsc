@@ -76,7 +76,7 @@ monitorClassChange() {
         self setOutfit();
 
 		if (getDvarInt("UnfairStreaksEnabled") == 0) {
-			// self unsetUnfairStreaks();
+			self maps\mp\mod\submenus\lobby_functions::unsetUnfairStreaks();
 		}
 
 		if (self getCurrentWeapon() == "china_lake_mp") {
