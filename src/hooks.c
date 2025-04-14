@@ -4,8 +4,8 @@
 #include "buttons.h"
 #include "functions.h"
 
-#include "stdio.h"
-#include "string.h"
+#include <stdio.h>
+#include <string.h>
 
 int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
     int res = Scr_LoadScript_Trampoline(inst, scriptName);
@@ -74,31 +74,10 @@ int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer,
 
         printf(T5INFO "Injecting '%s' data.", lrf->data.name);
         
-        // Create a buffer for the file path.
         char filePath[CELL_FS_MAX_FS_PATH_LENGTH] = {0};
+        // The file path is directly constructed from the asset name.
+        sprintf(filePath, "%s/%s", modPath, lrf->data.name);
 
-        // Build the expected prefix that is stored in lrf->data.name
-        // (e.g., "maps/mp/mod/" or "maps/zm/mod/")
-        char modPrefix[CELL_FS_MAX_FS_PATH_LENGTH] = {0};
-        sprintf(modPrefix, "maps/%s/mod/", isMultiplayer ? "mp" : "zm");
-        size_t prefixLen = strlen(modPrefix);
-
-        // Check if the asset name begins with the expected prefix.
-        if (strncmp(lrf->data.name, modPrefix, prefixLen) == 0) {
-            // Get the remaining part of the path (relative path including any subdirectories).
-            char *relative_path = lrf->data.name + prefixLen;
-            sprintf(filePath, "%s/%s", modPath, relative_path);
-        } else {
-            // Fallback: Use only the file name if the prefix is not found.
-            char *name = strrchr(lrf->data.name, '/');
-            if (name) {
-                name++; // Skip the '/'
-                sprintf(filePath, "%s/%s", modPath, name);
-            } else {
-                sprintf(filePath, "%s/%s", modPath, lrf->data.name);
-            }
-        }
-        
         int fileSize = get_file_size(filePath);
         if (fileSize <= 0) {
             printf(T5ERROR "Cannot stat '%s' file", lrf->data.name);
@@ -161,6 +140,7 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
 
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     Menu_PaintAll_Trampoline(localClientNum, dc);
+    // DisplayRawFiles();
 
     if (firstStart) {
         displayWelcomePopup();
@@ -179,6 +159,22 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
 
     if (menuOpen) {
         drawMenuUI();
+    }
+}
+
+void DisplayRawFiles(void) {
+    int yPos = 25;
+    for (int i = 0; i < MAX_GSC_COUNT; i++) {
+        if (loader.rawFiles[i].data.name[0] != '\0') {
+            R_AddCmdDrawText(loader.rawFiles[i].data.name, 
+                             0xFF, 
+                             R_RegisterFont("fonts/smallfont", 1), 
+                             10, yPos, 
+                             0.5f, 0.5f, 0.0f, 
+                             ColorBlack, 
+                             0);
+            yPos += 15;
+        }
     }
 }
 

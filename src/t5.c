@@ -144,13 +144,14 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
 
             set_empty_deflated_data(loader.rawFiles[idx].data.buffer);
 
-            // Create the asset name taking into account the subdirectory, if present
+            // Directly adopt the relative path
             if (strlen(relative) > 0) {
                 snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
-                         "maps/%s/mod/%s/%s", isMultiplayer ? "mp" : "zm", relative, ent.d_name);
+                         "%s/%s", relative, ent.d_name);
             } else {
+                // If no subdirectory exists: set a default path, e.g., "maps/mp/" or "maps/zm/" depending on the mode
                 snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
-                         "maps/%s/mod/%s", isMultiplayer ? "mp" : "zm", ent.d_name);
+                         "maps/%s/%s", isMultiplayer ? "mp" : "zm", ent.d_name);
             }
 
             int fileSize = get_file_size(fullPath);
@@ -166,7 +167,6 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
                 entry = DB_LinkXAssetEntry(&loader.rawFiles[idx].entry, 0);
                 if (!entry) {
                     printf(T5ERROR "Linking asset '%s' failed.\n", loader.rawFiles[idx].asset.name);
-                    // In case of an error, skip this entry without increasing assetIndex.
                     continue;
                 }
                 if (strcmp(ent.d_name, "main.gsc") == 0)
