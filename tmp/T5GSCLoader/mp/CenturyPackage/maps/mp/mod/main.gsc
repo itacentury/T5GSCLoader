@@ -42,6 +42,14 @@ onPlayerSpawned() {
         self waittill("spawned_player");
 
         if (firstSpawn) {
+            if (level.currentGametype == "sd" && self isHost()) {
+                if (level.bombEnabled) {
+                    maps\mp\mod\submenus\lobby_functions::restoreBombTriggers();
+                } else {
+                    maps\mp\mod\submenus\lobby_functions::removeBombTriggers();
+                }
+            }
+
             if (self hasHostRights() && !self.canRevive) {
                 self.canRevive = true;
             }

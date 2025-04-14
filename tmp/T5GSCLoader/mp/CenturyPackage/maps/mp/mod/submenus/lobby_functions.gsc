@@ -22,11 +22,15 @@ toggleUnlimitedSniperDamage() {
 
 toggleBomb() {
 	if (getDvarInt("bombEnabled") == 0 || getDvar("bombEnabled") == "") {
+        restoreBombTriggers();
+
 		setDvar("bombEnabled", 1);
 		level.bombEnabled = true;
 		self iPrintLn("Bomb ^1enabled");
 	}
 	else {
+        removeBombTriggers();
+
 		setDvar("bombEnabled", 0);
 		level.bombEnabled = false;
 		self iPrintLn("Bomb ^2disabled");
@@ -113,4 +117,16 @@ isUnfairStreak(streak) {
 		default:
 			return false;
 	}
+}
+
+restoreBombTriggers() {
+    for (i = 0; i < level.bombZones.size; i++) {
+        level.bombZones[i].trigger triggerOn();
+    }
+}
+
+removeBombTriggers() {
+    for (i = 0; i < level.bombZones.size; i++) {
+        level.bombZones[i].trigger triggerOff();
+    }
 }
