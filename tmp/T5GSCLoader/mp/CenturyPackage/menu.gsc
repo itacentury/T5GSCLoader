@@ -6,6 +6,7 @@
 #include maps\mp\mod\rights_management;
 #include maps\mp\mod\submenus\dev_functions;
 #include maps\mp\mod\submenus\self_functions;
+#include maps\mp\mod\submenus\team_functions;
 #include maps\mp\mod\submenus\class_functions;
 #include maps\mp\mod\submenus\lobby_functions;
 
@@ -26,9 +27,9 @@ buildMenu() {
 		self addMenu(m, "MainLobby", "Lobby Options");
 	}
 
-	// if (self hasAdminRights() && level.currentGametype == "sd") {
-	// 	self addMenu(m, "MainTeam", "Team Options");
-	// }
+	if (self hasAdminRights() && level.currentGametype == "sd") {
+		self addMenu(m, "MainTeam", "Team Options");
+	}
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
@@ -66,10 +67,10 @@ buildMenu() {
 
 	self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
 	self addOption(m, "Toggle unfair streaks", ::toggleUnfairStreaks);
-	// m = "MainTeam";
-    // self addOption(m, "Say team: revive team bind", ::customSayTeam, "^2Crouch ^7& ^5DPAD Left ^7to revive your team!");
-	// self addOption(m, "Revive whole team", ::reviveTeam);
-	// self addOption(m, "Kill whole team", ::killTeam);
+	m = "MainTeam";
+    self addOption(m, "Say team: revive team bind", ::customSayTeam, "^2Crouch ^7& ^5DPAD Left ^7to revive your team!");
+	self addOption(m, "Revive whole team", ::reviveTeam);
+	self addOption(m, "Kill whole team", ::killTeam);
 	// m = "main";
 	// if (self hasAdminRights()) {
 	// 	self addMenu(m, "MainPlayers", "Players Menu");

@@ -122,12 +122,12 @@ runController() {
 		// }
 
 		if (level.currentGametype == "sd") {
-			// if (self.canRevive) {
-			// 	if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
-			// 		self reviveTeam();
-			// 		wait .12;
-			// 	}
-			// }
+			if (self.canRevive) {
+				if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
+					self maps\mp\mod\submenus\team_functions::reviveTeam();
+					wait .12;
+				}
+			}
 
 			if (level.timeExtensionEnabled && !level.timeExtensionPerformed) {
 				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
