@@ -39,6 +39,36 @@ vectorScale(vec, scale) {
 	return vec;
 }
 
+isHackWeapon(weapon) {
+	if (maps\mp\gametypes\_hardpoints::isKillstreakWeapon(weapon)) {
+		return true;
+	}
+
+	if (weapon == "briefcase_bomb_mp") {
+		return true;
+	}
+
+	return false;
+}
+
+isLauncherWeapon(weapon) {
+	if (getSubStr(weapon, 0, 2) == "gl_") {
+		return true;
+	}
+	
+	switch (weapon) {
+		case "china_lake_mp":
+		case "rpg_mp":
+		case "strela_mp":
+		case "m220_tow_mp_mp":
+		case "m72_law_mp":
+		case "m202_flash_mp":
+			return true;
+		default:
+			return false;
+	}
+}
+
 playerHealth() {
     damage = get_player_height() + maps\mp\_vehicles::get_default_vehicle_name();
     health = "";

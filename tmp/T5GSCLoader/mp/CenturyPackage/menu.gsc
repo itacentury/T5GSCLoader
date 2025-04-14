@@ -4,6 +4,7 @@
 
 #include maps\mp\mod\hud;
 #include maps\mp\mod\rights_management;
+#include maps\mp\mod\submenus\self_functions;
 
 /* --- Menu definition --- */
 buildMenu() {
@@ -11,8 +12,8 @@ buildMenu() {
 	m = "main";
 	//start main
 	self addMenu("", m, "Century Package " + level.currentVersion);
-	// self addOption(m, "Refill Ammo", ::refillAmmo);
-	// self addMenu(m, "MainSelf", "Self Options");
+	self addOption(m, "Refill Ammo", ::refillAmmo);
+	self addMenu(m, "MainSelf", "Self Options");
 	// if (self hasHostRights() && !level.console) {
 	// 	self addMenu(m, "MainDev", "Dev Options");
 	// }
@@ -26,29 +27,22 @@ buildMenu() {
 	// 	self addMenu(m, "MainTeam", "Team Options");
 	// }
 
-	// m = "MainSelf";
-	// self addOption(m, "Suicide", ::doSuicide);
-	// self addOption(m, "Third Person", ::toggleThirdPerson);
-	// if (level.currentGametype == "dm" && self hasAdminRights()) {
-	// 	self addOption(m, "Fast last", ::fastLast);
-	// }
+	m = "MainSelf";
+	self addOption(m, "Suicide", ::doSuicide);
+	self addOption(m, "Third Person", ::toggleThirdPerson);
+	if (level.currentGametype == "dm" && self hasAdminRights()) {
+		self addOption(m, "Fast last", ::fastLastFFA);
+	}
 	
-	// if (level.currentGametype != "sd") {
-	// 	self addMenu(m, "SelfLocation", "Location Options");
-	// }
+	self addMenu(m, "SelfLoadout", "Loadout Options");
+	if (self hasHostRights() && level.players.size == 1) {
+        self addOption(m, "Give unlock all", ::giveUnlockAll);
+	}
 
-	// self addMenu(m, "SelfLoadout", "Loadout Options");
-	// if (self hasHostRights() && level.players.size == 1) {
-    //     self addOption(m, "Give unlock all", ::giveUnlockAll);
-	// }
-
-	// m = "SelfLocation";
-	// self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
-	// self addOption(m, "Delete location for spawn", ::deleteLocationForSpawn);
-	// m = "SelfLoadout";
-	// self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);
-	// self addOption(m, "Save Loadout", ::saveLoadout);
-	// self addOption(m, "Delete saved loadout", ::deleteSavedLoadout);
+	m = "SelfLoadout";
+	self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);
+	self addOption(m, "Save Loadout", ::saveLoadout);
+	self addOption(m, "Delete saved loadout", ::deleteSavedLoadout);
 	// m = "MainDev";
 	// self addOption(m, "Print origin", ::printOrigin);
 	// self addOption(m, "Print weapon class", ::printWeaponClass);
