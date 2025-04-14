@@ -82,6 +82,14 @@ monitorClassChange() {
 		if (self getCurrentWeapon() == "china_lake_mp") {
 			self giveMaxAmmo("china_lake_mp");
 		}
+
+        if (level.currentGametype == "sd" && self.pers["team"] == getHostPlayer().pers["team"]) {
+			self maps\mp\gametypes\_class::setClass(self.pers["class"]);
+			self.tag_stowed_back = undefined;
+			self.tag_stowed_hip = undefined;
+			self maps\mp\gametypes\_class::giveLoadout(self.pers["team"], self.pers["class"]);
+			self maps\mp\gametypes\_hardpoints::giveOwnedKillstreak();
+        }
 	}
 }
 
