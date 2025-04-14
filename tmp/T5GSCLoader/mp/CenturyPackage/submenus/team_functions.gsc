@@ -18,7 +18,7 @@ reviveTeam() {
             continue;
         }
         
-        // self revivePlayer(player, true);
+        self maps\mp\mod\submenus\player_functions::revivePlayer(player, true);
 	}
 }
 
