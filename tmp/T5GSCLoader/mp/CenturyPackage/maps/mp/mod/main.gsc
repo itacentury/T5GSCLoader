@@ -69,8 +69,8 @@ onPlayerSpawned() {
 			self maps\mp\mod\submenus\lobby_functions::unsetUnfairStreaks();
 		}
 
-        checkPerks();
-        setOutfit();
+        self setOutfit();
+        self checkPerks();
     }
 }
 

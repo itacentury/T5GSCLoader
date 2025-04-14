@@ -72,8 +72,8 @@ monitorClassChange() {
 	for (;;) {
 		self waittill("changed_class");
 
-		self checkPerks();
         self setOutfit();
+		self checkPerks();
 
 		if (getDvarInt("UnfairStreaksEnabled") == 0) {
 			self maps\mp\mod\submenus\lobby_functions::unsetUnfairStreaks();
@@ -96,44 +96,12 @@ monitorClassChange() {
 checkPerks() {
     self checkGivenPerks();
     self giveEssentialPerks();
+    self removePerks();
 }
 
 setOutfit() {
     self setBodyType();
     self setFacepaint();
-}
-
-giveEssentialPerks() {
-	if (level.currentGametype == "sd") {
-		//Lightweight
-		self setPerk("specialty_movefaster");
-		self setPerk("specialty_fallheight");
-		//Steady Aim
-		self setPerk("specialty_bulletaccuracy");
-		self setPerk("specialty_fastmeleerecovery");
-	}
-
-	self setPerk("specialty_sprintrecovery");
-	//Hardened
-	self setPerk("specialty_bulletpenetration");
-	self setPerk("specialty_armorpiercing");
-	self setPerk("specialty_bulletflinch");
-	setDvar("perk_bulletPenetrationMultiplier", 5);
-	//Remove Second Chance Pro
-	self unsetPerk("specialty_finalstand");
-	//Marathon
-	if (self.pers["team"] == getHostPlayer().pers["team"]) {
-		self setPerk("specialty_longersprint");
-	}
-
-	if (self.pers["class"] == "CLASS_ASSAULT") {
-		self unsetPerk("specialty_pistoldeath");
-		self unsetPerk("specialty_scavenger");
-		self.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
-		self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
-		self.cac_hat_type = "none";
-		self maps\mp\gametypes\_armor::set_player_model();
-	}
 }
 
 checkGivenPerks() {
@@ -174,6 +142,50 @@ checkGivenPerks() {
 		self setPerk("specialty_stunprotection");
 		self setPerk("specialty_shades");
 	}
+}
+
+giveEssentialPerks() {
+	//Marathon
+    self setPerk("specialty_longersprint");
+	if (self.pers["class"] == "CLASS_ASSAULT") {
+		self unsetPerk("specialty_pistoldeath");
+		self unsetPerk("specialty_scavenger");
+		self.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
+		self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
+		self.cac_hat_type = "none";
+		self maps\mp\gametypes\_armor::set_player_model();
+	}
+
+	if (level.currentGametype != "sd") {
+        return;
+    }
+
+    if (self.pers["team"] != getHostPlayer().pers["team"]) {
+        return;
+    }
+
+    //Lightweight pro
+    self setPerk("specialty_movefaster");
+    self setPerk("specialty_fallheight");
+    //Steady aim pro
+    self setPerk("specialty_bulletaccuracy");
+    self setPerk("specialty_fastmeleerecovery");
+	self setPerk("specialty_sprintrecovery");
+	//Hardened pro
+	self setPerk("specialty_bulletpenetration");
+	self setPerk("specialty_armorpiercing");
+	self setPerk("specialty_bulletflinch");
+	setDvar("perk_bulletPenetrationMultiplier", 5);
+}
+
+removePerks() {
+	//Remove second chance pro
+	self unsetPerk("specialty_finalstand");
+
+    if (level.currentGametype == "sd") {
+        // Remove second chance completely in search & destroy
+        self unsetPerk("specialty_pistoldeath");
+    }
 }
 
 setBodyType() {
