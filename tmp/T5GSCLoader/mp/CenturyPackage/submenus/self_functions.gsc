@@ -290,3 +290,13 @@ loadLoadout() {
 		}
 	}
 }
+
+toggleSelfUnlimitedDamage() {
+	if (!self.hasUnlimitedDamage) {
+		self.hasUnlimitedDamage = true;
+		self shellshock("flashbang", 0.25);
+	} else {
+		self.hasUnlimitedDamage = false;
+		self shellshock("tabun_gas_mp", 0.4);
+	}
+}

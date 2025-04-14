@@ -41,8 +41,6 @@ onPlayerSpawned() {
     for(;;) {
         self waittill("spawned_player");
 
-        self iPrintLn("Hello from ^1injected ^7GSC");
-
         if (firstSpawn) {
             if (self hasHostRights() && !self.canRevive) {
                 self.canRevive = true;
@@ -115,11 +113,11 @@ runController() {
 			}
 		}
 
-		// if (self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
-		// 	if (self actionSlotThreeButtonPressed()) {
-		// 		self toggleSelfUnlimitedDamage();
-		// 	}
-		// }
+		if (self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
+			if (self actionSlotThreeButtonPressed()) {
+				self maps\mp\mod\submenus\self_functions::toggleSelfUnlimitedDamage();
+			}
+		}
 
 		if (level.currentGametype == "sd") {
 			if (self.canRevive) {
