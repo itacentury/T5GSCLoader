@@ -19,10 +19,7 @@ extern int partyMinPlayers;
 extern int partyMaxPlayers;
 
 extern bool GSC_Keyboardbool;
-extern int HostNum;
 extern scrVmPub_t *scrVmPub;
-
-extern char GSC_Keyboardbuffer[MAX_STRING_CHARS];
 
 extern gentity_s *g_entities;
 extern SessionData_s *g_serverSession;

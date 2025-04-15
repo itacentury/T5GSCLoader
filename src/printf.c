@@ -101,10 +101,6 @@
 #include <limits.h>
 #include <string.h>
 
-#define LOWORD(a) ((short)(a))
-#define HIWORD(a) ((short)(((int)(a) >> 16) & 0xFFFF))
-
-#define MAX_PRINTF_BUFFER 256
 #define HAVE_UNSIGNED_LONG_LONG_INT
 #define HAVE_STDINT_H
 #define HAVE_INTTYPES_H

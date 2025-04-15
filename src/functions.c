@@ -14,12 +14,6 @@ void(*Scr_AddString)(const char* value, scriptInstance_t inst) =
 opd_s SL_GetString_t = { 0x5B99C8, T5_TOC };
 int(*SL_GetString)(const char* str, unsigned int user, scriptInstance_t inst) = 
     (int(*)(const char*, unsigned int, scriptInstance_t))&SL_GetString_t;
-opd_s ExecuteKeyboardCallback_t = { 0x56A270, (int32_t)T5_TOC };
-void(*ExecuteKeyboardCallback)(int localClientNum) = 
-    (void(*)(int))&ExecuteKeyboardCallback_t;
-opd_s UI_DrawKeyboard_t = { 0x56A118, T5_TOC };
-void(*UI_DrawKeyboard)(int localClientNum, const wchar_t *title, const wchar_t *presetMessage, size_t size, UI_KeyboardCallback function) = 
-    (void(*)(int, const wchar_t *, const wchar_t *, size_t, UI_KeyboardCallback))&UI_DrawKeyboard_t;
 opd_s Dvar_SetFromStringByName_t = { 0x4CF160, (int32_t)T5_TOC };
 void (*Dvar_SetFromStringByName)(const char *dvarName, const char *value) =
     (void (*)(const char *, const char *))&Dvar_SetFromStringByName_t;
@@ -51,6 +45,10 @@ opd_s Cmd_MenuResponse_f_t = { 0x2D5AE8, T5_TOC };
 void(*Cmd_MenuResponse_f)(gentity_s *pEnt) = (void(*)(gentity_s *))&Cmd_MenuResponse_f_t;
 opd_s CG_BoldGameMessage_t = { 0x113528, T5_TOC };
 void(*CG_BoldGameMessage)(int localClientNum, const char *msg, int duration) = (void(*)(int, const char *, int))&CG_BoldGameMessage_t;
+opd_s Scr_GetSelf_t = { 0x5BA4F0, T5_TOC };
+int(*Scr_GetSelf)(scriptInstance_t inst,int value) = (int(*)(scriptInstance_t,int))&Scr_GetSelf_t;
+opd_s SL_ConvertToString_t = { 0x5B6D10, T5_TOC };
+const char*(*SL_ConvertToString)(int stringValue, scriptInstance_t inst) = (const char*(*)(int, scriptInstance_t))&SL_ConvertToString_t;
 
 void Scr_ClearOutParams() {
     *(int*)(&scrVmPub->outparamcount) = 0;
@@ -91,16 +89,6 @@ void drawOkayPopup(const char *title, const char *message) {
 
 void displayWelcomePopup(void) {
     drawOkayPopup(va("Welcome %s", GetSelfName()), "to Century Package: Pregame Version");
-}
-
-void DrawKeyboard(char *title, const char *presetMessage, size_t size, uint32_t panelMode, UI_KeyboardCallback function) {
-	*(bool*)0x1B29434 = true;
-	WriteProcessMemory(0x56A122, HIWORD(panelMode), sizeof(uint16_t));
-	wchar_t titleBuffer[MAX_STRING_CHARS], presetMessageBuffer[MAX_STRING_CHARS];
-	StringToWideCharacter(titleBuffer, title, MAX_STRING_CHARS);
-	StringToWideCharacter(presetMessageBuffer, presetMessage, MAX_STRING_CHARS);
-	UI_DrawKeyboard(0, titleBuffer, presetMessageBuffer, size, function);
-	WriteProcessMemory(0x56A122, HIWORD(CELL_OSKDIALOG_PANELMODE_ALPHABET), sizeof(uint16_t));
 }
 
 void iPrintlnBold_GameMessage(const char *messageFormat, ...) {

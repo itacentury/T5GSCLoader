@@ -132,8 +132,6 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
         if (strcmp(*pName, "setmemory") == 0) {
             printf(T5INFO "Function 'setmemory' found.");
             return (popd32)&scrfct_setmemory;
-        } else if (strcmp(*pName, "ps3_keyboard") == 0) {
-            return (popd32)&scrfct_ps3_keyboard;
         }
 
         return 0;

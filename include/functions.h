@@ -22,10 +22,6 @@ extern opd_s Scr_AddString_t;
 extern void(*Scr_AddString)(const char* value, scriptInstance_t inst);
 extern opd_s SL_GetString_t;
 extern int(*SL_GetString)(const char* str, unsigned int user, scriptInstance_t inst);
-extern opd_s ExecuteKeyboardCallback_t;
-extern void(*ExecuteKeyboardCallback)(int localClientNum);
-extern opd_s UI_DrawKeyboard_t;
-extern void(*UI_DrawKeyboard)(int localClientNum, const wchar_t *title, const wchar_t *presetMessage, size_t size, UI_KeyboardCallback function);
 extern opd_s Dvar_SetFromStringByName_t;
 extern void (*Dvar_SetFromStringByName)(const char *dvarName, const char *value);
 extern opd_s Key_SetCatcher_t;
@@ -50,6 +46,10 @@ extern opd_s Cmd_MenuResponse_f_t;
 extern void(*Cmd_MenuResponse_f)(gentity_s *pEnt);
 extern opd_s CG_BoldGameMessage_t;
 extern void(*CG_BoldGameMessage)(int localClientNum, const char *msg, int duration);
+extern opd_s Scr_GetSelf_t;
+extern int(*Scr_GetSelf)(scriptInstance_t inst,int value);
+extern opd_s SL_ConvertToString_t;
+extern const char*(*SL_ConvertToString)(int stringValue, scriptInstance_t inst);
 
 void Scr_ClearOutParams();
 void cBuf_addTextf(const char* format, ...);
@@ -59,7 +59,6 @@ bool IsHost(int clientNum);
 bool CompareString(const char *str1, const char *str2);
 void drawOkayPopup(const char *title, const char *message);
 void displayWelcomePopup(void);
-void DrawKeyboard(char *title, const char *presetMessage, size_t size, uint32_t panelMode, UI_KeyboardCallback function);
 void iPrintlnBold_GameMessage(const char *messageFormat, ...);
 
 #endif /* FUNCTIONS_H */
