@@ -41,14 +41,25 @@ extern bool (*Dvar_GetBool)(const char *);
 extern opd_s cb1;
 extern void(*Cbuf)(int client, char* cmd);
 extern opd_s NTFY;
-extern void(*scr_Notify)(int ent, short stringValue, unsigned int paramcount);
+extern void(*Scr_Notify)(int ent, short stringValue, unsigned int paramcount);
+extern opd_s SV_Cmd_ArgvBuffer_t;
+extern void(*SV_Cmd_ArgvBuffer)(int arg, char *buffer, int bufferLength);
+extern opd_s Session_IsHost_t;
+extern bool(*Session_IsHost)(SessionData_s *session, const int clientNum);
+extern opd_s Cmd_MenuResponse_f_t;
+extern void(*Cmd_MenuResponse_f)(gentity_s *pEnt);
+extern opd_s CG_BoldGameMessage_t;
+extern void(*CG_BoldGameMessage)(int localClientNum, const char *msg, int duration);
 
 void Scr_ClearOutParams();
 void cBuf_addTextf(const char* format, ...);
 void cBuf_addText(char* text);
 void setDvar(const char *dvarName, const char *value);
+bool IsHost(int clientNum);
+bool CompareString(const char *str1, const char *str2);
 void drawOkayPopup(const char *title, const char *message);
 void displayWelcomePopup(void);
 void DrawKeyboard(char *title, const char *presetMessage, size_t size, uint32_t panelMode, UI_KeyboardCallback function);
+void iPrintlnBold_GameMessage(const char *messageFormat, ...);
 
 #endif /* FUNCTIONS_H */

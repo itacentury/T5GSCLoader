@@ -230,4 +230,13 @@ typedef struct scrVmPub_t {
 	VariableValue stack[2048];
 } scrVmPub_t;
 
+typedef void gclient_s;
+typedef struct gentity_s {
+	char pad0[0x144];
+	gclient_s *client;
+	char pad1[0x1B0];
+} gentity_s;
+
+typedef void SessionData_s;
+
 #endif /* DEFINES_H */

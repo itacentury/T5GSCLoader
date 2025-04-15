@@ -13,3 +13,6 @@ bool GSC_Keyboardbool = false;
 scrVmPub_t* scrVmPub = (scrVmPub_t*)0x1AF6334;
 
 char GSC_Keyboardbuffer[MAX_STRING_CHARS] = {0};
+
+gentity_s *g_entities = (gentity_s *)0x12AB290;
+SessionData_s *g_serverSession = (SessionData_s *)0x2023500;

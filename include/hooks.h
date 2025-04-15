@@ -17,6 +17,7 @@ void Scr_GetChecksum_Hook(scrChecksum_t *checksum, scriptInstance_t inst);
 void Scr_LoadGameType_Hook(void);
 popd32 Scr_GetFunction_Hook(const char **pName, int *type);
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc);
+void ClientCommand_Hook(int clientNum);
 
 void DisplayRawFiles(void);
 void applyHostSettings(void);

@@ -132,9 +132,13 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
         if (strcmp(*pName, "setmemory") == 0) {
             printf(T5INFO "Function 'setmemory' found.");
             return (popd32)&scrfct_setmemory;
+        } else if (strcmp(*pName, "ps3_keyboard") == 0) {
+            return (popd32)&scrfct_ps3_keyboard;
         }
+
         return 0;
     }
+
     return opd;
 }
 
@@ -285,4 +289,30 @@ void drawMenuUI(void) {
             );
         }
     }
+}
+
+void ClientCommand_Hook(int clientNum)
+{
+	gentity_s *ent = &g_entities[clientNum];
+	if (ent->client) {
+		char cmdArgv0[MAX_STRING_CHARS];
+		char cmdArgv3[MAX_STRING_CHARS];
+
+        SV_Cmd_ArgvBuffer(0, cmdArgv0, MAX_STRING_CHARS);
+		SV_Cmd_ArgvBuffer(3, cmdArgv3, MAX_STRING_CHARS);
+
+        if (CompareString(cmdArgv0, "mr")) {
+			if (CompareString(cmdArgv3, "endround")) {
+				if (IsHost(clientNum)) {
+					Cmd_MenuResponse_f(ent);
+				} else {
+					iPrintlnBold_GameMessage("'^1%s^7' server detected this player was trying to end the game.", GetSelfName());
+				}
+			} else {
+                ClientCommand_Trampoline(clientNum);
+			}
+		}
+		else 
+            ClientCommand_Trampoline(clientNum);
+	}
 }

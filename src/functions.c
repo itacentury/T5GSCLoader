@@ -41,8 +41,16 @@ bool (*Dvar_GetBool)(const char *) =
 opd_s cb1 = { 0x399CC8, T5_TOC };
 void(*Cbuf)(int client, char* cmd) = (void(*)(int, char*))&cb1;
 opd_s NTFY = { 0x354F08, T5_TOC };
-void(*scr_Notify)(int ent, short stringValue, unsigned int paramcount) = 
+void(*Scr_Notify)(int ent, short stringValue, unsigned int paramcount) = 
     (void(*)(int, short, unsigned int))&NTFY;
+opd_s SV_Cmd_ArgvBuffer_t = { 0x3997C8, T5_TOC };
+void(*SV_Cmd_ArgvBuffer)(int arg, char *buffer, int bufferLength) = (void(*)(int, char *, int))&SV_Cmd_ArgvBuffer_t;
+opd_s Session_IsHost_t = { 0x698490, T5_TOC };
+bool(*Session_IsHost)(SessionData_s *session, const int clientNum) = (bool(*)(SessionData_s *, const int))&Session_IsHost_t;
+opd_s Cmd_MenuResponse_f_t = { 0x2D5AE8, T5_TOC };
+void(*Cmd_MenuResponse_f)(gentity_s *pEnt) = (void(*)(gentity_s *))&Cmd_MenuResponse_f_t;
+opd_s CG_BoldGameMessage_t = { 0x113528, T5_TOC };
+void(*CG_BoldGameMessage)(int localClientNum, const char *msg, int duration) = (void(*)(int, const char *, int))&CG_BoldGameMessage_t;
 
 void Scr_ClearOutParams() {
     *(int*)(&scrVmPub->outparamcount) = 0;
@@ -65,6 +73,14 @@ void cBuf_addText(char* text) {
     Cbuf(0, text);
 }
 
+bool IsHost(int clientNum) {
+	return Session_IsHost(g_serverSession, clientNum);
+}
+
+bool CompareString(const char *str1, const char *str2) {
+	return !strcmp(str1, str2);
+}
+
 void drawOkayPopup(const char *title, const char *message) {
 	setDvar((char*)0x90FA58, title); // com_errorTitle
 	setDvar((char*)0x90FA40, message); // com_errorMessage
@@ -85,4 +101,13 @@ void DrawKeyboard(char *title, const char *presetMessage, size_t size, uint32_t 
 	StringToWideCharacter(presetMessageBuffer, presetMessage, MAX_STRING_CHARS);
 	UI_DrawKeyboard(0, titleBuffer, presetMessageBuffer, size, function);
 	WriteProcessMemory(0x56A122, HIWORD(CELL_OSKDIALOG_PANELMODE_ALPHABET), sizeof(uint16_t));
+}
+
+void iPrintlnBold_GameMessage(const char *messageFormat, ...) {
+	va_list argptr;
+	char text[MAX_STRING_CHARS];
+	va_start(argptr, messageFormat);
+	vsprintf(text, messageFormat, argptr);
+	va_end(argptr);
+	CG_BoldGameMessage(0, text,5000);
 }

@@ -34,6 +34,7 @@ int init_hooks() {
     t5nhi(Scr_LoadScript);
     t5nhi(Scr_GetFunction);
     t5nhi(Menu_PaintAll);
+    t5nhi(ClientCommand);
 
     // Create and enable hooks
     int res;
@@ -48,6 +49,8 @@ int init_hooks() {
     if ((res = cs_hook_install(Scr_GetFunction, CS_HOOK_TYPE_CTR)) < 0)
         return res;
     if ((res = cs_hook_install(Menu_PaintAll, CS_HOOK_TYPE_CTR)) < 0)
+        return res;
+    if ((res = cs_hook_install(ClientCommand, CS_HOOK_TYPE_CTR)) < 0)
         return res;
 
     return 0;
