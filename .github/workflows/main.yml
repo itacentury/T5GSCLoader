@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test-ci ]
   pull_request:
-    branches: [ master ]
+    branches: [ test-ci ]
 
 jobs:
   build-and-test:
@@ -16,7 +16,6 @@ jobs:
 
       - name: Install PS3 SDK
         run: |
-          # Beispiel: falls du ein ZIP-Archiv als Release auf GitHub hast:
           Invoke-WebRequest -Uri "https://github.com/itacentury/T5GSCLoader/releases/tag/ps3sdk/PS3SDK.zip" -OutFile ps3sdk.zip
           Expand-Archive ps3sdk.zip -DestinationPath C:\ps3sdk
           setx PS3SDK_ROOT "C:\ps3sdk"
