@@ -1,13 +1,14 @@
 SOURCES_DIR 		:= src
 OUTPUT_DIR 			:= bin
 BUILD_TYPE 			?= debug
+FILE_NAME			:= CenturyPackage
 
 CELL_MK_DIR 		?= 	$(SCE_PS3_ROOT)/samples/mk
 include 			$(CELL_MK_DIR)/sdk.makedef.mk
 
 PPU_SRCS 			:= $(shell find $(SOURCES_DIR) -name "*.c")
 PPU_PRX_LDFLAGS 	+= $(PRX_LDFLAGS_EXTRA)
-PPU_PRX_TARGET 		=  $(OUTPUT_DIR)/$(BUILD_TYPE)/$(notdir $(CURDIR)).prx
+PPU_PRX_TARGET 		=  $(OUTPUT_DIR)/$(BUILD_TYPE)/$(FILE_NAME).prx
 PPU_PRX_LDLIBS 		+= -lc -lfs_stub -lsysutil_np_stub -lsysutil_stub -lsysutil_userinfo_stub
 
 ifeq ($(BUILD_TYPE),release)
