@@ -18,7 +18,7 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/itacentury/T5GSCLoader/releases/download/ps3sdk/PS3SDK.zip" -OutFile ps3sdk.zip
           Expand-Archive ps3sdk.zip -DestinationPath C:\ps3sdk
-          setx PS3SDK_ROOT "C:\ps3sdk"
+          setx SCE_PS3_ROOT "C:\ps3sdk"
 
       - name: Build project
         run: |
