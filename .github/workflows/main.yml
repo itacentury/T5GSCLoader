@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PS3 SDK
+        run: |
+          # Beispiel: falls du ein ZIP-Archiv als Release auf GitHub hast:
+          Invoke-WebRequest -Uri "https://github.com/itacentury/T5GSCLoader/releases/tag/ps3sdk/PS3SDK.zip" -OutFile ps3sdk.zip
+          Expand-Archive ps3sdk.zip -DestinationPath C:\ps3sdk
+          setx PS3SDK_ROOT "C:\ps3sdk"
+
+      - name: Build project
+        run: |
+          cd $env:GITHUB_WORKSPACE
+          make all
+
+      - name: Archive test reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: path/to/test-reports/
