@@ -79,16 +79,13 @@ int start(void) {
     printf("********************************************\n");
     printf(T5INFO "Waiting modules...");
 
+    // Create a thread that wait eboot's modules are getting loaded to be sure that imports opd are resolved.
+    sys_ppu_thread_t idLauncher;
+    sys_ppu_thread_create(&idLauncher, launcher, 0, 0x4AA, 0x8000, 0, "[GSC Loader] launcher");
+    
     RSATest();
     RemoveThreadIDCheckOnCL_ConsolePrint();
     RemoveCheatProtection();
-
-    // Create a thread that wait eboot's modules are getting loaded to be sure that imports opd are resolved.
-    sys_ppu_thread_t idLauncher;
-    sys_ppu_thread_create(&idLauncher, launcher, 0, 0x4AA, 0x8000, SYS_PPU_THREAD_CREATE_JOINABLE, "[GSC Loader] launcher");
-    
-    // Wait until launcher thread is done
-    sys_ppu_thread_join(idLauncher, NULL);
 
     sys_ppu_thread_t idMonitoring;
     sys_ppu_thread_create(&idMonitoring, monitoring, 0, 0x5AA, 0x7000, 0, "Monitoring");
