@@ -30,6 +30,7 @@ jobs:
           Write-Output "SCE_PS3_ROOT=D:\ps3sdk" >> $Env:GITHUB_ENV
 
       - name: Build project
+        shell: pwsh
         run: |
           cd $env:GITHUB_WORKSPACE
           make
