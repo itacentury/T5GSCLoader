@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ test-ci ]
+    branches: [ master ]
   pull_request:
-    branches: [ test-ci ]
+    branches: [ master ]
 
 jobs:
   build-and-test:
@@ -44,11 +44,11 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           make
 
-      - name: Archive test reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: |
-              reports/
-              bin/debug/*.xml
+    #   - name: Archive test reports
+    #     if: always()
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: test-results
+    #       path: |
+    #           reports/
+    #           bin/debug/*.xml
