@@ -25,12 +25,12 @@ jobs:
         run: |
           $sdkRoot = "/ps3sdk"
           $dirs = "host-win32/ppu/bin","host-win32/spu/bin","host-win32/sn/bin","host-win32/CG/bin"
-          
+
           $prefix = ($dirs | ForEach-Object { "$sdkRoot/$_" }) -join ";"
           Write-Output "PATH=$prefix;${env:PATH}" >> $Env:GITHUB_ENV
 
-          $prefix = ($dirs | ForEach-Object { "$sdkRoot/$_" }) -join ":"
-          Write-Output "PATH=$prefix:${env:PATH}" >> $Env:GITHUB_ENV
+          $prefix = ($dirs | ForEach-Object { Join-Path $sdkRoot $_ }) -join ':'
+          Write-Output "PATH=$($prefix):$($env:PATH)" >> $Env:GITHUB_ENV
 
           Write-Output "SCE_PS3_ROOT=/ps3sdk" >> $Env:GITHUB_ENV
 
