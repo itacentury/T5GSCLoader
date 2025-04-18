@@ -45,7 +45,8 @@ jobs:
           export PATH="$PS3DEV/host-win32/ppu/bin:$PS3DEV/host-win32/spu/bin:$PS3DEV/host-win32/sn/bin:$PS3DEV/host-win32/CG/bin:$PATH"
 
           # Debug: zeigt Dir, ob das Verzeichnis wirklich da ist
-          ls -l /d/ps3sdk/host-win32/ppu/bin/ppu-lv2-gcc
+          ls -l /
+          ls -l /d/
 
           cd "$GITHUB_WORKSPACE"
           make
