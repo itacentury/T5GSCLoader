@@ -20,18 +20,21 @@ jobs:
           Expand-Archive ps3sdk.zip -DestinationPath D:\ps3sdk
           setx SCE_PS3_ROOT "D:\ps3sdk"
 
-      - name: Set PS3 SDK in PATH
-        shell: pwsh
-        run: |
-          $sdkRoot = "D:\ps3sdk"
-          $dirs = "host-win32\ppu\bin","host-win32\spu\bin","host-win32\sn\bin","host-win32\CG\bin"
-          $prefix = ($dirs | ForEach-Object { "$sdkRoot/$_" }) -join ";"
-          Write-Output "PATH=$prefix;${env:PATH}" >> $Env:GITHUB_ENV
-          Write-Output "SCE_PS3_ROOT=D:\ps3sdk" >> $Env:GITHUB_ENV
+    #   - name: Set PS3 SDK in PATH
+    #     shell: pwsh
+    #     run: |
+    #       $sdkRoot = "D:\ps3sdk"
+    #       $dirs = "host-win32\ppu\bin","host-win32\spu\bin","host-win32\sn\bin","host-win32\CG\bin"
+    #       $prefix = ($dirs | ForEach-Object { "$sdkRoot/$_" }) -join ";"
+    #       Write-Output "PATH=$prefix;${env:PATH}" >> $Env:GITHUB_ENV
+    #       Write-Output "SCE_PS3_ROOT=D:\ps3sdk" >> $Env:GITHUB_ENV
 
       - name: Build project
-        shell: pwsh
+        shell: bash
+        env:
+          SCE_PS3_ROOT: /d/ps3sdk
         run: |
+          export PATH="$SCE_PS3_ROOT/host-win32/ppu/bin:$SCE_PS3_ROOT/host-win32/spu/bin:$SCE_PS3_ROOT/host-win32/sn/bin:$SCE_PS3_ROOT/host-win32/CG/bin:$PATH"
           cd $env:GITHUB_WORKSPACE
           make
 
