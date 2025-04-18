@@ -48,7 +48,7 @@ jobs:
           ls -l $SCE_PS3_ROOT/host-win32/ppu/bin
 
           cd "$GITHUB_WORKSPACE"
-          make
+          make PS3DEV="$PS3DEV" SCE_PS3_ROOT="$SCE_PS3_ROOT"
 
       - name: Archive test reports
         if: always()
