@@ -17,22 +17,22 @@ jobs:
       - name: Install PS3 SDK
         run: |
           Invoke-WebRequest -Uri "https://github.com/itacentury/T5GSCLoader/releases/download/ps3sdk/ps3sdk.zip" -OutFile ps3sdk.zip
-          Expand-Archive ps3sdk.zip -DestinationPath C:\ps3sdk
-          setx SCE_PS3_ROOT "C:\ps3sdk"
+          Expand-Archive ps3sdk.zip -DestinationPath D:\ps3sdk
+          setx SCE_PS3_ROOT "D:\ps3sdk"
 
       - name: Set PS3 SDK in PATH
         shell: pwsh
         run: |
-          $sdkRoot = "C:\ps3sdk"
+          $sdkRoot = "D:\ps3sdk"
           $dirs = "host-win32\ppu\bin","host-win32\spu\bin","host-win32\sn\bin","host-win32\CG\bin"
           $prefix = ($dirs | ForEach-Object { Join-Path $sdkRoot $_ }) -join ";"
           Write-Output "PATH=$prefix;${env:PATH}" >> $Env:GITHUB_ENV
-          Write-Output "SCE_PS3_ROOT=C:\ps3sdk" >> $Env:GITHUB_ENV
+          Write-Output "SCE_PS3_ROOT=D:\ps3sdk" >> $Env:GITHUB_ENV
 
       - name: Build project
         run: |
           ls /
-          ls
+          ls $sdkRoot
           cd $env:GITHUB_WORKSPACE
           make all
 
