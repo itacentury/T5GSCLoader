@@ -25,29 +25,22 @@ jobs:
         run: |
           $root = 'D:\ps3sdk'
     
-          # 1) SCE_PS3_ROOT braucht sdk.makedef.mk
           Write-Output "SCE_PS3_ROOT=$root" >> $Env:GITHUB_ENV
-          # 2) PS3DEV braucht sdk.target.mk für den Compiler‑Pfad
           Write-Output "PS3DEV=$root"       >> $Env:GITHUB_ENV
-          Write-Output "CELL_SDL=/d/ps3sdk"       >> $Env:GITHUB_ENV
+          Write-Output "CELL_SDK=/d/ps3sdk"       >> $Env:GITHUB_ENV
     
-          # 3) Wenn Ihr es trotzdem über den PATH gewohnt seid:
-          $dirs = 'host-win32\ppu\bin','host-win32\spu\bin','host-win32\sn\bin','host-win32\CG\bin'
-          $prefix = ($dirs | ForEach-Object { Join-Path $root $_ }) -join ';'
-          Write-Output "PATH=$prefix;$Env:PATH" >> $Env:GITHUB_ENV
+          $paths = @(
+            "$root\host-win32\ppu\bin"
+            "$root\host-win32\spu\bin"
+            "$root\host-win32\CG\bin"
+            "$root\host-win32\sn\bin"
+            ) -join ';'
+
+          Write-Output "PATH=$paths;$Env:PATH" >> $Env:GITHUB_ENV
 
       - name: Build project
         shell: bash
-        env:
-          PS3DEV:       "/d/ps3sdk"   # <-- Unix‑Mount unter Bash
-          SCE_PS3_ROOT: "/d/ps3sdk"   # <- falls sdk.makedef.mk das auch braucht
         run: |
-          # optional: Path ergänzen, wenn Ihr über PATH starten wollt
-          export PATH="$PS3DEV/host-win32/ppu/bin:$PS3DEV/host-win32/spu/bin:$PS3DEV/host-win32/sn/bin:$PS3DEV/host-win32/CG/bin:$PATH"
-
-          # Debug: zeigt Dir, ob das Verzeichnis wirklich da ist
-          ls -l $SCE_PS3_ROOT/host-win32/ppu/bin
-
           cd "$GITHUB_WORKSPACE"
           make
 
