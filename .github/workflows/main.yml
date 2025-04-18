@@ -29,6 +29,7 @@ jobs:
           Write-Output "SCE_PS3_ROOT=$root" >> $Env:GITHUB_ENV
           # 2) PS3DEV braucht sdk.target.mk für den Compiler‑Pfad
           Write-Output "PS3DEV=$root"       >> $Env:GITHUB_ENV
+          Write-Output "CELL_SDL=/d/ps3sdk"       >> $Env:GITHUB_ENV
     
           # 3) Wenn Ihr es trotzdem über den PATH gewohnt seid:
           $dirs = 'host-win32\ppu\bin','host-win32\spu\bin','host-win32\sn\bin','host-win32\CG\bin'
@@ -48,7 +49,7 @@ jobs:
           ls -l $SCE_PS3_ROOT/host-win32/ppu/bin
 
           cd "$GITHUB_WORKSPACE"
-          make PS3DEV="$PS3DEV" SCE_PS3_ROOT="$SCE_PS3_ROOT"
+          make
 
       - name: Archive test reports
         if: always()
