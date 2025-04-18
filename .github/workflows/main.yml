@@ -35,7 +35,7 @@ jobs:
           SCE_PS3_ROOT: /d/ps3sdk
         run: |
           export PATH="$SCE_PS3_ROOT/host-win32/ppu/bin:$SCE_PS3_ROOT/host-win32/spu/bin:$SCE_PS3_ROOT/host-win32/sn/bin:$SCE_PS3_ROOT/host-win32/CG/bin:$PATH"
-          cd $env:GITHUB_WORKSPACE
+          cd "$GITHUB_WORKSPACE"
           make
 
       - name: Archive test reports
