@@ -31,6 +31,8 @@ jobs:
 
       - name: Build project
         run: |
+          ls /
+          ls
           cd $env:GITHUB_WORKSPACE
           make all
 
