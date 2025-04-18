@@ -1,4 +1,5 @@
 # Century Package + T5GSCLoader
+[![build](https://github.com/itacentury/T5GSCLoader/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/itacentury/T5GSCLoader/actions/workflows/build.yml)
 
 T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game scripts, call C functions from them and make possible connect to others players by patching client/server checksum.
 
