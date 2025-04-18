@@ -3,7 +3,12 @@
 
 T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game scripts, call C functions from them and make possible connect to others players by patching client/server checksum.
 
-Additionally a pregame menu was added to be able to use force host and other functions.
+Additionally a pregame menu was added to be able to use force host and other features.
+
+<div style="display: flex;">
+  <img src="https://github.com/user-attachments/assets/8b9e51ea-e102-4bd9-9e43-e163f15e8c6e" width="45%">
+  <img src="https://github.com/user-attachments/assets/9960fb35-2e37-487f-a6f3-42e5c5392036" width="45%">
+</div>
 
 ## Build
 ### Windows
@@ -79,3 +84,11 @@ I made it for some people few months ago, to help and having some memories times
 Recently, by cleaning my desktop i came across that folder, I said to myself it would be a cool to share this, maybe some people are curious about how game scripts check is made.
 
 Maybe this code will be useful to someone, who knows?
+
+## Credits
+
+* iMCSx - for creating this module
+* Jo-Milk - for his work and menus
+* NickBeHaxing & Milky4444 - for the original `Snow Engine`
+* gopro_2027 - Remastering and open sourcing `Snow Engine`
+* & anyone I missed
