@@ -37,7 +37,16 @@ jobs:
 
       - name: Build project
         shell: bash
+        env:
+          PS3DEV:       "/d/ps3sdk"   # <-- Unix‑Mount unter Bash
+          SCE_PS3_ROOT: "/d/ps3sdk"   # <- falls sdk.makedef.mk das auch braucht
         run: |
+          # optional: Path ergänzen, wenn Ihr über PATH starten wollt
+          export PATH="$PS3DEV/host-win32/ppu/bin:$PS3DEV/host-win32/spu/bin:$PS3DEV/host-win32/sn/bin:$PS3DEV/host-win32/CG/bin:$PATH"
+
+          # Debug: zeigt Dir, ob das Verzeichnis wirklich da ist
+          ls -l /d/ps3sdk/host-win32/ppu/bin/ppu-lv2-gcc
+
           cd "$GITHUB_WORKSPACE"
           make
 
