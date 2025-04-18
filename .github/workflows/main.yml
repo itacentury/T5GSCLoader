@@ -23,18 +23,18 @@ jobs:
       - name: Set PS3 SDK in PATH
         shell: pwsh
         run: |
-          $sdkRoot = "D:\ps3sdk"
+          $sdkRoot = "/ps3sdk"
           $dirs = "host-win32\ppu\bin","host-win32\spu\bin","host-win32\sn\bin","host-win32\CG\bin"
           $prefix = ($dirs | ForEach-Object { Join-Path $sdkRoot $_ }) -join ";"
           Write-Output "PATH=$prefix;${env:PATH}" >> $Env:GITHUB_ENV
-          Write-Output "SCE_PS3_ROOT=D:\ps3sdk" >> $Env:GITHUB_ENV
+          Write-Output "SCE_PS3_ROOT=/ps3sdk" >> $Env:GITHUB_ENV
 
       - name: Build project
         run: |
           ls /
           ls $sdkRoot
           cd $env:GITHUB_WORKSPACE
-          make all
+          make
 
       - name: Archive test reports
         if: always()
