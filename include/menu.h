@@ -51,6 +51,7 @@ void changeMinPlayers(const char*);
 void changeMaxPlayers(const char*);
 void changeGametype(const char*);
 void toggleOverlay(const char*);
+void run_keyboard_dialog(void);
 
 void scrollUp();
 void scrollDown();

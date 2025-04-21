@@ -3,18 +3,20 @@
 #include "utils.h"
 #include "globals.h"
 #include "functions.h"
+#include "keyboard.h"
 
 #include <string.h>
 
 /* --- Menu definition --- */
 MenuOption mainMenuOptions[] = {
-    { "Force Host",      OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
-    { "Players to start",      OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
-    { "Max players",      OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
+    { "Force Host", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
+    { "Players to start", OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
+    { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
     { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
-    { "Controls overlay",OPTION_SELECTOR, { .selector = {1, 2, toggleValues, toggleOverlay} } }
+    { "Controls overlay", OPTION_SELECTOR, { .selector = {1, 2, toggleValues, toggleOverlay} } },
+    { "test keyboard", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, run_keyboard_dialog} } }
 };
-Menu mainMenu = {"Century Package [Pregame]", 5, mainMenuOptions};
+Menu mainMenu = {"Century Package [Pregame]", 6, mainMenuOptions};
 
 Menu* menus[MENU_COUNT] = {&mainMenu};
 
@@ -43,6 +45,21 @@ void changeGametype(const char* gametype) {
 void toggleOverlay(const char* val) {
     showOverlay = (strcmp(val, "ON") == 0);
 }
+
+void run_keyboard_dialog(void) {
+    char dest[CELL_OSKDIALOG_STRING_SIZE + 1] = {0};
+    wchar_t init_text[CELL_OSKDIALOG_STRING_SIZE + 1] = L"";
+    wchar_t message[CELL_OSKDIALOG_STRING_SIZE + 1] = L"Input text";
+
+    oskdialog_mode = MODE_OPEN;
+    while (oskdialog_mode != MODE_EXIT) {
+        sys_timer_usleep(16 * 1000);
+        keyboard(dest, init_text, message);
+    }
+
+    printf(T5INFO "Keyboard input: '%s'", dest);
+}
+
 
 /* --- Menu structure --- */
 int currentMenuIndex = 0;
