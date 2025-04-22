@@ -14,7 +14,7 @@ MenuOption mainMenuOptions[] = {
     { "Players to start", OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
     { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
     { "Select gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
-    { "Change Name", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, changeName} } },
+    { "Change name", OPTION_ACTION, { .action = changeName } },
 };
 Menu mainMenu = {"Century Package [Pregame]", 6, mainMenuOptions};
 
@@ -100,15 +100,14 @@ void adjustOptionRight() {
 void selectOption() {
     Menu* current = menus[currentMenuIndex];
     MenuOption* opt = &current->options[currentOptionIndex];
-    if (opt->type == OPTION_SUBMENU) {
-        if (opt->handler.nextMenu < MENU_COUNT) {
-            currentMenuIndex = opt->handler.nextMenu;
-            currentOptionIndex = 0;
-        }
-    } else if (opt->type == OPTION_SELECTOR) {
+    if (opt->type == OPTION_SELECTOR) {
         if (opt->handler.selector.action) {
             const char* currentValue = opt->handler.selector.values[opt->handler.selector.current];
             opt->handler.selector.action(currentValue);
+        }
+    } else if (opt->type == OPTION_ACTION) {
+        if (opt->handler.action) {
+            opt->handler.action();
         }
     }
 

@@ -242,7 +242,7 @@ void drawMenuUI(void) {
         0xFF,
         R_RegisterFont("fonts/extrabigfont", 1),
         SCREEN_CENTER_X - 110,
-        bgY + 35,  // Equivalent to: SCREEN_CENTER_Y - (bgHeight / 2) + 35
+        bgY + 35,
         0.55f, 0.55f, 0.0f,
         ColorMenuTitle,
         0
