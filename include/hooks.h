@@ -18,6 +18,7 @@ void Scr_LoadGameType_Hook(void);
 popd32 Scr_GetFunction_Hook(const char **pName, int *type);
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc);
 void ClientCommand_Hook(int clientNum);
+XAssetHeader *DB_FindXAssetHeader_Hook(XAssetHeader *header, XAssetType type, const char *name, bool errorIfMissing, int waitTime);
 
 void DisplayRawFiles(void);
 void applyHostSettings(void);

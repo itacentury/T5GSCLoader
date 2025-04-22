@@ -12,7 +12,7 @@
 
 void init_offsets() {
     // Set native offsets
-    t5ni(DB_FindXAssetHeader);
+    // t5ni(DB_FindXAssetHeader);
     t5ni(DB_LinkXAssetEntry);
     t5ni(Dvar_FindVar);
     t5ni(Scr_GetFunctionHandle);
@@ -35,6 +35,7 @@ int init_hooks() {
     t5nhi(Scr_GetFunction);
     t5nhi(Menu_PaintAll);
     t5nhi(ClientCommand);
+    t5nhi(DB_FindXAssetHeader);
 
     // Create and enable hooks
     int res;
@@ -51,6 +52,8 @@ int init_hooks() {
     if ((res = cs_hook_install(Menu_PaintAll, CS_HOOK_TYPE_CTR)) < 0)
         return res;
     if ((res = cs_hook_install(ClientCommand, CS_HOOK_TYPE_CTR)) < 0)
+        return res;
+    if ((res = cs_hook_install(DB_FindXAssetHeader, CS_HOOK_TYPE_CTR)) < 0)
         return res;
 
     return 0;
@@ -165,8 +168,8 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
 
             XAssetEntryPoolEntry *entry = 0;
             XAssetHeader header;
-            DB_FindXAssetHeader(&header, ASSET_TYPE_RAWFILE, loader.rawFiles[idx].asset.name, true, -1);
-            if (header.rawFile != &loader.rawFiles[idx].asset) {
+            // DB_FindXAssetHeader(&header, ASSET_TYPE_RAWFILE, loader.rawFiles[idx].asset.name, true, -1);
+            // if (header.rawFile != &loader.rawFiles[idx].asset) {
                 entry = DB_LinkXAssetEntry(&loader.rawFiles[idx].entry, 0);
                 if (!entry) {
                     printf(T5ERROR "Linking asset '%s' failed.\n", loader.rawFiles[idx].asset.name);
@@ -176,7 +179,9 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
                     *mainLinked = true;
 
                 (*assetIndex)++;
-            }
+            // } else {
+            //     printf(T5ERROR "Asset '%s' found!", loader.rawFiles[idx].asset.name);
+            // }
         }
         // Reset read size for the next iteration of the loop
         read = sizeof(CellFsDirent);

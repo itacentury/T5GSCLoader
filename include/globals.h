@@ -24,7 +24,6 @@ extern scrVmPub_t *scrVmPub;
 extern gentity_s *g_entities;
 extern SessionData_s *g_serverSession;
 
-
 typedef enum Addies
 {
     LEVEL_LOCALS_T = 0x1213800,

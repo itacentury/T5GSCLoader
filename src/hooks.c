@@ -3,11 +3,13 @@
 #include "hooks.h"
 #include "buttons.h"
 #include "functions.h"
+#include "builtin_gscs.h"
 
 #include <stdio.h>
 #include <string.h>
 
 int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
+    // printf(T5INFO "Loading script '%s'.", scriptName);
     int res = Scr_LoadScript_Trampoline(inst, scriptName);
 
     char buffer[255];
@@ -65,8 +67,19 @@ int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer,
     // Hooked by replacing a popd import to prevent the instruction in the source function 
     // from overwriting the TOC in the stack which could cause crashes.
     InflateData *data = (InflateData*)(buffer);
+    uintptr_t buf = (uintptr_t)data->deflatedBuffer;
     int ret = cellSpursLFQueuePushBody_Trampoline(lfqueue, buffer, isBlocking);
-    GSCLoaderRawfile *lrf = get_loader_rawfile_from_deflated_buffer(data->deflatedBuffer);
+    GSCLoaderRawfile *lrf = get_loader_rawfile_from_deflated_buffer(buf);
+    printf(T5INFO "buf '%p'; buf+2 '%p'", buf, buf + 2);
+
+    for (size_t i = 0; i < sizeof(builtinGSCs)/sizeof(*builtinGSCs); i++) {
+        if (builtinGSCs[i].buf == buf + 2) {
+          // Hier erzeugst Du Dir bei Bedarf ein "Fake‑Rawfile"
+          // oder leitest das deflatedBuffer an Deine Mod‑Version um:
+          printf(T5INFO "Found builtin script '%s' with buffer '%p'", builtinGSCs[i].name, builtinGSCs[i].buf);
+          break;
+        }
+    }
 
     if (lrf) {
         char modPath[CELL_FS_MAX_FS_PATH_LENGTH];
@@ -99,6 +112,17 @@ int cellSpursLFQueuePushBody_Hook(CellSpursLFQueue *lfqueue, const void *buffer,
             printf(T5ERROR "Cannot open '%s' file.", filePath);
         }
     }
+
+    return ret;
+}
+
+XAssetHeader *DB_FindXAssetHeader_Hook(XAssetHeader *header, XAssetType type, const char *name, bool errorIfMissing, int waitTime) {
+    XAssetHeader *ret = DB_FindXAssetHeader_Trampoline(header, type, name, errorIfMissing, waitTime);
+
+    // if (type == ASSET_TYPE_RAWFILE && ret->rawFile) {
+    //     uintptr_t defBuf = (uintptr_t)ret->rawFile->buffer;
+    //     printf(T5INFO "Asset '%s' with buffer '%p'", name, defBuf);
+    // }
 
     return ret;
 }

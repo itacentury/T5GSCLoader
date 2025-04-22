@@ -17,7 +17,7 @@ scrChecksum_t checksums[3];
 scrVarPub_t *scrVarPub;
 scrCompilePub_t *scrCompilePub;
 
-t5nd(XAssetHeader *, DB_FindXAssetHeader, (XAssetHeader *header, XAssetType type, const char *name, bool errorIfMissing, int waitTime));
+// t5nd(XAssetHeader *, DB_FindXAssetHeader, (XAssetHeader *header, XAssetType type, const char *name, bool errorIfMissing, int waitTime));
 t5nd(XAssetEntryPoolEntry*, DB_LinkXAssetEntry, (XAssetEntry *newEntry, int allowOverride));
 t5nd(dvar_s*, Dvar_FindVar, (const char *name));
 t5nd(int, Scr_GetFunctionHandle, (scriptInstance_t inst, const char *scriptName, const char *functionName));
@@ -33,6 +33,7 @@ t5nhd(void, Scr_LoadGameType, (void));
 t5nhd(popd32, Scr_GetFunction, (const char **pName, int *type));
 t5nhd(void, Menu_PaintAll, (int localClientNum, UiContext *dc));
 t5nhd(void, ClientCommand, (int localClientNum));
+t5nhd(XAssetHeader *, DB_FindXAssetHeader, (XAssetHeader *header, XAssetType type, const char *name, bool errorIfMissing, int waitTime));
 
 GSCLoaderRawfile *get_loader_rawfile_from_deflated_buffer(char *inflatedBuffer);
 void get_or_create_mod_path(char *path);
