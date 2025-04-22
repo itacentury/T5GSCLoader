@@ -24,6 +24,7 @@ enum KeyboardMode {
 
 extern int oskdialog_mode;
 
+char *run_keyboard_dialog(void);
 int getkbLen(char *str);
 void makekbStr(char *str, char *dest, int len);
 int keyboard(char *dest, wchar_t *INIT_TEXT, wchar_t *MESSAGE);

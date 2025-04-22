@@ -3,12 +3,27 @@
 
 #include <wchar.h>
 #include <stdint.h>
+#include <sys/timer.h>
 #include <sys/sys_time.h>
 #include <cell/sysmodule.h>
 #include <sysutil/sysutil_oskdialog.h>
 #include <sysutil/sysutil_msgdialog.h>
 
 int oskdialog_mode = MODE_IDLE;
+
+char *run_keyboard_dialog(void) {
+    char dest[CELL_OSKDIALOG_STRING_SIZE + 1] = {0};
+    wchar_t init_text[CELL_OSKDIALOG_STRING_SIZE + 1] = L"";
+    wchar_t message[CELL_OSKDIALOG_STRING_SIZE + 1] = L"Input text";
+
+    oskdialog_mode = MODE_OPEN;
+    while (oskdialog_mode != MODE_EXIT) {
+        sys_timer_usleep(16 * 1000);
+        keyboard(dest, init_text, message);
+    }
+
+    return dest;
+}
 
 static void sysutil_callback(uint64_t status, uint64_t param, void *userdata) {
     (void)param;
