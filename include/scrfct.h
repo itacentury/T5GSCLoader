@@ -6,5 +6,6 @@
 #include "functions.h"
 
 void scrfct_setmemory(void);
+void scrfct_getkeyboardinput(void);
 
 #endif /* SCRFCT_H */

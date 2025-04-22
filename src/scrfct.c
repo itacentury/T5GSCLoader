@@ -3,7 +3,9 @@
 #include "printf.h"
 #include "scrfct.h"
 #include "globals.h"
+#include "keyboard.h"
 
+#include <wchar.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,4 +42,23 @@ void scrfct_setmemory() {
         else
             printf(T5ERROR "Cannot resolve setmemory parameters call from gsc.");
     }
+}
+
+void scrfct_getkeyboardinput() {
+    if (Scr_GetNumParam(0) != 2) {
+        Scr_AddInt(0, SCRIPTINSTANCE_SERVER);
+        return;
+    }
+
+    char* title = Scr_GetString(0, SCRIPTINSTANCE_SERVER);
+    int clientNum = Scr_GetInt(1, SCRIPTINSTANCE_SERVER);
+
+    size_t len = strlen(title) + 1;
+    wchar_t wtitle[len];
+	StringToWideCharacter(wtitle, title, len);
+
+    Scr_AddInt(1, SCRIPTINSTANCE_SERVER);
+    const char *name = getKeyboardInput(wtitle);
+
+    Scr_Notify(0x012AB290 + (clientNum * 0x2F8), SL_GetString("keyboard_input", 0, SCRIPTINSTANCE_SERVER), 1);
 }

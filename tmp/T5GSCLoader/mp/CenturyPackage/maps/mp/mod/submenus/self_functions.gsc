@@ -23,6 +23,17 @@ refillAmmo() {
 	}
 }
 
+callCustomSayAll() {
+    self thread customSayAll();
+}
+
+customSayAll() {
+    if(getkeyboardinput("Say Message", self getEntityNumber()) == 1) {
+        self waittill("keyboard_input", text);
+        self sayAll(text);
+    }
+}
+
 doSuicide() {
 	self suicide();
 	self.currentMenu = "main";

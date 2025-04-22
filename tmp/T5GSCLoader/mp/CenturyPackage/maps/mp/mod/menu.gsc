@@ -17,6 +17,7 @@ buildMenu() {
 	m = "main";
 	self addMenu("", m, "Century Package " + level.currentVersion);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
+    self addOption(m, "Test custom say", ::callCustomSayAll);
 	self addMenu(m, "MainSelf", "Self Options");
 	if (self hasHostRights() && !level.console) {
 		self addMenu(m, "MainDev", "Dev Options");
