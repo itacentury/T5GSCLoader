@@ -46,10 +46,11 @@ void toggleOverlay(const char* val) {
     showOverlay = (strcmp(val, "ON") == 0);
 }
 
+// clantag: strcpy((char*)0x1B137EC, clantag);
 void changeName(void) {
     const char *name = getKeyboardInput(L"Change name");
-    strcpy((char*)0x02000934, name);
-    strcpy((char*)0x139784C, name); // needs testing
+    strcpy((char*)0x02000934, name); // pregame name
+    strcpy((char*)0x2000A14, name); // ingame name
 }
 
 /* --- Menu structure --- */
