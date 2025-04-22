@@ -47,7 +47,7 @@ void toggleOverlay(const char* val) {
 }
 
 void changeName(void) {
-    const char *name = run_keyboard_dialog();
+    const char *name = run_keyboard_dialog(L"Change name");
     strcpy((char*)0x02000934, name);
     strcpy((char*)0x139784C, name); // needs testing
 }
