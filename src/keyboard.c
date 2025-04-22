@@ -11,7 +11,7 @@
 
 int oskdialog_mode = MODE_IDLE;
 
-char *run_keyboard_dialog(const wchar_t *prompt) {
+char *getKeyboardInput(const wchar_t *prompt) {
     char dest[CELL_OSKDIALOG_STRING_SIZE + 1] = {0};
     wchar_t init_text[CELL_OSKDIALOG_STRING_SIZE + 1] = L"";
     wchar_t message[CELL_OSKDIALOG_STRING_SIZE + 1] = {0};
