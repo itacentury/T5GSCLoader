@@ -4,8 +4,8 @@
 #define MENU_COUNT 1
 
 typedef enum {
-    OPTION_SUBMENU,
-    OPTION_SELECTOR
+    OPTION_SELECTOR,
+    OPTION_ACTION,
 } OptionType;
 
 typedef struct {
@@ -19,8 +19,8 @@ typedef struct MenuOption {
     const char* text;
     OptionType type;
     union {
-        int nextMenu;
         SelectorOption selector;
+        void (*action)(void);
     } handler;
 } MenuOption;
 
@@ -51,6 +51,7 @@ void changeMinPlayers(const char*);
 void changeMaxPlayers(const char*);
 void changeGametype(const char*);
 void toggleOverlay(const char*);
+void changeName(void);
 
 void scrollUp();
 void scrollDown();

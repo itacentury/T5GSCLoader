@@ -3,18 +3,20 @@
 #include "utils.h"
 #include "globals.h"
 #include "functions.h"
+#include "keyboard.h"
 
 #include <string.h>
 
 /* --- Menu definition --- */
 MenuOption mainMenuOptions[] = {
-    { "Force Host",      OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
-    { "Players to start",      OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
-    { "Max players",      OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
-    { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
-    { "Controls overlay",OPTION_SELECTOR, { .selector = {1, 2, toggleValues, toggleOverlay} } }
+    { "Show controls", OPTION_SELECTOR, { .selector = {1, 2, toggleValues, toggleOverlay} } },
+    { "Force Host", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
+    { "Players to start", OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
+    { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
+    { "Select gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
+    { "Change name", OPTION_ACTION, { .action = changeName } },
 };
-Menu mainMenu = {"Century Package [Pregame]", 5, mainMenuOptions};
+Menu mainMenu = {"Century Package [Pregame]", 6, mainMenuOptions};
 
 Menu* menus[MENU_COUNT] = {&mainMenu};
 
@@ -42,6 +44,13 @@ void changeGametype(const char* gametype) {
 
 void toggleOverlay(const char* val) {
     showOverlay = (strcmp(val, "ON") == 0);
+}
+
+// clantag: strcpy((char*)0x1B137EC, clantag);
+void changeName(void) {
+    const char *name = getKeyboardInput(L"Change name");
+    strcpy((char*)0x02000934, name); // pregame name
+    strcpy((char*)0x2000A14, name); // ingame name
 }
 
 /* --- Menu structure --- */
@@ -92,15 +101,14 @@ void adjustOptionRight() {
 void selectOption() {
     Menu* current = menus[currentMenuIndex];
     MenuOption* opt = &current->options[currentOptionIndex];
-    if (opt->type == OPTION_SUBMENU) {
-        if (opt->handler.nextMenu < MENU_COUNT) {
-            currentMenuIndex = opt->handler.nextMenu;
-            currentOptionIndex = 0;
-        }
-    } else if (opt->type == OPTION_SELECTOR) {
+    if (opt->type == OPTION_SELECTOR) {
         if (opt->handler.selector.action) {
             const char* currentValue = opt->handler.selector.values[opt->handler.selector.current];
             opt->handler.selector.action(currentValue);
+        }
+    } else if (opt->type == OPTION_ACTION) {
+        if (opt->handler.action) {
+            opt->handler.action();
         }
     }
 
