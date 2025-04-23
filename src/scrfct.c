@@ -9,7 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ppu_thread.h>
 #include <sysutil/sysutil_oskdialog.h>
+
+KeyboardThreadArg gKbArgs[MAX_KB_THREADS];
+int gNextKb = 0;
 
 void scrfct_setmemory() {
     // Verify that we have 2 parameters for this function.
@@ -44,21 +48,49 @@ void scrfct_setmemory() {
     }
 }
 
-void scrfct_getkeyboardinput() {
+void scrfct_callkeyboard() {
     if (Scr_GetNumParam(0) != 2) {
         Scr_AddInt(0, SCRIPTINSTANCE_SERVER);
+        printf(T5ERROR "'callkeyboard' called with wrong parameters.");
         return;
     }
 
     char* title = Scr_GetString(0, SCRIPTINSTANCE_SERVER);
     int clientNum = Scr_GetInt(1, SCRIPTINSTANCE_SERVER);
 
+    printf(T5INFO "'callkeyboard' called with title '%s' and clientnum '%i'", title, clientNum);
+
+    int idx = gNextKb;
+    gNextKb = (gNextKb + 1) % MAX_KB_THREADS;
+    KeyboardThreadArg *ka = &gKbArgs[idx];
+    ka->clientNum = clientNum;
+
     size_t len = strlen(title) + 1;
     wchar_t wtitle[len];
-	StringToWideCharacter(wtitle, title, len);
+    StringToWideCharacter(ka->wtitle, title, len);
+
+    sys_ppu_thread_t idKeyboard;
+    int ret = sys_ppu_thread_create(&idKeyboard, keyboard_thread, ka, 0, 0x7000, 0, "Keyboard thread");
+    if (ret != CELL_OK) {
+        printf(T5ERROR "Failed to create keyboard thread (0x%X)", ret);
+        Scr_AddInt(0, SCRIPTINSTANCE_SERVER);
+    } else {
+        printf(T5INFO "Started keyboard thread");
+    }
+}
+
+void keyboard_thread(void *arg) {
+    KeyboardThreadArg *ka = (KeyboardThreadArg*)arg;
 
     Scr_AddInt(1, SCRIPTINSTANCE_SERVER);
-    const char *name = getKeyboardInput(wtitle);
+    const char *message = getKeyboardInput(ka->wtitle);
 
-    Scr_Notify(0x012AB290 + (clientNum * 0x2F8), SL_GetString("keyboard_input", 0, SCRIPTINSTANCE_SERVER), 1);
+    printf(T5INFO "User entered message '%s'. Notifying..", message);
+
+    Scr_ClearOutParams();
+    Scr_AddString(message, SCRIPTINSTANCE_SERVER);
+    Scr_Notify(0x012AB290 + (ka->clientNum * 0x2F8), SL_GetString("keyboard_input", 0, SCRIPTINSTANCE_SERVER), 1);
+
+    printf(T5INFO "Notified. Exiting keyboard thread..");
+    sys_ppu_thread_exit(0);
 }

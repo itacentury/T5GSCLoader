@@ -17,7 +17,6 @@ buildMenu() {
 	m = "main";
 	self addMenu("", m, "Century Package " + level.currentVersion);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
-    self addOption(m, "Test custom say", ::callCustomSayAll);
 	self addMenu(m, "MainSelf", "Self Options");
 	if (self hasHostRights() && !level.console) {
 		self addMenu(m, "MainDev", "Dev Options");
@@ -50,6 +49,8 @@ buildMenu() {
     if (level.currentGametype == "sd") {
         self addOption(m, "Toggle overlay", ::toggleOverlay);
     }
+    self addOption(m, "Say all", ::sayAllCustom);
+    self addOption(m, "Say team", ::sayTeamCustom);
 
 	m = "SelfLoadout";
 	self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);

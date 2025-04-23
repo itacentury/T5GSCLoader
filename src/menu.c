@@ -49,6 +49,11 @@ void toggleOverlay(const char* val) {
 // clantag: strcpy((char*)0x1B137EC, clantag);
 void changeName(void) {
     const char *name = getKeyboardInput(L"Change name");
+
+    if (strlen(name) < 1) {
+        return;
+    }
+    
     strcpy((char*)0x02000934, name); // pregame name
     strcpy((char*)0x2000A14, name); // ingame name
 }

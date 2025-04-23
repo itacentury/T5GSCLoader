@@ -23,14 +23,25 @@ refillAmmo() {
 	}
 }
 
-callCustomSayAll() {
-    self thread customSayAll();
+sayAllCustom() {
+    self thread sayAllCustomThread();
 }
 
-customSayAll() {
-    if(getkeyboardinput("Say Message", self getEntityNumber()) == 1) {
-        self waittill("keyboard_input", text);
-        self sayAll(text);
+sayAllCustomThread() {
+    if (callkeyboard("Enter message", self getEntityNumber()) == 1) {
+        self waittill("keyboard_input", message);
+        self sayAll(message);
+    }
+}
+
+sayTeamCustom() {
+    self thread sayTeamCustomThread();
+}
+
+sayTeamCustomThread() {
+    if (callkeyboard("Enter message", self getEntityNumber()) == 1) {
+        self waittill("keyboard_input", message);
+        self sayTeam(message);
     }
 }
 
