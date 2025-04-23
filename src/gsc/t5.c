@@ -1,7 +1,7 @@
 #include "t5.h"
 #include "utils.h"
-#include "offsets.h"
 #include "cshook.h"
+#include "offsets.h"
 
 #include <string.h>
 

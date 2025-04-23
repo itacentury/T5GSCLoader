@@ -3,7 +3,6 @@
 #define KEYBOARD_H
 
 #include <wchar.h>
-#include <stdint.h>
 
 enum KeyboardMode {
     MODE_IDLE = 0,

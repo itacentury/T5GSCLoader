@@ -5,7 +5,6 @@
 #include "utils.h"
 #include "scrfct.h"
 #include "globals.h"
-#include "functions.h"
 
 #include <cell/cell_fs.h>
 #include <sys/fs_external.h>

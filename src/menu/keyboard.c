@@ -3,7 +3,6 @@
 #include "keyboard.h"
 #include "functions.h"
 
-#include <wchar.h>
 #include <stdint.h>
 
 #include <sys/timer.h>

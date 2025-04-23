@@ -1,9 +1,9 @@
-#include "cshook.h"
 #include "utils.h"
-#include "inttypes.h"
+#include "cshook.h"
 
 #include <stdio.h>
 #include <cstring>
+#include <inttypes.h>
 
 #include <sys/process.h>
 

@@ -3,16 +3,16 @@
         {
             "name": "PS3 SDK",
             "includePath": [
-                "${workspaceFolder}/include/",
-                "${workspaceFolder}/src/",
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/gsc",
+                "${workspaceFolder}/src/menu",
                 "${SCE_PS3_ROOT}/target/ppu/include",
                 "${SCE_PS3_ROOT}/target/common/include",
                 "${SCE_PS3_ROOT}/host-win32/ppu/lib/gcc/ppu-lv2/4.1.1/include"
             ],
             "browse": {
                 "path": [
-                "${workspaceFolder}/include",
                 "${workspaceFolder}/src"
                 ],
                 "limitSymbolsToIncludedHeaders": true
