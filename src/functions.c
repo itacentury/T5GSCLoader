@@ -2,7 +2,10 @@
 #include "globals.h"
 #include "functions.h"
 
+#include <string.h>
+
 #include <np.h>
+#include <sys/timer.h>
 #include <sysutil/sysutil_userinfo.h>
 
 opd_s Scr_AddInt_t = { 0x5DF2A0, T5_TOC };
