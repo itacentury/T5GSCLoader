@@ -13,10 +13,13 @@ MenuOption mainMenuOptions[] = {
     { "Force Host", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
     { "Players to start", OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
     { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
-    { "Select gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
+    { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
+    { "Change prestige", OPTION_SELECTOR, { .selector = {0, 16, prestigeValues, changePrestige} } },
+    { "Level 50", OPTION_ACTION, { .action = levelFifty } },
+    { "Unlimited money", OPTION_ACTION, { .action = giveMoney } },
     { "Change name", OPTION_ACTION, { .action = changeName } },
 };
-Menu mainMenu = {"Century Package [Pregame]", 6, mainMenuOptions};
+Menu mainMenu = {"Century Package [Pregame]", 9, mainMenuOptions};
 
 Menu* menus[MENU_COUNT] = {&mainMenu};
 
@@ -42,18 +45,29 @@ void changeGametype(const char* gametype) {
     cBuf_addTextf("g_gametype %s; ui_gametype %s; party_gametype %s; \n", gametype, gametype, gametype);
 }
 
+void levelFifty() {
+    strcpy((char*)0x20946E5, "1202800");
+}
+
+void changePrestige(const char* prestige) {
+    cBuf_addTextf("statsetbyname PLEVEL %s; updategamerprofile; uploadstats; \n", prestige);
+}
+
+void giveMoney(void) {
+    strcpy((char*)0x020942d1, "2147483647");
+}
+
 void toggleOverlay(const char* val) {
     showOverlay = (strcmp(val, "ON") == 0);
 }
 
-// clantag: strcpy((char*)0x1B137EC, clantag);
 void changeName(void) {
     const char *name = getKeyboardInput(L"Change name");
 
     if (strlen(name) < 1) {
         return;
     }
-    
+
     strcpy((char*)0x02000934, name); // pregame name
     strcpy((char*)0x2000A14, name); // ingame name
 }
