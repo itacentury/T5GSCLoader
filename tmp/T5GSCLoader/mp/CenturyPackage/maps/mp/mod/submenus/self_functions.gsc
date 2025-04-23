@@ -23,6 +23,28 @@ refillAmmo() {
 	}
 }
 
+sayAllCustom() {
+    self thread sayAllCustomThread();
+}
+
+sayAllCustomThread() {
+    if (callkeyboard("Enter message", self getEntityNumber()) == 1) {
+        self waittill("keyboard_input", message);
+        self sayAll(message);
+    }
+}
+
+sayTeamCustom() {
+    self thread sayTeamCustomThread();
+}
+
+sayTeamCustomThread() {
+    if (callkeyboard("Enter message", self getEntityNumber()) == 1) {
+        self waittill("keyboard_input", message);
+        self sayTeam(message);
+    }
+}
+
 doSuicide() {
 	self suicide();
 	self.currentMenu = "main";

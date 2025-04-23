@@ -49,6 +49,8 @@ buildMenu() {
     if (level.currentGametype == "sd") {
         self addOption(m, "Toggle overlay", ::toggleOverlay);
     }
+    self addOption(m, "Say all", ::sayAllCustom);
+    self addOption(m, "Say team", ::sayTeamCustom);
 
 	m = "SelfLoadout";
 	self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);

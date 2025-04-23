@@ -1,3 +1,4 @@
+#include "printf.h"
 #include "defines.h"
 #include "keyboard.h"
 
@@ -7,7 +8,6 @@
 #include <sys/sys_time.h>
 #include <cell/sysmodule.h>
 #include <sysutil/sysutil_oskdialog.h>
-#include <sysutil/sysutil_msgdialog.h>
 
 int oskdialog_mode = MODE_IDLE;
 
@@ -20,8 +20,14 @@ char *getKeyboardInput(const wchar_t *prompt) {
     oskdialog_mode = MODE_OPEN;
     while (oskdialog_mode != MODE_EXIT) {
         sys_timer_usleep(16 * 1000);
-        keyboard(dest, init_text, message);
+
+        int ret = keyboard(dest, init_text, message);
+        if (ret < 0) {
+            break;
+        }
     }
+
+    oskdialog_mode = MODE_IDLE;
 
     return dest;
 }
@@ -79,8 +85,6 @@ void makekbStr(char *str, char *dest, int len) {
 }
 
 int keyboard(char *dest, wchar_t *INIT_TEXT, wchar_t *MESSAGE) {
-    int ret;
-
     CellOskDialogInputFieldInfo inputFieldInfo;
     inputFieldInfo.message          = (uint16_t*)MESSAGE;
     inputFieldInfo.init_text        = (uint16_t*)INIT_TEXT;
@@ -92,15 +96,18 @@ int keyboard(char *dest, wchar_t *INIT_TEXT, wchar_t *MESSAGE) {
     static uint16_t Result_Text_Buffer[CELL_OSKDIALOG_STRING_SIZE + 1];
     OutputInfo.pResultString        = Result_Text_Buffer;
 
-    ret = cellOskDialogSetKeyLayoutOption(
-        CELL_OSKDIALOG_10KEY_PANEL |
-        CELL_OSKDIALOG_FULLKEY_PANEL
-    );
+    if (cellOskDialogSetKeyLayoutOption(CELL_OSKDIALOG_10KEY_PANEL | CELL_OSKDIALOG_FULLKEY_PANEL) != CELL_OK) {
+        printf(T5ERROR "Failed to set key layout options!");
+        return -1;
+    }
 
     CellOskDialogPoint pos = { .x = 0.0f, .y = 0.0f };
     int32_t LayoutMode = CELL_OSKDIALOG_LAYOUTMODE_X_ALIGN_CENTER |
                          CELL_OSKDIALOG_LAYOUTMODE_Y_ALIGN_TOP;
-    ret = cellOskDialogSetLayoutMode(LayoutMode);
+    if (cellOskDialogSetLayoutMode(LayoutMode) != CELL_OK) {
+        printf(T5ERROR "Failed to set layout mode!");
+        return -1;
+    }
 
     CellOskDialogParam dialogParam = {
         .allowOskPanelFlg = CELL_OSKDIALOG_PANELMODE_KOREAN     |
@@ -116,24 +123,40 @@ int keyboard(char *dest, wchar_t *INIT_TEXT, wchar_t *MESSAGE) {
     };
 
     sys_timer_usleep(16 * 1000);
-    ret = cellSysutilCheckCallback();
+    if (cellSysutilCheckCallback() != CELL_OK) {
+        printf(T5ERROR "Failed to check sysutil callback!");
+        return -1;
+    }
 
     if (oskdialog_mode == MODE_OPEN) {
-        if (cellSysutilRegisterCallback(0, sysutil_callback, NULL) != 0) {
-            printf(T5ERROR "Couldn't register the keyboard!");
+        if (cellSysutilRegisterCallback(0, sysutil_callback, NULL) != CELL_OK) {
+            printf(T5ERROR "Couldn't register sysutil callback!");
+            return -1;
         }
 
-        ret = cellOskDialogLoadAsync(SYS_MEMORY_CONTAINER_ID_INVALID, &dialogParam, &inputFieldInfo);
+        if (cellOskDialogLoadAsync(SYS_MEMORY_CONTAINER_ID_INVALID, &dialogParam, &inputFieldInfo) != CELL_OK) {
+            printf(T5ERROR "Failed to load OSK dialog");
+            cellSysutilUnregisterCallback(0);
+            return -1;
+        }
+    
         oskdialog_mode = MODE_RUNNING;
     }
 
     if (oskdialog_mode == MODE_ENTERED) {
-        ret = cellOskDialogGetInputText(&OutputInfo);
+        if (cellOskDialogGetInputText(&OutputInfo) != CELL_OK) {
+            printf(T5ERROR "Failed to get input text!");
+            return -1;
+        }
+
         oskdialog_mode = MODE_RUNNING;
     }
 
     if (oskdialog_mode == MODE_CLOSE) {
-        ret = cellOskDialogUnloadAsync(&OutputInfo);
+        if (cellOskDialogUnloadAsync(&OutputInfo) != CELL_OK) {
+            printf(T5ERROR "Failed to unload dialog async!");
+            return -1;
+        }
 
         int strLen = getkbLen((char*)OutputInfo.pResultString);
         makekbStr((char*)OutputInfo.pResultString, dest, strLen);

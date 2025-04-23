@@ -134,6 +134,11 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
             return (popd32)&scrfct_setmemory;
         }
 
+        if (strcmp(*pName, "callkeyboard") == 0) {
+            printf(T5INFO "Function 'callkeyboard' found.");
+            return (popd32)&scrfct_callkeyboard;
+        }
+
         return 0;
     }
 
