@@ -130,7 +130,8 @@ buildMenu() {
         if (level.teambased) {
             self addOption(player_name, "Switch team", ::changePlayerTeam, player);
         }
-        else {
+        
+        if (level.currentGametype == "dm") {
             self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
         }
 
