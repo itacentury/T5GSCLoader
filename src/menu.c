@@ -15,11 +15,10 @@ MenuOption mainMenuOptions[] = {
     { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
     { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
     { "Change prestige", OPTION_SELECTOR, { .selector = {0, 16, prestigeValues, changePrestige} } },
-    { "Level 50", OPTION_ACTION, { .action = levelFifty } },
-    { "Unlimited money", OPTION_ACTION, { .action = giveMoney } },
+    { "Basic recovery", OPTION_ACTION, { .action = basicRecovery } },
     { "Change name", OPTION_ACTION, { .action = changeName } },
 };
-Menu mainMenu = {"Century Package [Pregame]", 9, mainMenuOptions};
+Menu mainMenu = {"Century Package [Pregame]", 8, mainMenuOptions};
 
 Menu* menus[MENU_COUNT] = {&mainMenu};
 
@@ -45,16 +44,13 @@ void changeGametype(const char* gametype) {
     cBuf_addTextf("g_gametype %s; ui_gametype %s; party_gametype %s; \n", gametype, gametype, gametype);
 }
 
-void levelFifty() {
-    strcpy((char*)0x20946E5, "1202800");
+void basicRecovery(void) {
+    strcpy((char*)0x20946E5, "1202800"); // Level 50
+    strcpy((char*)0x020942d1, "2147483647"); // COD points
 }
 
 void changePrestige(const char* prestige) {
     cBuf_addTextf("statsetbyname PLEVEL %s; updategamerprofile; uploadstats; \n", prestige);
-}
-
-void giveMoney(void) {
-    strcpy((char*)0x020942d1, "2147483647");
 }
 
 void toggleOverlay(const char* val) {
