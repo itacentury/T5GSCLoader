@@ -1,9 +1,9 @@
 #ifndef PRINTF_H
 #define PRINTF_H
 
+#include <wchar.h>
 #include <stdarg.h>
 #include <stddef.h>
-#include <wchar.h>
 
 #define LOWORD(a) ((short)(a))
 #define HIWORD(a) ((short)(((int)(a) >> 16) & 0xFFFF))

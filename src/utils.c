@@ -1,8 +1,9 @@
 #include "utils.h"
 
-#include <sys/process.h>
-#include <sys/tty.h>
 #include <string.h>
+
+#include <sys/tty.h>
+#include <sys/process.h>
 #include <cell/fs/cell_fs_file_api.h>
 
 int sys_dbg_process_write(uint64_t address, const void *data, size_t size) {

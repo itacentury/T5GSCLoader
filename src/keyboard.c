@@ -1,9 +1,11 @@
 #include "printf.h"
 #include "defines.h"
 #include "keyboard.h"
+#include "functions.h"
 
 #include <wchar.h>
 #include <stdint.h>
+
 #include <sys/timer.h>
 #include <sys/sys_time.h>
 #include <cell/sysmodule.h>
@@ -19,7 +21,7 @@ char *getKeyboardInput(const wchar_t *prompt) {
 
     oskdialog_mode = MODE_OPEN;
     while (oskdialog_mode != MODE_EXIT) {
-        sys_timer_usleep(16 * 1000);
+        sleep(16);
 
         int ret = keyboard(dest, init_text, message);
         if (ret < 0) {
@@ -122,7 +124,7 @@ int keyboard(char *dest, wchar_t *INIT_TEXT, wchar_t *MESSAGE) {
         .prohibitFlgs     = 0
     };
 
-    sys_timer_usleep(16 * 1000);
+    sleep(16);
     if (cellSysutilCheckCallback() != CELL_OK) {
         printf(T5ERROR "Failed to check sysutil callback!");
         return -1;

@@ -1,5 +1,4 @@
 #include "t5.h"
-#include "PS3.h"
 #include "hud.h"
 #include "menu.h"
 #include "utils.h"
@@ -8,6 +7,7 @@
 #include "functions.h"
 
 #include <stdio.h>
+
 #include <sys/prx.h>
 #include <sys/timer.h>
 #include <sys/ppu_thread.h>

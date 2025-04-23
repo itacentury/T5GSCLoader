@@ -1,9 +1,12 @@
 #ifndef SCRFCT_H
 #define SCRFCT_H
 
+#include "functions.h"
+
 #include <wchar.h>
 
-#include "functions.h"
+#include <sysutil/sysutil_oskdialog.h>
+
 
 #define MAX_TITLE (CELL_OSKDIALOG_STRING_SIZE+1)
 #define MAX_KB_THREADS 4

@@ -95,11 +95,11 @@
 
 #include "printf.h"
 
-#include <sys/tty.h>
-
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
+
+#include <sys/tty.h>
 
 #define HAVE_UNSIGNED_LONG_LONG_INT
 #define HAVE_STDINT_H

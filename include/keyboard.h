@@ -2,8 +2,8 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include <stdint.h>
 #include <wchar.h>
+#include <stdint.h>
 
 enum KeyboardMode {
     MODE_IDLE = 0,

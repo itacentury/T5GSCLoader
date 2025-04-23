@@ -1,9 +1,8 @@
-#include "PS3.h"
 #include "menu.h"
 #include "utils.h"
 #include "globals.h"
-#include "functions.h"
 #include "keyboard.h"
+#include "functions.h"
 
 #include <string.h>
 

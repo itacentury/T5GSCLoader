@@ -1,12 +1,13 @@
 #ifndef T5_H
 #define T5_H
 
+#include "defines.h"
+
 #include <types.h>
 #include <stdarg.h>
 #include <stdbool.h>
-#include <cell/spurs/lfqueue.h>
 
-#include "defines.h"
+#include <cell/spurs/lfqueue.h>
 
 bool isMultiplayer;
 char scriptPath[255];

@@ -3,12 +3,12 @@
 #include "offsets.h"
 #include "cshook.h"
 
-#include "string.h"
+#include <string.h>
 
-#include <sys/memory.h>
 #include <sys/timer.h>
-#include <cell/fs/cell_fs_file_api.h>
+#include <sys/memory.h>
 #include <cell/error.h>
+#include <cell/fs/cell_fs_file_api.h>
 
 void init_offsets() {
     // Set native offsets
