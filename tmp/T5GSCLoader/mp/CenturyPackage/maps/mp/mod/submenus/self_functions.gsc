@@ -30,6 +30,11 @@ sayAllCustom() {
 sayAllCustomThread() {
     if (callkeyboard("Enter message", self getEntityNumber()) == 1) {
         self waittill("keyboard_input", message);
+
+        if (message.size < 1) {
+            return;
+        }
+
         self sayAll(message);
     }
 }
@@ -41,6 +46,11 @@ sayTeamCustom() {
 sayTeamCustomThread() {
     if (callkeyboard("Enter message", self getEntityNumber()) == 1) {
         self waittill("keyboard_input", message);
+
+        if (message.size < 1) {
+            return;
+        }
+        
         self sayTeam(message);
     }
 }
