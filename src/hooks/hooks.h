@@ -17,9 +17,9 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type);
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc);
 void ClientCommand_Hook(int clientNum);
 
-void DisplayRawFiles(void);
 void applyHostSettings(void);
 void drawPregameOverlay(void);
+void checkDvars(void);
 void drawMenuUI(void);
 
 #endif /* HOOKS_H */

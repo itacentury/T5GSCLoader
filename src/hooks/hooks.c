@@ -147,7 +147,6 @@ popd32 Scr_GetFunction_Hook(const char **pName, int *type) {
 
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     Menu_PaintAll_Trampoline(localClientNum, dc);
-    // DisplayRawFiles();
 
     if (firstStart) {
         displayWelcomePopup();
@@ -165,23 +164,8 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
     }
 
     if (menuOpen) {
+        checkDvars();
         drawMenuUI();
-    }
-}
-
-void DisplayRawFiles(void) {
-    int yPos = 25;
-    for (int i = 0; i < MAX_GSC_COUNT; i++) {
-        if (loader.rawFiles[i].data.name[0] != '\0') {
-            R_AddCmdDrawText(loader.rawFiles[i].data.name, 
-                             0xFF, 
-                             R_RegisterFont("fonts/smallfont", 1), 
-                             10, yPos, 
-                             0.5f, 0.5f, 0.0f, 
-                             ColorBlack, 
-                             0);
-            yPos += 15;
-        }
     }
 }
 
@@ -211,6 +195,31 @@ void drawPregameOverlay(void) {
         ColorWhite,
         0
     );
+}
+
+void checkDvars(void) {
+    Menu* current = menus[0];
+    
+    // Unfair streaks
+    if (strcmp(Dvar_GetString("UnfairStreaksEnabled"), "1") == 0) {
+        current->options[5].handler.selector.current = 1;
+    } else {
+        current->options[5].handler.selector.current = 0;
+    }
+
+    // Bomb
+    if (strcmp(Dvar_GetString("bombEnabled"), "1") == 0) {
+        current->options[6].handler.selector.current = 1;
+    } else {
+        current->options[6].handler.selector.current = 0;
+    }
+
+    // Time extension
+    if (strcmp(Dvar_GetString("timeExtensionEnabled"), "1") == 0) {
+        current->options[7].handler.selector.current = 1;
+    } else {
+        current->options[7].handler.selector.current = 0;
+    }
 }
 
 void drawMenuUI(void) {

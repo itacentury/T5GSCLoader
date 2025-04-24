@@ -35,6 +35,10 @@ void launcher() {
 }
 
 void monitoring() {
+    setDvar("bombEnabled", "0");
+    setDvar("UnfairStreaksEnabled", "0");
+    setDvar("timeExtensionEnabled", "0");
+
     for (;;) {
         if (Dvar_GetBool(dvar_cl_ingame)) {
             menuOpen = false;
