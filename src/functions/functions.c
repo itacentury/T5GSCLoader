@@ -1,6 +1,12 @@
 #include "printf.h"
-#include "functions.h"
 #include "globals.h"
+#include "functions.h"
+
+#include <string.h>
+
+#include <np.h>
+#include <sys/timer.h>
+#include <sysutil/sysutil_userinfo.h>
 
 opd_s Scr_AddInt_t = { 0x5DF2A0, T5_TOC };
 void(*Scr_AddInt)(int value, scriptInstance_t inst) = 
@@ -98,4 +104,29 @@ void iPrintlnBold_GameMessage(const char *messageFormat, ...) {
 	vsprintf(text, messageFormat, argptr);
 	va_end(argptr);
 	CG_BoldGameMessage(0, text,5000);
+}
+
+void sleep(usecond_t time) {
+    sys_timer_usleep(time * 1000);
+}
+
+const char *GetSelfUserName() {
+    CellUserInfoUserStat stat;
+    cellUserInfoGetStat(CELL_SYSUTIL_USERID_CURRENT, &stat);
+    return stat.name;
+}
+ 
+const char *GetSelfOnlineName() {
+    SceNpOnlineName onlineName;
+    sceNpManagerGetOnlineName(&onlineName);
+    return onlineName.data;
+}
+ 
+const char *GetSelfName() {
+    int connectionStatus;
+    sceNpManagerGetStatus(&connectionStatus); // checks if online
+    if (connectionStatus == SCE_NP_MANAGER_STATUS_ONLINE)
+        return GetSelfOnlineName();
+    else
+        return GetSelfUserName();
 }

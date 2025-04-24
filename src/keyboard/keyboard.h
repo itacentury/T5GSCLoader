@@ -2,7 +2,6 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include <stdint.h>
 #include <wchar.h>
 
 enum KeyboardMode {

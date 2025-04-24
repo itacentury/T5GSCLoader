@@ -2,6 +2,7 @@ SOURCES_DIR 		:= src
 OUTPUT_DIR 			:= bin
 BUILD_TYPE 			?= debug
 FILE_NAME			:= CenturyPackage
+SRCDIRS 			:= $(shell find src -type d)
 
 CELL_MK_DIR 		?= 	$(SCE_PS3_ROOT)/samples/mk
 include 			$(CELL_MK_DIR)/sdk.makedef.mk
@@ -20,7 +21,7 @@ PRX_LDFLAGS_EXTRA	=
 endif
 
 PPU_CFLAGS 			+= -std=c99 -ffunction-sections -fdata-sections -fno-builtin-printf -nodefaultlibs -Wno-shadow -Wno-unused-parameter
-PPU_CFLAGS         	+= -Iinclude/
+PPU_CFLAGS 			+= $(addprefix -I,$(SRCDIRS))
 
 CLEANFILES 			= $(PRX_DIR)/$(PPU_SPRX_TARGET)
 

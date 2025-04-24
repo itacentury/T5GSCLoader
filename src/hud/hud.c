@@ -1,8 +1,7 @@
 #include "hud.h"
 #include "utils.h"
-#include "globals.h"
 #include "offsets.h"
-#include "functions.h"
+#include "globals.h"
 
 float ColorVividTeal[4] = {0.0f, 1.0f, 1.0f, 1.0f};
 float ColorMutedTeal[4] = {0.0f, 0.7f, 0.7f, 1.0f};

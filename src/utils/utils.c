@@ -1,8 +1,9 @@
 #include "utils.h"
 
-#include <sys/process.h>
-#include <sys/tty.h>
 #include <string.h>
+
+#include <sys/tty.h>
+#include <sys/process.h>
 #include <cell/fs/cell_fs_file_api.h>
 
 int sys_dbg_process_write(uint64_t address, const void *data, size_t size) {
@@ -89,8 +90,9 @@ int hex_str_to_int32(char *hexStr, size_t hexLen) {
     return *(int*)(&out);
 }
 
-void RemoveThreadIDCheckOnCL_ConsolePrint() { // allows iPrintln_GameMessage and iPrintlnBold_GameMessage by noping Com_GetParseThreadInfo in 0x001AF228 CL_ConsolePrint
-    uint32_t PPC[] = {0x60000000};
+// allows iPrintln_GameMessage and iPrintlnBold_GameMessage by noping Com_GetParseThreadInfo in 0x001AF228 CL_ConsolePrint
+void RemoveThreadIDCheckOnCL_ConsolePrint() {
+    uint32_t PPC[] = { 0x60000000 };
 	for (int i = 0; i < 0x4; i++)
         sys_dbg_process_write(0x1AF264 + (i * 4), &PPC[0], 4);
 }
@@ -104,7 +106,8 @@ void RSATest() {
 	sys_dbg_process_write(0x230268, &PPC[0], 4);
 }
 
-void RemoveCheatProtection() { //can use some cheat protected dvars
+// can use some cheat protected dvars
+void RemoveCheatProtection() {
 	uint32_t PPC[] = { 0x60000000, 0x3B200000 };
 	sys_dbg_process_write(0x4C8EC4, &PPC[0], 4);
 	sys_dbg_process_write(0x4C8ED0, &PPC[0], 4);

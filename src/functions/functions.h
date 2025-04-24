@@ -1,7 +1,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "PS3.h"
 #include "offsets.h"
 #include "defines.h"
 
@@ -60,5 +59,9 @@ bool CompareString(const char *str1, const char *str2);
 void drawOkayPopup(const char *title, const char *message);
 void displayWelcomePopup(void);
 void iPrintlnBold_GameMessage(const char *messageFormat, ...);
+void sleep(usecond_t time);
+const char *GetSelfName();
+const char *GetSelfUserName();
+const char *GetSelfOnlineName();
 
 #endif /* FUNCTIONS_H */

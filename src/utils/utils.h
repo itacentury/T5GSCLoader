@@ -1,8 +1,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <sys/prx.h>
 #include <types.h>
+
+#include <sys/prx.h>
 
 // Fixing the define only to remove the annoying intellisense issue..
 #ifdef SYS_MODULE_INFO_SECTION

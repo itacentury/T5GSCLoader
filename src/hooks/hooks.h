@@ -2,11 +2,9 @@
 #define HOOKS_H
 
 #include "t5.h"
-#include "PS3.h"
 #include "utils.h"
 #include "scrfct.h"
 #include "globals.h"
-#include "functions.h"
 
 #include <cell/cell_fs.h>
 #include <sys/fs_external.h>
