@@ -38,6 +38,8 @@ char * (*va)(const char *format, ...) =
 opd_s Dvar_GetBool_t = { 0x4C7BF0, (int32_t)T5_TOC };
 bool (*Dvar_GetBool)(const char *) =
     (bool (*)(const char *))&Dvar_GetBool_t;
+opd_s Dvar_GetString_t = { 0x4C7370, T5_TOC };
+char*(*Dvar_GetString)(const char *dvarName) = (char*(*)(const char *))&Dvar_GetString_t;
 opd_s cb1 = { 0x399CC8, T5_TOC };
 void(*Cbuf)(int client, char* cmd) = (void(*)(int, char*))&cb1;
 opd_s NTFY = { 0x354F08, T5_TOC };
