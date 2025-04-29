@@ -1,0 +1,3 @@
+[submodule "tmp/T5GSCLoader/mp/CenturyPackageBO1"]
+	path = tmp/T5GSCLoader/mp/CenturyPackageBO1
+	url = https://github.com/itacentury/CenturyPackageBO1.git
