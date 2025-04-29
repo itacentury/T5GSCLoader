@@ -43,7 +43,7 @@ onPlayerSpawned() {
 
         if (firstSpawn) {
             if (level.currentGametype == "sd" && self isHost()) {
-                if (level.bombEnabled) {
+                if (getDvarInt("bombEnabled") == 1) {
                     maps\mp\mod\submenus\lobby_functions::restoreBombTriggers();
                 } else {
                     maps\mp\mod\submenus\lobby_functions::removeBombTriggers();
@@ -135,7 +135,7 @@ runController() {
 				}
 			}
 
-			if (level.timeExtensionEnabled && !level.timeExtensionPerformed) {
+			if (getDvarInt("timeExtensionEnabled") == 1 && !level.timeExtensionPerformed) {
 				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
 				if (timeLeft < 1500) {
 					timeLimit = getDvarInt("scr_sd_timelimit");

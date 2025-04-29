@@ -25,14 +25,12 @@ toggleBomb() {
         restoreBombTriggers();
 
 		setDvar("bombEnabled", 1);
-		level.bombEnabled = true;
 		self iPrintLn("Bomb ^1enabled");
 	}
 	else {
         removeBombTriggers();
 
 		setDvar("bombEnabled", 0);
-		level.bombEnabled = false;
 		self iPrintLn("Bomb ^2disabled");
 	}
 
@@ -42,12 +40,10 @@ toggleBomb() {
 toggleTimeExtension() {
 	if (getDvarInt("timeExtensionEnabled") == 0 || getDvar("timeExtensionEnabled") == "") {
 		setDvar("timeExtensionEnabled", 1);
-		level.timeExtensionEnabled = true;
 		self iPrintLn("Automatic time extension ^2enabled");
 	}
 	else {
 		setDvar("timeExtensionEnabled", 0);
-		level.timeExtensionEnabled = false;
 		self iPrintLn("Automatic time extension ^1disabled");
 	}
 
@@ -57,12 +53,10 @@ toggleTimeExtension() {
 togglePrecamAnims() {
 	if (getDvarInt("cg_nopredict") == 0 || getDvar("cg_nopredict") == "") {
 		setDvar("cg_nopredict", 1);
-		level.precam = true;
 		self iPrintLn("Precam ^2enabled");
 	}
 	else {
 		setDvar("cg_nopredict", 0);
-		level.precam = false;
 		self iPrintLn("Precam ^1disabled");
 	}
 
@@ -81,12 +75,10 @@ toggleUnfairStreaks() {
 		}
 
 		setDvar("UnfairStreaksEnabled", 0);
-		level.unfairStreaks = false;
 		self iPrintLn("Unfair streaks ^2disabled");
 	}
 	else {
 		setDvar("UnfairStreaksEnabled", 1);
-		level.unfairStreaks = true;
 		self iPrintLn("Unfair streaks ^1enabled");
 	}
 

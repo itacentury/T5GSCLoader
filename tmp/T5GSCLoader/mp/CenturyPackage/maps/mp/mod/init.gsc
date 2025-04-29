@@ -21,29 +21,9 @@ initLevelVars() {
         level.yAxisOverlayPlacement = 474;
 	}
 
-    level.bombEnabled = false;
-	if (getDvarInt("bombEnabled") != 0) {
-		level.bombEnabled = true;
-	}
-
-    level.precam = false;
-	if (getDvarInt("cg_nopredict") == 1) {
-		level.precam = true;
-	}
-
-    level.unfairStreaks = true;
-	if (getDvarInt("UnfairStreaksEnabled") == 0) {
-		level.unfairStreaks = false;
-	}
-
     level.unlimitedSniperDmg = false;
 	if (level.currentGametype == "sd" || level.currentGametype == "dm") {
 		level.unlimitedSniperDmg = true;
-	}
-
-    level.timeExtensionEnabled = false;
-	if (getDvarInt("timeExtensionEnabled") == 1) {
-		level.timeExtensionEnabled = true;
 	}
 
     level.timeExtensionPerformed = false;
@@ -52,8 +32,24 @@ initLevelVars() {
 }
 
 initDvars() {
-    setDvar("UnfairStreaksEnabled", "0"); //Unfair Streaks
-	setDvar("killcam_final", "1"); //Playercard in Killcam
+    if (!isDefined(getDvar("bombEnabled"))) {
+        setDvar("bombEnabled", 0);
+	}
+
+    if (!isDefined(getDvar("UnfairStreaksEnabled"))) {
+        setDvar("UnfairStreaksEnabled", 0);
+	}
+
+    if (!isDefined(getDvar("timeExtensionEnabled"))) {
+        setDvar("timeExtensionEnabled", 0);
+	}
+
+    if (!isDefined(getDvar("UnfairStreaksEnabled"))) {
+        setDvar("UnfairStreaksEnabled", 0);
+    }
+
+    //Playercard in killcam
+    setDvar("killcam_final", 1);
 
     switch (level.currentGametype) {
 		case "dm": {
