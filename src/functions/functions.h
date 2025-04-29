@@ -33,6 +33,8 @@ extern opd_s va_t;
 extern char *(*va)(const char *format, ...);
 extern opd_s Dvar_GetBool_t;
 extern bool (*Dvar_GetBool)(const char *);
+extern opd_s Dvar_GetString_t;
+extern char*(*Dvar_GetString)(const char *dvarName);
 extern opd_s cb1;
 extern void(*Cbuf)(int client, char* cmd);
 extern opd_s NTFY;

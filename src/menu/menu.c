@@ -13,11 +13,14 @@ MenuOption mainMenuOptions[] = {
     { "Players to start", OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
     { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
     { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
+    { "Unfair streaks", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleUnfairStreaks} } },
+    { "Bomb (sd)", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleBomb} } },
+    { "Time extension (sd)", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleTimeExtension} } },
     { "Change prestige", OPTION_SELECTOR, { .selector = {0, 16, prestigeValues, changePrestige} } },
     { "Basic recovery", OPTION_ACTION, { .action = basicRecovery } },
     { "Change name", OPTION_ACTION, { .action = changeName } },
 };
-Menu mainMenu = {"Century Package [Pregame]", 8, mainMenuOptions};
+Menu mainMenu = {"Century Package [Pregame]", 11, mainMenuOptions};
 
 Menu* menus[MENU_COUNT] = {&mainMenu};
 
@@ -41,6 +44,21 @@ void changeMaxPlayers(const char* val) {
 
 void changeGametype(const char* gametype) {
     cBuf_addTextf("g_gametype %s; ui_gametype %s; party_gametype %s; \n", gametype, gametype, gametype);
+}
+
+void toggleUnfairStreaks(const char* val) {
+    int p = (val && strcmp(val, "ON") == 0) ? 1 : 0;
+    cBuf_addTextf("UnfairStreaksEnabled %i; \n", p);
+}
+
+void toggleBomb(const char* val) {
+    int p = (val && strcmp(val, "ON") == 0) ? 1 : 0;
+    cBuf_addTextf("bombEnabled %i; \n", p);
+}
+
+void toggleTimeExtension(const char* val) {
+    int p = (val && strcmp(val, "ON") == 0) ? 1 : 0;
+    cBuf_addTextf("timeExtensionEnabled %i; \n", p);
 }
 
 void basicRecovery(void) {

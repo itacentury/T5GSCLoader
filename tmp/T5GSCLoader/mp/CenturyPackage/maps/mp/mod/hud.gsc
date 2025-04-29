@@ -189,22 +189,22 @@ updateInfoText() {
     }
 
     bombText = "Bomb: ^2disabled^7";
-	if (level.bombEnabled) {
+	if (getDvarInt("bombEnabled") == 1) {
 		bombText = "Bomb: ^1enabled^7";
 	}
 
     precamText = "Pre-cam anims: ^1disabled^7";
-	if (level.precam) {
+	if (getDvarInt("cg_nopredict") == 1) {
 		precamText = "Pre-cam anims: ^2enabled^7";
 	}
 
     timeExtensionEnabledText = "Time extension: ^1disabled^7";
-	if (level.timeExtensionEnabled) {
+	if (getDvarInt("timeExtensionEnabled") == 1) {
 		timeExtensionEnabledText = "Time extension: ^2enabled^7";
 	}
 
     unfairStreaksText = "Unfair streaks: ^2disabled^7";
-	if (level.unfairStreaks) {
+	if (getDvarInt("UnfairStreaksEnabled") == 1) {
 		unfairStreaksText = "Unfair streaks: ^1enabled^7";
 	}
 
