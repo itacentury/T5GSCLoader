@@ -69,7 +69,7 @@ void get_or_create_mod_path(char *path) {
     int fd;
     CellFsErrno err;
     char pathMods[CELL_FS_MAX_FS_PATH_LENGTH];
-    sprintf(pathMods, SCRIPTS_PATH "/%s", isMultiplayer ? "mp" : "zm");
+    sprintf(pathMods, SCRIPTS_PATH "/mp");
 
     // Check scripts folder existing and create it if necessary
     err = cellFsMkdir(SCRIPTS_PATH, CELL_FS_DEFAULT_CREATE_MODE_1);
@@ -94,7 +94,7 @@ void get_or_create_mod_path(char *path) {
 
         if (strstr(ent.d_name, ".mod")) {
             strcpy(loader.currentModName, ent.d_name);
-            sprintf(path, SCRIPTS_PATH "/%s/%s", isMultiplayer ? "mp" : "zm", ent.d_name);
+            sprintf(path, SCRIPTS_PATH "/mp/%s", ent.d_name);
             path[strlen(path) - 4] = 0;
         }
     }
@@ -152,9 +152,9 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
                 snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
                          "%s/%s", relative, ent.d_name);
             } else {
-                // If no subdirectory exists: set a default path, e.g., "maps/mp/" or "maps/zm/" depending on the mode
+                // If no subdirectory exists: set a default path, e.g., "maps/mp/"
                 snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
-                         "maps/%s/%s", isMultiplayer ? "mp" : "zm", ent.d_name);
+                         "maps/mp/%s", ent.d_name);
             }
 
             int fileSize = get_file_size(fullPath);
@@ -194,17 +194,16 @@ bool create_assets_from_scripts(char *path) {
 }
 
 int init_game() {
-    // Current process is Black Ops MP 1.13 MP or ZM?
+    // Current process is Black Ops MP 1.13 MP?
     if (*(int*)(0x1002C) == 0xB5A4A0)
         isMultiplayer = true;
-    else if (*(int*)(0x1002C) == 0xA56728)
-        isMultiplayer = false;
     else {
-        printf(T5ERROR "The process is not Black Ops 1.13 MP/ZM.");
+        isMultiplayer = false;
+        printf(T5ERROR "The process is not Black Ops 1.13 MP.");
         return -1;
     }
 
-    // Init offsets / hooks according MP/ZM
+    // Init offsets / hooks according MP
     init_offsets();
     int err;
     if ((err = init_hooks()) < 0) {
@@ -216,7 +215,7 @@ int init_game() {
     char modPath[CELL_FS_MAX_FS_PATH_LENGTH];
     get_or_create_mod_path(modPath);
     if (!*modPath) {
-        printf(T5WARNING "Mod file not found, create a .mod file in '%s/%s' with a name that is equal to a mod folder to load it (no game restart required using ftp).", SCRIPTS_PATH, isMultiplayer ? "mp" : "zm");
+        printf(T5WARNING "Mod file not found, create a .mod file in '%s/mp' with a name that is equal to a mod folder to load it (no game restart required using ftp).", SCRIPTS_PATH);
     }
 
     return 0;

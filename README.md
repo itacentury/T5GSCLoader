@@ -18,7 +18,7 @@ Additionally a pregame menu was added to be able to use force host and other fea
 * The module will be created in `bin/release/`.
 
 ## Usage
-Create a folder in `/dev_hdd0/tmp/T5GSCLoader/mp` or `/dev_hdd0/tmp/T5GSCLoader/zm` and put your script in it. Beside your created folder create a .mod file that has the same name than your mod to enable it. You need to have a file in your mod folder named `main.gsc` with a `main()` function inside to get it load and started (see tmp directory for structure/examples).
+Create a folder in `/dev_hdd0/tmp/T5GSCLoader/mp` and put your script in it. Beside your created folder create a .mod file that has the same name than your mod to enable it. You need to have a file in your mod folder named `main.gsc` with a `main()` function inside to get it load and started (see tmp directory for structure/examples).
 
 The pregame menu can be opened with L1 + R3.
 

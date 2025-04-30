@@ -10,8 +10,8 @@
     uint64_t name##_opd;              \
     name##_t name;
 
-#define t5ni(name)                                                                                                    \
-    name##_opd = isMultiplayer ? ((uint64_t)T5_##name << 32) | T5_TOC : ((uint64_t)T5_##name##_ZM << 32) | T5_TOC_ZM; \
+#define t5ni(name)                                      \
+    name##_opd = ((uint64_t)T5_##name << 32) | T5_TOC ; \
     name = (name##_t) & name##_opd;
 
 #define t5nhd(ret_type, name, args)   \
@@ -21,12 +21,12 @@
     name##_t name##_Trampoline;       \
     ret_type name##_Hook args;
 
-#define t5nhi(name)                                                                                                   \
-    name##_opd = isMultiplayer ? ((uint64_t)T5_##name << 32) | T5_TOC : ((uint64_t)T5_##name##_ZM << 32) | T5_TOC_ZM; \
-    name = (name##_t) & name##_opd;                                                                                   \
+#define t5nhi(name)                                     \
+    name##_opd = ((uint64_t)T5_##name << 32) | T5_TOC;  \
+    name = (name##_t) & name##_opd;                     \
     name##_Trampoline = 0;
 
-#define t5o(name) (isMultiplayer ? T5_##name : T5_##name##_ZM)
+#define t5o(name) (T5_##name)
 
 #define MAX_GSC_COUNT 100
 

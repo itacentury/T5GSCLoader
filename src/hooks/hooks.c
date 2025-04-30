@@ -18,12 +18,12 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
         return res;
     }
 
-    // The game will load some script on boot (ZM), avoid it.
+    // The game will load some script on boot, avoid it.
     if (strcmp(mapname->current.string, "frontend") == 0) {
         return res;
     }
 
-    sprintf(buffer, isMultiplayer ? "maps/mp/%s" : "maps/%s", mapname->current.string);
+    sprintf(buffer, "maps/mp/%s", mapname->current.string);
 
     // Checking if the current gsc loaded is the one for the current map.
     if (strcmp(scriptName, buffer) == 0) {
@@ -43,7 +43,7 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
             // Create asset entry for each file in our mod directory.
             if (create_assets_from_scripts(modPath)) {
                 // Load the main file; any gsc used as include inside will be loaded too.
-                char *mainMod = isMultiplayer ? "maps/mp/mod/main" : "maps/zm/mod/main";
+                char *mainMod = "maps/mp/mod/main";
                 Scr_LoadScript_Trampoline(inst, mainMod);
 
                 // Get our main function handle to start it later in another hook.
