@@ -1,10 +1,12 @@
 #include "utils.h"
+#include "globals.h"
 
 #include <string.h>
 
 #include <sys/tty.h>
 #include <sys/process.h>
 #include <cell/fs/cell_fs_file_api.h>
+#include <sysutil/sysutil_sysparam.h>
 
 int sys_dbg_process_write(uint64_t address, const void *data, size_t size) {
     system_call_4(905, sys_process_getpid(), address, size, (uintptr_t)data);
@@ -115,6 +117,33 @@ void RemoveCheatProtection() {
 	
 	//TEST
 	sys_dbg_process_write(0x3E013C, &PPC[0], 4);
+}
+
+void checkScreenResolution() {
+    float width = 1280.0f, height = 720.0f;
+
+    CellVideoOutConfiguration config;
+    cellVideoOutGetConfiguration(CELL_VIDEO_OUT_PRIMARY, &config, NULL);
+
+    CellVideoOutResolution resInfo = {0};
+    int res = cellVideoOutGetResolution(config.resolutionId, &resInfo);
+    if (res == CELL_OK) {
+        width  = (float)resInfo.width;
+        height = (float)resInfo.height;
+        printf(T5INFO "Detected screen resolution '%i×%i'", resInfo.width, resInfo.height);
+    } else {
+        width  = 1280.0f;
+        height = 720.0f;
+        printf(T5WARNING "Unknown screen resolution (%d), using 1280×720", config.resolutionId);
+    }
+
+    // hudScale = height >= 1080 ? 1.2f : 1.0f;
+    hudScale = height >= 1080 ? 1.0f : 1.0f;
+
+    screenResolution.width  = width;
+    screenResolution.height = height;
+    screenCenter.width      = width  * 0.5f;
+    screenCenter.height     = height * 0.5f;
 }
 
 char byteArray[100];

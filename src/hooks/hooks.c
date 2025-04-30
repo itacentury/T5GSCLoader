@@ -150,6 +150,7 @@ void Menu_PaintAll_Hook(int localClientNum, UiContext *dc) {
 
     if (firstStart) {
         displayWelcomePopup();
+        checkScreenResolution();
         firstStart = false;
     }
 
@@ -185,18 +186,6 @@ void applyHostSettings(void) {
     }
 }
 
-void drawPregameOverlay(void) {
-    R_AddCmdDrawText(
-        va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3),
-        0xFF,
-        R_RegisterFont("fonts/normalfont", 1),
-        10, 710,
-        0.5f, 0.5f, 0.0f,
-        ColorWhite,
-        0
-    );
-}
-
 void checkDvars(void) {
     Menu* current = menus[0];
     
@@ -222,60 +211,66 @@ void checkDvars(void) {
     }
 }
 
-void drawMenuUI(void) {
-    Menu* current = menus[currentMenuIndex];
+void drawPregameOverlay(void) {
+    float fontScale = 0.5 * hudScale;
 
     R_AddCmdDrawText(
-        va("%s %s/%s %s - Scroll/Rotate | %s - Select | %s - Exit",
-           CODE_DPAD_UP, CODE_DPAD_DOWN, CODE_L1, CODE_R1, CODE_SQUARE, CODE_R3),
+        va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3),
         0xFF,
         R_RegisterFont("fonts/normalfont", 1),
-        10, 710,
-        0.5f, 0.5f, 0.0f,
+        10, screenResolution.height - 10,
+        fontScale, fontScale, 0.0f,
         ColorWhite,
         0
     );
+}
 
-    const int bgWidth = 260;
-    const int bgHeight = 354;
-    int bgX = SCREEN_CENTER_X - (bgWidth / 2);
-    int bgY = SCREEN_CENTER_Y - (bgHeight / 2);
+void drawMenuUI(void) {
+    Menu* current = menus[currentMenuIndex];
 
+    float fontScale  = 0.55f * hudScale;
+    float marginX    = 20.0f * hudScale;
+    float marginY    = 35.0f * hudScale;
+    float lineHeight = 15.0f * hudScale;
+
+    float bgWidth  = 260.0f * hudScale;
+    float bgHeight = 354.0f * hudScale;
+    float bgX      = screenCenter.width - bgWidth / 2.0f;
+    float bgY      = screenCenter.height - bgHeight / 2.0f;
+
+    // Background
     R_AddCmdDrawStretchPic(
-        bgX,
-        bgY,
-        bgWidth,
-        bgHeight,
+        bgX, bgY,
+        bgWidth, bgHeight,
         0.0f, 0.0f, 1.0f, 1.0f,
         ColorBackground,
         Material_RegisterHandle("white", 7)
     );
 
+    // Title
     R_AddCmdDrawText(
         current->title,
         0xFF,
         R_RegisterFont("fonts/extrabigfont", 1),
-        SCREEN_CENTER_X - 110,
-        bgY + 35,
-        0.55f, 0.55f, 0.0f,
+        bgX + marginX, bgY + marginY,
+        fontScale, fontScale, 0.0f,
         ColorMenuTitle,
         0
     );
 
+    // Menu options
     for (int i = 0; i < current->optionCount; i++) {
-        int optionY = bgY + 60 + (15 * i);
+        float optionY = bgY + marginY + lineHeight * (i + 1);
+
         char leftText[128];
-        snprintf(leftText, sizeof(leftText), "%c %s",
-                 (i == currentOptionIndex ? '>' : ' '),
-                 current->options[i].text);
+        snprintf(leftText, sizeof(leftText), "%c %s", (i == currentOptionIndex ? '>' : ' '), current->options[i].text);
         
         R_AddCmdDrawText(
             leftText,
             0xFF,
             R_RegisterFont("fonts/smallfont", 1),
-            SCREEN_CENTER_X - 125,
-            optionY,
-            0.55f, 0.55f, 0.0f,
+            bgX + marginX - (15 * hudScale), optionY,
+            fontScale, fontScale, 0.0f,
             ColorWhite,
             0
         );
@@ -286,21 +281,33 @@ void drawMenuUI(void) {
                 current->options[i].handler.selector.current
             ];
             snprintf(formattedValue, sizeof(formattedValue), "%c%s%c",
-                     (i == currentOptionIndex ? '<' : ' '),
-                     currentValue,
-                     (i == currentOptionIndex ? '>' : ' '));
+                     (i == currentOptionIndex ? '<' : ' '), currentValue, (i == currentOptionIndex ? '>' : ' '));
+
+            float rightX = bgX + bgWidth - marginX - (18.0f * hudScale);//80
             R_AddCmdDrawText(
                 formattedValue,
                 0xFF,
                 R_RegisterFont("fonts/smallfont", 1),
-                SCREEN_CENTER_X + 90,
-                optionY,
-                0.55f, 0.55f, 0.0f,
+                rightX, optionY,
+                fontScale, fontScale, 0.0f,
                 ColorWhite,
                 0
             );
         }
     }
+
+    // Footer
+    fontScale = 0.5 * hudScale;
+    R_AddCmdDrawText(
+        va("%s %s/%s %s - Scroll/Rotate | %s - Select | %s - Exit",
+           CODE_DPAD_UP, CODE_DPAD_DOWN, CODE_L1, CODE_R1, CODE_SQUARE, CODE_R3),
+        0xFF,
+        R_RegisterFont("fonts/normalfont", 1),
+        10, screenResolution.height - 10,
+        fontScale, fontScale, 0.0f,
+        ColorWhite,
+        0
+    );
 }
 
 void ClientCommand_Hook(int clientNum)
@@ -318,7 +325,7 @@ void ClientCommand_Hook(int clientNum)
 				if (IsHost(clientNum)) {
 					Cmd_MenuResponse_f(ent);
 				} else {
-					iPrintlnBold_GameMessage("'^1%s^7' server detected this player was trying to end the game.", GetSelfName());
+					iPrintln_GameMessage("^1'%s' server detected this player was trying to end the game.", GetSelfName());
 				}
 			} else {
                 ClientCommand_Trampoline(clientNum);
