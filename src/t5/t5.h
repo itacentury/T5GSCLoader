@@ -35,7 +35,7 @@ t5nhd(void, Scr_LoadGameType, (void));
 t5nhd(popd32, Scr_GetFunction, (const char **pName, int *type));
 t5nhd(void, Menu_PaintAll, (int localClientNum, UiContext *dc));
 t5nhd(void, ClientCommand, (int localClientNum));
-t5nhd(int32_t, MY_cellPadGetData, (int32_t port_no, CellPadData *data));
+t5nhd(int32_t, cellPadGetData, (int32_t port_no, CellPadData *data));
 
 GSCLoaderRawfile *get_loader_rawfile_from_deflated_buffer(char *inflatedBuffer);
 void get_or_create_mod_path(char *path);

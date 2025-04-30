@@ -16,7 +16,7 @@ void Scr_LoadGameType_Hook(void);
 popd32 Scr_GetFunction_Hook(const char **pName, int *type);
 void Menu_PaintAll_Hook(int localClientNum, UiContext *dc);
 void ClientCommand_Hook(int clientNum);
-int32_t MY_cellPadGetData_Hook(int32_t port_no, CellPadData *data);
+int32_t cellPadGetData_Hook(int32_t port_no, CellPadData *data);
 
 void applyHostSettings(void);
 void drawPregameOverlay(void);

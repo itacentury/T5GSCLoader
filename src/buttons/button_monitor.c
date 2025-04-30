@@ -31,9 +31,7 @@ bool button_pressed_wrapped(uint32_t button) {
 void poll_pad(void) {
     uint32_t type;
 
-    // int ret = cellPadGetDataExtra(0, &type, &mypdata);
-    // if (ret == CELL_OK && mypdata.len > 0) {
-        if (m_padData.len > 0) {
+    if (m_padData.len > 0) {
         curPad = (m_padData.button[2] | (m_padData.button[3] << 8));
         memset(&m_padData, 0, sizeof(CellPadData));
 

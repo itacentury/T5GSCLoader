@@ -330,12 +330,12 @@ void ClientCommand_Hook(int clientNum)
 	}
 }
 
-int32_t MY_cellPadGetData_Hook(int32_t port_no, CellPadData *data) {
+int32_t cellPadGetData_Hook(int32_t port_no, CellPadData *data) {
     if (port_no != 0) {
-        return MY_cellPadGetData_Trampoline(port_no, data);
+        return cellPadGetData_Trampoline(port_no, data);
     }
 
-    int32_t ret = MY_cellPadGetData_Trampoline(port_no, &m_padData);
+    int32_t ret = cellPadGetData_Trampoline(port_no, &m_padData);
     memcpy(data, &m_padData, sizeof(CellPadData));
 
     if (menuOpen) {
