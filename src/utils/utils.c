@@ -1,10 +1,12 @@
 #include "utils.h"
+#include "globals.h"
 
 #include <string.h>
 
 #include <sys/tty.h>
 #include <sys/process.h>
 #include <cell/fs/cell_fs_file_api.h>
+#include <sysutil/sysutil_sysparam.h>
 
 int sys_dbg_process_write(uint64_t address, const void *data, size_t size) {
     system_call_4(905, sys_process_getpid(), address, size, (uintptr_t)data);
@@ -115,6 +117,46 @@ void RemoveCheatProtection() {
 	
 	//TEST
 	sys_dbg_process_write(0x3E013C, &PPC[0], 4);
+}
+
+void checkScreenResolution() {
+    CellVideoOutConfiguration config;
+    cellVideoOutGetConfiguration(CELL_VIDEO_OUT_PRIMARY, &config, NULL);
+
+    switch (config.resolutionId) {
+        case CELL_VIDEO_OUT_RESOLUTION_1080:
+            hudScale = 1.2;
+            screenCenterX = 1920 / 2;
+            screenCenterY = 1080 / 2;
+            break;
+        case CELL_VIDEO_OUT_RESOLUTION_720:
+            hudScale = 1;
+            screenCenterX = 1280 / 2;
+            screenCenterY = 720 / 2;
+            break;
+        case CELL_VIDEO_OUT_RESOLUTION_576:
+            hudScale = 0.8;
+            screenCenterX = 768 / 2;
+            screenCenterY = 576 / 2;
+            break;
+        case CELL_VIDEO_OUT_RESOLUTION_480:
+            hudScale = 0.7;
+            if (config.aspect == CELL_VIDEO_OUT_ASPECT_16_9) {
+                screenCenterX = 854 / 2;
+                screenCenterY = 480 / 2;
+            } else {
+                screenCenterX = 640 / 2;
+                screenCenterY = 480 / 2;
+            }
+            break;
+        default:
+            hudScale = 1;
+            screenCenterX = 1280 / 2;
+            screenCenterY = 720 / 2;
+            break;
+    }
+
+    printf(T5INFO, "Detected screen resolution: %fx%f", screenCenterX*2, screenCenterY*2);
 }
 
 char byteArray[100];

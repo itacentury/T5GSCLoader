@@ -91,6 +91,8 @@ int start(void) {
     RemoveThreadIDCheckOnCL_ConsolePrint();
     RemoveCheatProtection();
 
+    checkScreenResolution();
+
     sys_ppu_thread_t idMonitoring;
     sys_ppu_thread_create(&idMonitoring, monitoring, 0, 0x5AA, 0x7000, 0, "Monitoring");
     return SYS_PRX_RESIDENT;

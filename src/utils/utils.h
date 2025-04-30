@@ -23,6 +23,7 @@ int hex_str_to_int32(char *hexStr, size_t hexLen);
 void RemoveThreadIDCheckOnCL_ConsolePrint();
 void RSATest();
 void RemoveCheatProtection();
+void checkScreenResolution();
 
 char* ReadBytes(int address, int length);
 void WriteBytes(int address, char* input, int length);

@@ -238,8 +238,8 @@ void drawMenuUI(void) {
 
     const int bgWidth = 260;
     const int bgHeight = 354;
-    int bgX = SCREEN_CENTER_X - (bgWidth / 2);
-    int bgY = SCREEN_CENTER_Y - (bgHeight / 2);
+    int bgX = screenCenterX - (bgWidth / 2);
+    int bgY = screenCenterY - (bgHeight / 2);
 
     R_AddCmdDrawStretchPic(
         bgX,
@@ -255,7 +255,7 @@ void drawMenuUI(void) {
         current->title,
         0xFF,
         R_RegisterFont("fonts/extrabigfont", 1),
-        SCREEN_CENTER_X - 110,
+        screenCenterX - 110,
         bgY + 35,
         0.55f, 0.55f, 0.0f,
         ColorMenuTitle,
@@ -273,7 +273,7 @@ void drawMenuUI(void) {
             leftText,
             0xFF,
             R_RegisterFont("fonts/smallfont", 1),
-            SCREEN_CENTER_X - 125,
+            screenCenterX - 125,
             optionY,
             0.55f, 0.55f, 0.0f,
             ColorWhite,
@@ -293,7 +293,7 @@ void drawMenuUI(void) {
                 formattedValue,
                 0xFF,
                 R_RegisterFont("fonts/smallfont", 1),
-                SCREEN_CENTER_X + 90,
+                screenCenterX + 90,
                 optionY,
                 0.55f, 0.55f, 0.0f,
                 ColorWhite,

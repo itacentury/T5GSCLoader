@@ -6,8 +6,10 @@
 #include <stdbool.h>
 
 #define MAX_STRING_CHARS 1024
-#define SCREEN_CENTER_X 640
-#define SCREEN_CENTER_Y 360
+
+extern float screenCenterX;
+extern float screenCenterY;
+extern float hudScale;
 
 extern bool firstStart;
 extern char* dvar_cl_ingame;

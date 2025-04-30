@@ -1,5 +1,9 @@
 #include "globals.h"
 
+float screenCenterX = 0;
+float screenCenterY = 0;
+float hudScale = 0;
+
 bool firstStart = true;
 char* dvar_cl_ingame = (char*)0x8F07B8;
 bool menuOpen = false;
