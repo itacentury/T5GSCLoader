@@ -18,7 +18,7 @@ int Scr_LoadScript_Hook(scriptInstance_t inst, const char *scriptName) {
         return res;
     }
 
-    // The game will load some script on boot (ZM), avoid it.
+    // The game will load some script on boot, avoid it.
     if (strcmp(mapname->current.string, "frontend") == 0) {
         return res;
     }

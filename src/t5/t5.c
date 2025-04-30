@@ -152,7 +152,7 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
                 snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
                          "%s/%s", relative, ent.d_name);
             } else {
-                // If no subdirectory exists: set a default path, e.g., "maps/mp/" or "maps/zm/" depending on the mode
+                // If no subdirectory exists: set a default path, e.g., "maps/mp/"
                 snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
                          "maps/mp/%s", ent.d_name);
             }
@@ -203,7 +203,7 @@ int init_game() {
         return -1;
     }
 
-    // Init offsets / hooks according MP/ZM
+    // Init offsets / hooks according MP
     init_offsets();
     int err;
     if ((err = init_hooks()) < 0) {
