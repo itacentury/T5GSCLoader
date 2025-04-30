@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define LOCAL_BUTTONS ((volatile int*)0xd19800)
+
 #define CODE_CROSS           "\x01"
 #define CODE_CIRCLE          "\x02"
 #define CODE_SQUARE          "\x03"
@@ -19,8 +21,6 @@
 #define CODE_DPAD_RIGHT      "\x17"
 #define CODE_DPAD_LEFT_RIGHT "\x18"
 #define CODE_DPAD_UP_DOWN    "\x19"
-
-extern int localButtons;
 
 enum Buttons {
     BTN_DPAD_UP             = 0x1FF,
@@ -46,5 +46,6 @@ enum Buttons {
 };
 
 bool ButtonPressed(enum Buttons Button);
+void ResetButton(enum Buttons Button);
 
 #endif /* BUTTONS_H */
