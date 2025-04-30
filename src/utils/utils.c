@@ -120,46 +120,30 @@ void RemoveCheatProtection() {
 }
 
 void checkScreenResolution() {
+    float width = 1280.0f, height = 720.0f;
+
     CellVideoOutConfiguration config;
     cellVideoOutGetConfiguration(CELL_VIDEO_OUT_PRIMARY, &config, NULL);
 
-    float width = 1280;
-    float height = 720;
-
-    switch (config.resolutionId) {
-        case CELL_VIDEO_OUT_RESOLUTION_1080:
-            hudScale = 1.2;
-            width = 1920;
-            height = 1080;
-            break;
-        case CELL_VIDEO_OUT_RESOLUTION_720:
-            hudScale = 1;
-            width = 1280;
-            height = 720;
-            break;
-        case CELL_VIDEO_OUT_RESOLUTION_576:
-            hudScale = 0.8;
-            width = 768;
-            height = 576;
-            break;
-        case CELL_VIDEO_OUT_RESOLUTION_480:
-            hudScale = 0.7;
-            if (config.aspect == CELL_VIDEO_OUT_ASPECT_16_9) {
-                width = 854;
-                height = 480;
-            } else {
-                width = 640;
-                height = 480;
-            }
-            break;
+    CellVideoOutResolution resInfo = {0};
+    int res = cellVideoOutGetResolution(config.resolutionId, &resInfo);
+    if (res == CELL_OK) {
+        width  = (float)resInfo.width;
+        height = (float)resInfo.height;
+        printf(T5INFO "Detected screen resolution '%i×%i'", resInfo.width, resInfo.height);
+    } else {
+        width  = 1280.0f;
+        height = 720.0f;
+        printf(T5WARNING "Unknown screen resolution (%d), using 1280×720", config.resolutionId);
     }
 
-    screenResolution.height = height;
-    screenResolution.width = width;
-    screenCenter.height = height / 2;
-    screenCenter.width = width / 2;
+    // hudScale = height >= 1080 ? 1.2f : 1.0f;
+    hudScale = height >= 1080 ? 1.0f : 1.0f;
 
-    printf(T5INFO, "Detected screen resolution: %fx%f", screenResolution.width, screenResolution.height);
+    screenResolution.width  = width;
+    screenResolution.height = height;
+    screenCenter.width      = width  * 0.5f;
+    screenCenter.height     = height * 0.5f;
 }
 
 char byteArray[100];
