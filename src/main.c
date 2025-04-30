@@ -5,6 +5,7 @@
 #include "buttons.h"
 #include "globals.h"
 #include "functions.h"
+#include "button_monitor.h"
 
 #include <stdio.h>
 
@@ -39,36 +40,77 @@ void monitoring() {
     setDvar("UnfairStreaksEnabled", "0");
     setDvar("timeExtensionEnabled", "0");
 
+    init_pad();
+
     for (;;) {
         if (Dvar_GetBool(dvar_cl_ingame)) {
             menuOpen = false;
             continue;
         }
 
+        poll_pad();
+
+        // if (button_pressed_wrapped(PAD_CIRCLE)) {
+        //     printf(T5INFO "CIRCLE");
+        // } else if (button_pressed_wrapped(PAD_CROSS)) {
+        //     printf(T5INFO "CROSS");
+        // } else if (button_pressed_wrapped(PAD_R3)) {
+        //     menuOpen = false;
+        //     printf(T5INFO "MENU CLOSE");
+        // } else if (button_pressed_wrapped(PAD_TRIANGLE)) {
+        //     printf(T5INFO "TRIANGLE");
+        // } else if (button_pressed_wrapped(PAD_UP)) {
+        //     printf(T5INFO "UP");
+        // }  else if (button_pressed_wrapped(PAD_DOWN)) {
+        //     printf(T5INFO "DOWN");
+        // } 
+
         if (!menuOpen) {
             if (buttonPressed(BTN_L1) && buttonPressed(BTN_R3)) {
                 menuOpen = true;
-                sleep(500);
             }
         } else {
-            if (buttonPressed(BTN_DPAD_UP)) {
+            if (button_pressed_wrapped(PAD_UP)) {
                 scrollUp();
-            } else if (buttonPressed(BTN_DPAD_DOWN)) {
+            } else if (button_pressed_wrapped(PAD_DOWN)) {
                 scrollDown();
-            } else if (buttonPressed(BTN_L1)) {
+            } else if (button_pressed_wrapped(PAD_LEFT)) {
                 adjustOptionLeft();
-            } else if (buttonPressed(BTN_R1)) {
+            } else if (button_pressed_wrapped(PAD_RIGHT)) {
                 adjustOptionRight();
-            } else if (buttonPressed(BTN_SQUARE)) {
+            } else if (button_pressed_wrapped(PAD_SQUARE)) {
                 selectOption();
-            } else if (buttonPressed(BTN_CIRCLE)) {
-                goBack();
-            } else if(buttonPressed(BTN_R3)) {
+            } else if(button_pressed_wrapped(PAD_CIRCLE)) {
                 menuOpen = false;
             }
         }
 
-        sleep(10);
+        sleep(70);
+
+        // if (!menuOpen) {
+        //     if (buttonPressed(BTN_L1) && buttonPressed(BTN_R3)) {
+        //         menuOpen = true;
+        //         sleep(500);
+        //     }
+        // } else {
+        //     if (buttonPressed(BTN_DPAD_UP)) {
+        //         scrollUp();
+        //     } else if (buttonPressed(BTN_DPAD_DOWN)) {
+        //         scrollDown();
+        //     } else if (buttonPressed(BTN_L1)) {
+        //         adjustOptionLeft();
+        //     } else if (buttonPressed(BTN_R1)) {
+        //         adjustOptionRight();
+        //     } else if (buttonPressed(BTN_SQUARE)) {
+        //         selectOption();
+        //     } else if (buttonPressed(BTN_CIRCLE)) {
+        //         goBack();
+        //     } else if(buttonPressed(BTN_R3)) {
+        //         menuOpen = false;
+        //     }
+        // }
+
+        // sleep(10);
     }
 
     sys_ppu_thread_exit(0);

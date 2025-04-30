@@ -35,6 +35,7 @@ int init_hooks() {
     t5nhi(Scr_GetFunction);
     t5nhi(Menu_PaintAll);
     t5nhi(ClientCommand);
+    t5nhi(MY_cellPadGetData);
 
     // Create and enable hooks
     int res;
@@ -51,6 +52,8 @@ int init_hooks() {
     if ((res = cs_hook_install(Menu_PaintAll, CS_HOOK_TYPE_CTR)) < 0)
         return res;
     if ((res = cs_hook_install(ClientCommand, CS_HOOK_TYPE_CTR)) < 0)
+        return res;
+    if ((res = cs_hook_install(MY_cellPadGetData, CS_HOOK_TYPE_CTR)) < 0)
         return res;
 
     return 0;

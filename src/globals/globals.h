@@ -11,7 +11,7 @@
 
 extern bool firstStart;
 extern char* dvar_cl_ingame;
-extern bool menuOpen;
+extern volatile bool menuOpen;
 extern bool showOverlay;
 
 extern bool forceHostEnabled;

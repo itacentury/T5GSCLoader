@@ -3,6 +3,7 @@
 #include "hooks.h"
 #include "buttons.h"
 #include "functions.h"
+#include "button_monitor.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -327,4 +328,18 @@ void ClientCommand_Hook(int clientNum)
 		else 
             ClientCommand_Trampoline(clientNum);
 	}
+}
+
+int32_t MY_cellPadGetData_Hook(int32_t port_no, CellPadData *data) {
+    int32_t ret = MY_cellPadGetData_Trampoline(port_no, data);
+
+    if (menuOpen && ret == CELL_OK && data->len > 0) {
+        uint16_t bits  = data->button[2] | (data->button[3] << 8);
+        const uint16_t block = PAD_UP | PAD_DOWN | PAD_LEFT | PAD_RIGHT | PAD_CROSS;
+        bits &= ~block;
+        data->button[2] = bits & 0xFF;
+        data->button[3] = (bits >> 8) & 0xFF;
+    }
+
+    return ret;
 }

@@ -4,6 +4,8 @@
 // Natives functions
 #define T5_cellSpursLFQueuePushBody 0x8C7080
 #define T5_cellSpursLFQueuePushBody_ZM 0x7DBFC0
+#define T5_MY_cellPadGetData 0x08C6A98
+#define T5_MY_cellPadGetData_ZM 0x08C6A98
 #define T5_DB_FindXAssetHeader 0x2601A0
 #define T5_DB_FindXAssetHeader_ZM 0x1B1E20
 #define T5_DB_LinkXAssetEntry 0x25EE38

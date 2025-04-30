@@ -96,13 +96,13 @@ void scrollUp() {
     else
         currentOptionIndex--;
     
-    sleep(200);
+    // sleep(200);
 }
 
 void scrollDown() {
     Menu* current = menus[currentMenuIndex];
     currentOptionIndex = (currentOptionIndex + 1) % current->optionCount;
-    sleep(200);
+    // sleep(200);
 }
 
 void adjustOptionLeft() {
@@ -115,7 +115,7 @@ void adjustOptionLeft() {
             opt->handler.selector.current--;
         
         selectOption();
-        sleep(200);
+        // sleep(200);
     }
 }
 
@@ -126,7 +126,7 @@ void adjustOptionRight() {
         opt->handler.selector.current = (opt->handler.selector.current + 1) % opt->handler.selector.count;
         
         selectOption();
-        sleep(200);
+        // sleep(200);
     }
 }
 
@@ -144,7 +144,7 @@ void selectOption() {
         }
     }
 
-    sleep(300);
+    // sleep(300);
 }
 
 void goBack() {
@@ -153,5 +153,5 @@ void goBack() {
         currentOptionIndex = 0;
     }
 
-    sleep(300);
+    // sleep(300);
 }
