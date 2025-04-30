@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "hooks.h"
 #include "buttons.h"
+#include "globals.h"
 #include "functions.h"
 
 #include <stdio.h>
@@ -185,18 +186,6 @@ void applyHostSettings(void) {
     }
 }
 
-void drawPregameOverlay(void) {
-    R_AddCmdDrawText(
-        va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3),
-        0xFF,
-        R_RegisterFont("fonts/normalfont", 1),
-        10, 710,
-        0.5f, 0.5f, 0.0f,
-        ColorWhite,
-        0
-    );
-}
-
 void checkDvars(void) {
     Menu* current = menus[0];
     
@@ -222,6 +211,18 @@ void checkDvars(void) {
     }
 }
 
+void drawPregameOverlay(void) {
+    R_AddCmdDrawText(
+        va("Press %s + %s for Century Package [Pregame]", CODE_L1, CODE_R3),
+        0xFF,
+        R_RegisterFont("fonts/normalfont", 1),
+        10, screenResolution.height - 10,
+        0.5f, 0.5f, 0.0f,
+        ColorWhite,
+        0
+    );
+}
+
 void drawMenuUI(void) {
     Menu* current = menus[currentMenuIndex];
 
@@ -238,8 +239,8 @@ void drawMenuUI(void) {
 
     const int bgWidth = 260;
     const int bgHeight = 354;
-    int bgX = screenCenterX - (bgWidth / 2);
-    int bgY = screenCenterY - (bgHeight / 2);
+    int bgX = screenCenter.width - (bgWidth / 2);
+    int bgY = screenCenter.height - (bgHeight / 2);
 
     R_AddCmdDrawStretchPic(
         bgX,
@@ -255,7 +256,7 @@ void drawMenuUI(void) {
         current->title,
         0xFF,
         R_RegisterFont("fonts/extrabigfont", 1),
-        screenCenterX - 110,
+        screenCenter.width - 110,
         bgY + 35,
         0.55f, 0.55f, 0.0f,
         ColorMenuTitle,
@@ -273,7 +274,7 @@ void drawMenuUI(void) {
             leftText,
             0xFF,
             R_RegisterFont("fonts/smallfont", 1),
-            screenCenterX - 125,
+            screenCenter.width - 125,
             optionY,
             0.55f, 0.55f, 0.0f,
             ColorWhite,
@@ -293,7 +294,7 @@ void drawMenuUI(void) {
                 formattedValue,
                 0xFF,
                 R_RegisterFont("fonts/smallfont", 1),
-                screenCenterX + 90,
+                screenCenter.width + 90,
                 optionY,
                 0.55f, 0.55f, 0.0f,
                 ColorWhite,
@@ -318,7 +319,7 @@ void ClientCommand_Hook(int clientNum)
 				if (IsHost(clientNum)) {
 					Cmd_MenuResponse_f(ent);
 				} else {
-					iPrintlnBold_GameMessage("'^1%s^7' server detected this player was trying to end the game.", GetSelfName());
+					iPrintln_GameMessage("^1'%s' server detected this player was trying to end the game.", GetSelfName());
 				}
 			} else {
                 ClientCommand_Trampoline(clientNum);

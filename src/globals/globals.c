@@ -1,7 +1,7 @@
 #include "globals.h"
 
-float screenCenterX = 0;
-float screenCenterY = 0;
+Coordinates2D screenResolution = {0};
+Coordinates2D screenCenter = {0};
 float hudScale = 0;
 
 bool firstStart = true;

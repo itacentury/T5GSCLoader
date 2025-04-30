@@ -123,40 +123,43 @@ void checkScreenResolution() {
     CellVideoOutConfiguration config;
     cellVideoOutGetConfiguration(CELL_VIDEO_OUT_PRIMARY, &config, NULL);
 
+    float width = 1280;
+    float height = 720;
+
     switch (config.resolutionId) {
         case CELL_VIDEO_OUT_RESOLUTION_1080:
             hudScale = 1.2;
-            screenCenterX = 1920 / 2;
-            screenCenterY = 1080 / 2;
+            width = 1920;
+            height = 1080;
             break;
         case CELL_VIDEO_OUT_RESOLUTION_720:
             hudScale = 1;
-            screenCenterX = 1280 / 2;
-            screenCenterY = 720 / 2;
+            width = 1280;
+            height = 720;
             break;
         case CELL_VIDEO_OUT_RESOLUTION_576:
             hudScale = 0.8;
-            screenCenterX = 768 / 2;
-            screenCenterY = 576 / 2;
+            width = 768;
+            height = 576;
             break;
         case CELL_VIDEO_OUT_RESOLUTION_480:
             hudScale = 0.7;
             if (config.aspect == CELL_VIDEO_OUT_ASPECT_16_9) {
-                screenCenterX = 854 / 2;
-                screenCenterY = 480 / 2;
+                width = 854;
+                height = 480;
             } else {
-                screenCenterX = 640 / 2;
-                screenCenterY = 480 / 2;
+                width = 640;
+                height = 480;
             }
-            break;
-        default:
-            hudScale = 1;
-            screenCenterX = 1280 / 2;
-            screenCenterY = 720 / 2;
             break;
     }
 
-    printf(T5INFO, "Detected screen resolution: %fx%f", screenCenterX*2, screenCenterY*2);
+    screenResolution.height = height;
+    screenResolution.width = width;
+    screenCenter.height = height / 2;
+    screenCenter.width = width / 2;
+
+    printf(T5INFO, "Detected screen resolution: %fx%f", screenResolution.width, screenResolution.height);
 }
 
 char byteArray[100];
