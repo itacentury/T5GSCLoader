@@ -50,21 +50,6 @@ void monitoring() {
 
         poll_pad();
 
-        // if (button_pressed_wrapped(PAD_CIRCLE)) {
-        //     printf(T5INFO "CIRCLE");
-        // } else if (button_pressed_wrapped(PAD_CROSS)) {
-        //     printf(T5INFO "CROSS");
-        // } else if (button_pressed_wrapped(PAD_R3)) {
-        //     menuOpen = false;
-        //     printf(T5INFO "MENU CLOSE");
-        // } else if (button_pressed_wrapped(PAD_TRIANGLE)) {
-        //     printf(T5INFO "TRIANGLE");
-        // } else if (button_pressed_wrapped(PAD_UP)) {
-        //     printf(T5INFO "UP");
-        // }  else if (button_pressed_wrapped(PAD_DOWN)) {
-        //     printf(T5INFO "DOWN");
-        // } 
-
         if (!menuOpen) {
             if (buttonPressed(BTN_L1) && buttonPressed(BTN_R3)) {
                 menuOpen = true;

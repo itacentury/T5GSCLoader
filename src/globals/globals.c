@@ -2,7 +2,7 @@
 
 bool firstStart = true;
 char* dvar_cl_ingame = (char*)0x8F07B8;
-volatile bool menuOpen = false;
+bool menuOpen = false;
 bool showOverlay = true;
 
 bool forceHostEnabled = false;

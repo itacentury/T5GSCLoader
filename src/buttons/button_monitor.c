@@ -4,6 +4,7 @@
 
 uint32_t pad = 0, oldPad = 0, curPad = 0;
 CellPadData mypdata;
+CellPadData m_padData;
 
 void init_pad(void) {
     cellPadInit(1);
@@ -30,10 +31,11 @@ bool button_pressed_wrapped(uint32_t button) {
 void poll_pad(void) {
     uint32_t type;
 
-    int ret = cellPadGetDataExtra(0, &type, &mypdata);
-    if (ret == CELL_OK && mypdata.len > 0) {
-        curPad = (mypdata.button[2] | (mypdata.button[3] << 8));
-        memset(&mypdata, 0, sizeof(CellPadData));
+    // int ret = cellPadGetDataExtra(0, &type, &mypdata);
+    // if (ret == CELL_OK && mypdata.len > 0) {
+        if (m_padData.len > 0) {
+        curPad = (m_padData.button[2] | (m_padData.button[3] << 8));
+        memset(&m_padData, 0, sizeof(CellPadData));
 
         if (curPad != oldPad) {
             sync_pad(curPad);

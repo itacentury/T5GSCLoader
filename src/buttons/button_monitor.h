@@ -4,9 +4,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <cell/pad.h>
 #include <sys/timer.h>
 #include <cell/sysmodule.h>
+#include <cell/pad/pad_codes.h>
 
 #define PAD_SELECT    (1<<0)
 #define PAD_L3        (1<<1)
@@ -30,6 +30,7 @@ extern uint32_t oldPad;
 extern uint32_t curPad;
 
 extern CellPadData mypdata;
+extern CellPadData m_padData;
 
 void init_pad(void);
 void sync_pad(uint32_t sync_pad);
