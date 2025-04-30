@@ -20,7 +20,7 @@
 #define CODE_DPAD_LEFT_RIGHT "\x18"
 #define CODE_DPAD_UP_DOWN    "\x19"
 
-extern int LocalButtons;
+extern int localButtons;
 
 enum Buttons {
     BTN_DPAD_UP             = 0x1FF,

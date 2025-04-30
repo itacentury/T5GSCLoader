@@ -1,7 +1,7 @@
 #include "buttons.h"
 
-int LocalButtons = 0xd19800;
+int localButtons = 0xd19800;
 
 bool ButtonPressed(enum Buttons Button) {
-    return (*(int*)(LocalButtons + Button) != 0);
+    return (*(int*)(localButtons + Button) != 0);
 }
