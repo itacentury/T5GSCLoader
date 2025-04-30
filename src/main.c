@@ -47,36 +47,23 @@ void monitoring() {
 
         if (!menuOpen) {
             if (buttonPressed(BTN_L1) && buttonPressed(BTN_R3)) {
-                resetButton(BTN_L1);
-                resetButton(BTN_R3);
-
                 menuOpen = true;
-    
                 sleep(500);
-            }    
-        }
-
-        if (menuOpen) {
+            }
+        } else {
             if (buttonPressed(BTN_DPAD_UP)) {
-                resetButton(BTN_DPAD_UP);
                 scrollUp();
             } else if (buttonPressed(BTN_DPAD_DOWN)) {
-                resetButton(BTN_DPAD_DOWN);
                 scrollDown();
             } else if (buttonPressed(BTN_L1)) {
-                resetButton(BTN_L1);
                 adjustOptionLeft();
             } else if (buttonPressed(BTN_R1)) {
-                resetButton(BTN_R1);
                 adjustOptionRight();
             } else if (buttonPressed(BTN_SQUARE)) {
-                resetButton(BTN_SQUARE);
                 selectOption();
             } else if (buttonPressed(BTN_CIRCLE)) {
-                resetButton(BTN_CIRCLE);
                 goBack();
             } else if(buttonPressed(BTN_R3)) {
-                resetButton(BTN_R3);
                 menuOpen = false;
             }
         }
@@ -102,6 +89,6 @@ int start(void) {
     RemoveCheatProtection();
 
     sys_ppu_thread_t idMonitoring;
-    sys_ppu_thread_create(&idMonitoring, monitoring, 0, 0x5AA, 0x7000, 0, "Monitoring");
+    sys_ppu_thread_create(&idMonitoring, monitoring, 0, 0x3AA, 0x7000, 0, "Monitoring");
     return SYS_PRX_RESIDENT;
 }

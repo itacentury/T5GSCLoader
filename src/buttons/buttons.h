@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#define LOCAL_BUTTONS ((volatile int*)0xd19800)
+#define LOCAL_BUTTONS        0xd19800
 
 #define CODE_CROSS           "\x01"
 #define CODE_CIRCLE          "\x02"
@@ -46,6 +46,5 @@ enum Buttons {
 };
 
 bool buttonPressed(enum Buttons Button);
-void resetButton(enum Buttons Button);
 
 #endif /* BUTTONS_H */
