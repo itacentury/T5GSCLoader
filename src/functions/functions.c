@@ -51,6 +51,8 @@ opd_s Session_IsHost_t = { 0x698490, T5_TOC };
 bool(*Session_IsHost)(SessionData_s *session, const int clientNum) = (bool(*)(SessionData_s *, const int))&Session_IsHost_t;
 opd_s Cmd_MenuResponse_f_t = { 0x2D5AE8, T5_TOC };
 void(*Cmd_MenuResponse_f)(gentity_s *pEnt) = (void(*)(gentity_s *))&Cmd_MenuResponse_f_t;
+opd_s CG_GameMessage_t = { 0x113550, T5_TOC };
+void(*CG_GameMessage)(int localClientNum, const char *msg) = (void(*)(int, const char *))&CG_GameMessage_t;
 opd_s CG_BoldGameMessage_t = { 0x113528, T5_TOC };
 void(*CG_BoldGameMessage)(int localClientNum, const char *msg, int duration) = (void(*)(int, const char *, int))&CG_BoldGameMessage_t;
 opd_s Scr_GetSelf_t = { 0x5BA4F0, T5_TOC };
@@ -97,6 +99,15 @@ void drawOkayPopup(const char *title, const char *message) {
 
 void displayWelcomePopup(void) {
     drawOkayPopup(va("Welcome %s", GetSelfName()), "to Century Package: Pregame Version");
+}
+
+void iPrintln_GameMessage(const char *messageFormat, ...) {
+	va_list argptr;
+	char text[MAX_STRING_CHARS];
+	va_start(argptr, messageFormat);
+	vsprintf(text, messageFormat, argptr);
+	va_end(argptr);
+	CG_GameMessage(0, text);
 }
 
 void iPrintlnBold_GameMessage(const char *messageFormat, ...) {
