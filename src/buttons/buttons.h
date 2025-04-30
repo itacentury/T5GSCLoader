@@ -45,7 +45,7 @@ enum Buttons {
     BTN_START               = 0x19F
 };
 
-bool ButtonPressed(enum Buttons Button);
-void ResetButton(enum Buttons Button);
+bool buttonPressed(enum Buttons Button);
+void resetButton(enum Buttons Button);
 
 #endif /* BUTTONS_H */

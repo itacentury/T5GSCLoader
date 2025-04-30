@@ -1,10 +1,10 @@
 #include "buttons.h"
 
-bool ButtonPressed(enum Buttons button) {
+bool buttonPressed(enum Buttons button) {
     return (*(int*)(LOCAL_BUTTONS + button) == 1);
 }
 
-void ResetButton(enum Buttons Button) {
-    volatile int *ptr = (volatile int*)(LOCAL_BUTTONS + Button);
+void resetButton(enum Buttons button) {
+    volatile int *ptr = (volatile int*)(LOCAL_BUTTONS + button);
     *ptr = 0;
 }

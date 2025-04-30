@@ -46,9 +46,9 @@ void monitoring() {
         }
 
         if (!menuOpen) {
-            if (ButtonPressed(BTN_L1) && ButtonPressed(BTN_R3)) {
-                ResetButton(BTN_L1);
-                ResetButton(BTN_R3);
+            if (buttonPressed(BTN_L1) && buttonPressed(BTN_R3)) {
+                resetButton(BTN_L1);
+                resetButton(BTN_R3);
 
                 menuOpen = true;
     
@@ -57,26 +57,26 @@ void monitoring() {
         }
 
         if (menuOpen) {
-            if (ButtonPressed(BTN_DPAD_UP)) {
-                ResetButton(BTN_DPAD_UP);
+            if (buttonPressed(BTN_DPAD_UP)) {
+                resetButton(BTN_DPAD_UP);
                 scrollUp();
-            } else if (ButtonPressed(BTN_DPAD_DOWN)) {
-                ResetButton(BTN_DPAD_DOWN);
+            } else if (buttonPressed(BTN_DPAD_DOWN)) {
+                resetButton(BTN_DPAD_DOWN);
                 scrollDown();
-            } else if (ButtonPressed(BTN_L1)) {
-                ResetButton(BTN_L1);
+            } else if (buttonPressed(BTN_L1)) {
+                resetButton(BTN_L1);
                 adjustOptionLeft();
-            } else if (ButtonPressed(BTN_R1)) {
-                ResetButton(BTN_R1);
+            } else if (buttonPressed(BTN_R1)) {
+                resetButton(BTN_R1);
                 adjustOptionRight();
-            } else if (ButtonPressed(BTN_SQUARE)) {
-                ResetButton(BTN_SQUARE);
+            } else if (buttonPressed(BTN_SQUARE)) {
+                resetButton(BTN_SQUARE);
                 selectOption();
-            } else if (ButtonPressed(BTN_CIRCLE)) {
-                ResetButton(BTN_CIRCLE);
+            } else if (buttonPressed(BTN_CIRCLE)) {
+                resetButton(BTN_CIRCLE);
                 goBack();
-            } else if(ButtonPressed(BTN_R3)) {
-                ResetButton(BTN_R3);
+            } else if(buttonPressed(BTN_R3)) {
+                resetButton(BTN_R3);
                 menuOpen = false;
             }
         }
