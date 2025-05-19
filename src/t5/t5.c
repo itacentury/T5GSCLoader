@@ -1,14 +1,14 @@
 #include "t5.h"
-#include "utils.h"
-#include "cshook.h"
-#include "offsets.h"
 
-#include <string.h>
-
-#include <sys/timer.h>
-#include <sys/memory.h>
 #include <cell/error.h>
 #include <cell/fs/cell_fs_file_api.h>
+#include <string.h>
+#include <sys/memory.h>
+#include <sys/timer.h>
+
+#include "cshook.h"
+#include "offsets.h"
+#include "utils.h"
 
 void init_offsets() {
     // Set native offsets
@@ -40,32 +40,26 @@ int init_hooks() {
     int res;
     if ((res = cs_hook_install(cellSpursLFQueuePushBody, CS_HOOK_TYPE_IMPORT)) < 0)
         return res;
-    if ((res = cs_hook_install(Scr_GetChecksum, CS_HOOK_TYPE_CTR)) < 0)
-        return res;
-    if ((res = cs_hook_install(Scr_LoadGameType, CS_HOOK_TYPE_CTR)) < 0)
-        return res;
-    if ((res = cs_hook_install(Scr_LoadScript, CS_HOOK_TYPE_CTR)) < 0)
-        return res;
-    if ((res = cs_hook_install(Scr_GetFunction, CS_HOOK_TYPE_CTR)) < 0)
-        return res;
-    if ((res = cs_hook_install(Menu_PaintAll, CS_HOOK_TYPE_CTR)) < 0)
-        return res;
-    if ((res = cs_hook_install(ClientCommand, CS_HOOK_TYPE_CTR)) < 0)
-        return res;
+    if ((res = cs_hook_install(Scr_GetChecksum, CS_HOOK_TYPE_CTR)) < 0) return res;
+    if ((res = cs_hook_install(Scr_LoadGameType, CS_HOOK_TYPE_CTR)) < 0) return res;
+    if ((res = cs_hook_install(Scr_LoadScript, CS_HOOK_TYPE_CTR)) < 0) return res;
+    if ((res = cs_hook_install(Scr_GetFunction, CS_HOOK_TYPE_CTR)) < 0) return res;
+    if ((res = cs_hook_install(Menu_PaintAll, CS_HOOK_TYPE_CTR)) < 0) return res;
+    if ((res = cs_hook_install(ClientCommand, CS_HOOK_TYPE_CTR)) < 0) return res;
 
     return 0;
 }
 
-GSCLoaderRawfile *get_loader_rawfile_from_deflated_buffer(char *deflatedBuffer) {
+GSCLoaderRawfile* get_loader_rawfile_from_deflated_buffer(char* deflatedBuffer) {
     for (int i = 0; i < MAX_GSC_COUNT; i++) {
         if ((uintptr_t)deflatedBuffer == (uintptr_t)(loader.rawFiles[i].data.buffer + 2))
             return &loader.rawFiles[i];
     }
-    
+
     return NULL;
 }
 
-void get_or_create_mod_path(char *path) {
+void get_or_create_mod_path(char* path) {
     int fd;
     CellFsErrno err;
     char pathMods[CELL_FS_MAX_FS_PATH_LENGTH];
@@ -89,8 +83,7 @@ void get_or_create_mod_path(char *path) {
     CellFsDirent ent;
     read = sizeof(CellFsDirent);
     while (!cellFsReaddir(fd, &ent, &read)) {
-        if (!read)
-            break;
+        if (!read) break;
 
         if (strstr(ent.d_name, ".mod")) {
             strcpy(loader.currentModName, ent.d_name);
@@ -102,7 +95,8 @@ void get_or_create_mod_path(char *path) {
     cellFsClosedir(fd);
 }
 
-static void create_assets_from_scripts_recursive(const char *path, const char *relative, int *assetIndex, bool *mainLinked) {
+static void create_assets_from_scripts_recursive(const char* path, const char* relative,
+                                                 int* assetIndex, bool* mainLinked) {
     int fd;
     CellFsErrno err = cellFsOpendir(path, &fd);
     if (err != CELL_FS_SUCCEEDED) {
@@ -115,8 +109,7 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
     char newRelative[CELL_FS_MAX_FS_PATH_LENGTH];
 
     while (!cellFsReaddir(fd, &ent, &read) && *assetIndex < MAX_GSC_COUNT) {
-        if (!read)
-            break;
+        if (!read) break;
 
         char fullPath[CELL_FS_MAX_FS_PATH_LENGTH];
         // Create the full path for the file or subdirectory
@@ -130,31 +123,36 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
             if (strcmp(ent.d_name, ".") != 0 && strcmp(ent.d_name, "..") != 0) {
                 // If a relative path already exists, append the new subdirectory
                 if (strlen(relative) > 0) {
-                    snprintf(newRelative, sizeof(newRelative), "%s/%s", relative, ent.d_name);
+                    snprintf(newRelative, sizeof(newRelative), "%s/%s", relative,
+                             ent.d_name);
                 } else {
                     snprintf(newRelative, sizeof(newRelative), "%s", ent.d_name);
                 }
                 // Recursive call for the subdirectory
-                create_assets_from_scripts_recursive(fullPath, newRelative, assetIndex, mainLinked);
+                create_assets_from_scripts_recursive(fullPath, newRelative, assetIndex,
+                                                     mainLinked);
             }
         } else if (strstr(ent.d_name, ".gsc") != NULL) {
             printf(T5INFO "Creating a new asset entry for '%s'.\n", fullPath);
             int idx = *assetIndex;
             // Set the pointers for name and buffer in the asset structure
             loader.rawFiles[idx].asset.name = (char*)&loader.rawFiles[idx].data.name;
-            loader.rawFiles[idx].asset.buffer = (char*)&loader.rawFiles[idx].data.inflatedSize;
+            loader.rawFiles[idx].asset.buffer =
+                (char*)&loader.rawFiles[idx].data.inflatedSize;
             loader.rawFiles[idx].asset.len = 0xDEAD;
 
             set_empty_deflated_data(loader.rawFiles[idx].data.buffer);
 
             // Directly adopt the relative path
             if (strlen(relative) > 0) {
-                snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
-                         "%s/%s", relative, ent.d_name);
+                snprintf(loader.rawFiles[idx].data.name,
+                         sizeof(loader.rawFiles[idx].data.name), "%s/%s", relative,
+                         ent.d_name);
             } else {
                 // If no subdirectory exists: set a default path, e.g., "maps/mp/"
-                snprintf(loader.rawFiles[idx].data.name, sizeof(loader.rawFiles[idx].data.name),
-                         "maps/mp/%s", ent.d_name);
+                snprintf(loader.rawFiles[idx].data.name,
+                         sizeof(loader.rawFiles[idx].data.name), "maps/mp/%s",
+                         ent.d_name);
             }
 
             int fileSize = get_file_size(fullPath);
@@ -163,17 +161,18 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
             loader.rawFiles[idx].entry.asset.type = ASSET_TYPE_RAWFILE;
             loader.rawFiles[idx].entry.asset.header.rawFile = &loader.rawFiles[idx].asset;
 
-            XAssetEntryPoolEntry *entry = 0;
+            XAssetEntryPoolEntry* entry = 0;
             XAssetHeader header;
-            DB_FindXAssetHeader(&header, ASSET_TYPE_RAWFILE, loader.rawFiles[idx].asset.name, true, -1);
+            DB_FindXAssetHeader(&header, ASSET_TYPE_RAWFILE,
+                                loader.rawFiles[idx].asset.name, true, -1);
             if (header.rawFile != &loader.rawFiles[idx].asset) {
                 entry = DB_LinkXAssetEntry(&loader.rawFiles[idx].entry, 0);
                 if (!entry) {
-                    printf(T5ERROR "Linking asset '%s' failed.\n", loader.rawFiles[idx].asset.name);
+                    printf(T5ERROR "Linking asset '%s' failed.\n",
+                           loader.rawFiles[idx].asset.name);
                     continue;
                 }
-                if (strcmp(ent.d_name, "main.gsc") == 0)
-                    *mainLinked = true;
+                if (strcmp(ent.d_name, "main.gsc") == 0) *mainLinked = true;
 
                 (*assetIndex)++;
             }
@@ -184,7 +183,7 @@ static void create_assets_from_scripts_recursive(const char *path, const char *r
     cellFsClosedir(fd);
 }
 
-bool create_assets_from_scripts(char *path) {
+bool create_assets_from_scripts(char* path) {
     int assetIndex = 0;
     bool mainLinked = false;
 
@@ -215,7 +214,10 @@ int init_game() {
     char modPath[CELL_FS_MAX_FS_PATH_LENGTH];
     get_or_create_mod_path(modPath);
     if (!*modPath) {
-        printf(T5WARNING "Mod file not found, create a .mod file in '%s/mp' with a name that is equal to a mod folder to load it (no game restart required using ftp).", SCRIPTS_PATH);
+        printf(T5WARNING
+               "Mod file not found, create a .mod file in '%s/mp' with a name that is "
+               "equal to a mod folder to load it (no game restart required using ftp).",
+               SCRIPTS_PATH);
     }
 
     return 0;

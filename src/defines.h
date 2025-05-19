@@ -1,8 +1,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#include <wchar.h>
 #include <stdbool.h>
+#include <wchar.h>
 
 // Macros to automate naming/setting variables for natives/hooks
 #define t5nd(ret_type, name, args)    \
@@ -10,8 +10,8 @@
     uint64_t name##_opd;              \
     name##_t name;
 
-#define t5ni(name)                                      \
-    name##_opd = ((uint64_t)T5_##name << 32) | T5_TOC ; \
+#define t5ni(name)                                     \
+    name##_opd = ((uint64_t)T5_##name << 32) | T5_TOC; \
     name = (name##_t) & name##_opd;
 
 #define t5nhd(ret_type, name, args)   \
@@ -21,9 +21,9 @@
     name##_t name##_Trampoline;       \
     ret_type name##_Hook args;
 
-#define t5nhi(name)                                     \
-    name##_opd = ((uint64_t)T5_##name << 32) | T5_TOC;  \
-    name = (name##_t) & name##_opd;                     \
+#define t5nhi(name)                                    \
+    name##_opd = ((uint64_t)T5_##name << 32) | T5_TOC; \
+    name = (name##_t) & name##_opd;                    \
     name##_Trampoline = 0;
 
 #define t5o(name) (T5_##name)
@@ -45,7 +45,7 @@ typedef union DvarValue {
     uint64_t unsignedInt64;
     float value;
     float vector[4];
-    const char *string;
+    const char* string;
     char color[4];
 } DvarValue;
 
@@ -72,8 +72,8 @@ typedef enum dvarType_t {
 } dvarType_t;
 
 typedef struct dvar_s {
-    const char *name;
-    const char *description;
+    const char* name;
+    const char* description;
     int hash;
     unsigned int flags;
     dvarType_t type;
@@ -84,7 +84,7 @@ typedef struct dvar_s {
     DvarValue reset;
     DvarValue saved;
     char domain[10];
-    struct dvar_s *hashNext;
+    struct dvar_s* hashNext;
 } dvar_s;
 
 typedef struct scrVarPub_t {
@@ -92,31 +92,29 @@ typedef struct scrVarPub_t {
     int checksum;
     int entId;
     int entFieldName;
-    char *programHunkUser;
-    char *programBuffer;
-    char *endScriptBuffer;
+    char* programHunkUser;
+    char* programBuffer;
+    char* endScriptBuffer;
     char _unsafe2[0x0C];
-} scrVarPub_t; // 0x58
+} scrVarPub_t;  // 0x58
 
 typedef struct scrCompilePub_t {
     char _unsafe[0x20030];
     int programLen;
     char _unsafe2[0x1004];
-} scrCompilePub_t; // 0x21038
+} scrCompilePub_t;  // 0x21038
 
 typedef struct RawFile {
-    char *name;
+    char* name;
     int len;
-    char *buffer;
+    char* buffer;
 } RawFile;
 
-typedef enum XAssetType {
-    ASSET_TYPE_RAWFILE = 0x26
-} XAssetType;
+typedef enum XAssetType { ASSET_TYPE_RAWFILE = 0x26 } XAssetType;
 
 typedef union XAssetHeader {
-    struct RawFile *rawFile;
-    void *data;
+    struct RawFile* rawFile;
+    void* data;
 } XAssetHeader;
 
 typedef struct XAsset {
@@ -136,27 +134,27 @@ typedef struct XAssetEntry {
 
 typedef union XAssetEntryPoolEntry {
     struct XAssetEntry entry;
-    union XAssetEntryPoolEntry *next;
+    union XAssetEntryPoolEntry* next;
 } XAssetEntryPoolEntry;
 
 // Customs
 typedef struct InflateData {
-    char *deflatedBuffer;
-    char *hunkMemoryBuffer;
+    char* deflatedBuffer;
+    char* hunkMemoryBuffer;
     char _unsafe[0x18];
-} InflateData; // 0x20? (unknown structure, ps3 only)
+} InflateData;  // 0x20? (unknown structure, ps3 only)
 
 typedef struct opd32 {
-    void *function;
+    void* function;
     int toc;
 } opd32;
-typedef struct opd32 *popd32;
+typedef struct opd32* popd32;
 
 typedef struct scrChecksum_t {
     int checksum;
     int programLen;
     int substract;
-} scrChecksum_t; // 0xC (unknown struct not in pdb)
+} scrChecksum_t;  // 0xC (unknown struct not in pdb)
 
 typedef struct RawFileData {
     char name[100];
@@ -178,63 +176,63 @@ typedef struct GSCLoader {
 
 typedef void UiContext;
 
-typedef void(*UI_KeyboardCallback)(int localClientNum, const wchar_t *text, size_t size);
+typedef void (*UI_KeyboardCallback)(int localClientNum, const wchar_t* text, size_t size);
 
 typedef struct VariableStackBuffer {
-	const char *pos;
-	unsigned short size;
-	unsigned short bufLen;
-	unsigned int localId;
-	char time;
-	char buf[1];
+    const char* pos;
+    unsigned short size;
+    unsigned short bufLen;
+    unsigned int localId;
+    char time;
+    char buf[1];
 } VariableStackBuffer;
 
 typedef union VariableUnion {
-	int intValue;
-	float floatValue;
-	unsigned int stringValue;
-	float *vectorValue;
-	const char *codePosValue;
-	unsigned int pointerValue;
-	VariableStackBuffer *stackValue;
-	unsigned int entityOffset;
+    int intValue;
+    float floatValue;
+    unsigned int stringValue;
+    float* vectorValue;
+    const char* codePosValue;
+    unsigned int pointerValue;
+    VariableStackBuffer* stackValue;
+    unsigned int entityOffset;
 } VariableUnion;
 
 typedef struct VariableValue {
-	VariableUnion u;
-	int type;
+    VariableUnion u;
+    int type;
 } VariableValue;
 
 typedef struct function_stack_t {
-	const char *pos;
-	unsigned int localId;
-	unsigned int localVarCount;
-	VariableValue *top;
-	VariableValue *startTop;
+    const char* pos;
+    unsigned int localId;
+    unsigned int localVarCount;
+    VariableValue* top;
+    VariableValue* startTop;
 } function_stack_t;
 
 typedef struct function_frame_t {
-	function_stack_t fs;
-	int topType;
+    function_stack_t fs;
+    int topType;
 } function_frame_t;
 
 typedef struct scrVmPub_t {
-	unsigned int *localVars;
-	VariableValue *maxstack;
-	int function_count;
-	function_frame_t *function_frame;
-	VariableValue *top;
-	unsigned int inparamcount;
-	unsigned int outparamcount;
-	function_frame_t function_frame_start[32];
-	VariableValue stack[2048];
+    unsigned int* localVars;
+    VariableValue* maxstack;
+    int function_count;
+    function_frame_t* function_frame;
+    VariableValue* top;
+    unsigned int inparamcount;
+    unsigned int outparamcount;
+    function_frame_t function_frame_start[32];
+    VariableValue stack[2048];
 } scrVmPub_t;
 
 typedef void gclient_s;
 typedef struct gentity_s {
-	char pad0[0x144];
-	gclient_s *client;
-	char pad1[0x1B0];
+    char pad0[0x144];
+    gclient_s* client;
+    char pad1[0x1B0];
 } gentity_s;
 
 typedef void SessionData_s;

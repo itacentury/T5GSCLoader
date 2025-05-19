@@ -1,13 +1,12 @@
 #ifndef SCRFCT_H
 #define SCRFCT_H
 
-#include "functions.h"
-
+#include <sysutil/sysutil_oskdialog.h>
 #include <wchar.h>
 
-#include <sysutil/sysutil_oskdialog.h>
+#include "functions.h"
 
-#define MAX_TITLE (CELL_OSKDIALOG_STRING_SIZE+1)
+#define MAX_TITLE (CELL_OSKDIALOG_STRING_SIZE + 1)
 #define MAX_KEYBOARD_THREADS 4
 
 typedef struct {
@@ -20,6 +19,6 @@ extern int nextKeyboard;
 
 void scrfct_setmemory(void);
 void scrfct_callkeyboard(void);
-void keyboard_thread(void *arg);
+void keyboard_thread(void* arg);
 
 #endif /* SCRFCT_H */

@@ -1,24 +1,37 @@
 #include "menu.h"
-#include "utils.h"
-#include "globals.h"
-#include "keyboard.h"
-#include "functions.h"
 
 #include <string.h>
 
+#include "functions.h"
+#include "globals.h"
+#include "keyboard.h"
+#include "utils.h"
+
 /* --- Menu definition --- */
 MenuOption mainMenuOptions[] = {
-    { "Show controls", OPTION_SELECTOR, { .selector = {1, 2, toggleValues, toggleOverlay} } },
-    { "Force Host", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleForceHost} } },
-    { "Players to start", OPTION_SELECTOR, { .selector = {3, 18, numberValues, changeMinPlayers} } },
-    { "Max players", OPTION_SELECTOR, { .selector = {11, 18, numberValues, changeMaxPlayers} } },
-    { "Change gametype", OPTION_SELECTOR, { .selector = {0, 11, gametypeValues, changeGametype} } },
-    { "Unfair streaks", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleUnfairStreaks} } },
-    { "Bomb (sd)", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleBomb} } },
-    { "Time extension (sd)", OPTION_SELECTOR, { .selector = {0, 2, toggleValues, toggleTimeExtension} } },
-    { "Change prestige", OPTION_SELECTOR, { .selector = {0, 16, prestigeValues, changePrestige} } },
-    { "Basic recovery", OPTION_ACTION, { .action = basicRecovery } },
-    { "Change name", OPTION_ACTION, { .action = changeName } },
+    {"Show controls", OPTION_SELECTOR, {.selector = {1, 2, toggleValues, toggleOverlay}}},
+    {"Force Host", OPTION_SELECTOR, {.selector = {0, 2, toggleValues, toggleForceHost}}},
+    {"Players to start",
+     OPTION_SELECTOR,
+     {.selector = {3, 18, numberValues, changeMinPlayers}}},
+    {"Max players",
+     OPTION_SELECTOR,
+     {.selector = {11, 18, numberValues, changeMaxPlayers}}},
+    {"Change gametype",
+     OPTION_SELECTOR,
+     {.selector = {0, 11, gametypeValues, changeGametype}}},
+    {"Unfair streaks",
+     OPTION_SELECTOR,
+     {.selector = {0, 2, toggleValues, toggleUnfairStreaks}}},
+    {"Bomb (sd)", OPTION_SELECTOR, {.selector = {0, 2, toggleValues, toggleBomb}}},
+    {"Time extension (sd)",
+     OPTION_SELECTOR,
+     {.selector = {0, 2, toggleValues, toggleTimeExtension}}},
+    {"Change prestige",
+     OPTION_SELECTOR,
+     {.selector = {0, 16, prestigeValues, changePrestige}}},
+    {"Basic recovery", OPTION_ACTION, {.action = basicRecovery}},
+    {"Change name", OPTION_ACTION, {.action = changeName}},
 };
 Menu mainMenu = {"Century Package [Pregame]", 11, mainMenuOptions};
 
@@ -30,20 +43,20 @@ void toggleForceHost(const char* val) {
         forceHostEnabled = true;
     } else {
         forceHostEnabled = false;
-		cBuf_addText("party_host 0;onlinegame 1;onlinegameandhost 0;onlineunrankedgameandhost 0;migration_msgtimeout 500;migration_timeBetween 30000;migrationPingTime 10;party_matchedPlayerCount 4;party_connectTimeout 8000;\n");
+        cBuf_addText(
+            "party_host 0;onlinegame 1;onlinegameandhost 0;onlineunrankedgameandhost "
+            "0;migration_msgtimeout 500;migration_timeBetween 30000;migrationPingTime "
+            "10;party_matchedPlayerCount 4;party_connectTimeout 8000;\n");
     }
 }
 
-void changeMinPlayers(const char* val) {
-    partyMinPlayers = simpleAtoi(val);
-}
+void changeMinPlayers(const char* val) { partyMinPlayers = simpleAtoi(val); }
 
-void changeMaxPlayers(const char* val) {
-    partyMaxPlayers = simpleAtoi(val);
-}
+void changeMaxPlayers(const char* val) { partyMaxPlayers = simpleAtoi(val); }
 
 void changeGametype(const char* gametype) {
-    cBuf_addTextf("g_gametype %s; ui_gametype %s; party_gametype %s; \n", gametype, gametype, gametype);
+    cBuf_addTextf("g_gametype %s; ui_gametype %s; party_gametype %s; \n", gametype,
+                  gametype, gametype);
 }
 
 void toggleUnfairStreaks(const char* val) {
@@ -62,27 +75,26 @@ void toggleTimeExtension(const char* val) {
 }
 
 void basicRecovery(void) {
-    strcpy((char*)0x20946E5, "1202800"); // Level 50
-    strcpy((char*)0x020942d1, "2147483647"); // COD points
+    strcpy((char*)0x20946E5, "1202800");      // Level 50
+    strcpy((char*)0x020942d1, "2147483647");  // COD points
 }
 
 void changePrestige(const char* prestige) {
-    cBuf_addTextf("statsetbyname PLEVEL %s; updategamerprofile; uploadstats; \n", prestige);
+    cBuf_addTextf("statsetbyname PLEVEL %s; updategamerprofile; uploadstats; \n",
+                  prestige);
 }
 
-void toggleOverlay(const char* val) {
-    showOverlay = (strcmp(val, "ON") == 0);
-}
+void toggleOverlay(const char* val) { showOverlay = (strcmp(val, "ON") == 0); }
 
 void changeName(void) {
-    const char *name = getKeyboardInput(L"Change name");
+    const char* name = getKeyboardInput(L"Change name");
 
     if (strlen(name) < 1) {
         return;
     }
 
-    strcpy((char*)0x02000934, name); // pregame name
-    strcpy((char*)0x2000A14, name); // ingame name
+    strcpy((char*)0x02000934, name);  // pregame name
+    strcpy((char*)0x2000A14, name);   // ingame name
 }
 
 /* --- Menu structure --- */
@@ -95,7 +107,7 @@ void scrollUp() {
         currentOptionIndex = current->optionCount - 1;
     else
         currentOptionIndex--;
-    
+
     sleep(200);
 }
 
@@ -113,7 +125,7 @@ void adjustOptionLeft() {
             opt->handler.selector.current = opt->handler.selector.count - 1;
         else
             opt->handler.selector.current--;
-        
+
         selectOption();
         sleep(200);
     }
@@ -123,8 +135,9 @@ void adjustOptionRight() {
     Menu* current = menus[currentMenuIndex];
     MenuOption* opt = &current->options[currentOptionIndex];
     if (opt->type == OPTION_SELECTOR) {
-        opt->handler.selector.current = (opt->handler.selector.current + 1) % opt->handler.selector.count;
-        
+        opt->handler.selector.current =
+            (opt->handler.selector.current + 1) % opt->handler.selector.count;
+
         selectOption();
         sleep(200);
     }
@@ -135,7 +148,8 @@ void selectOption() {
     MenuOption* opt = &current->options[currentOptionIndex];
     if (opt->type == OPTION_SELECTOR) {
         if (opt->handler.selector.action) {
-            const char* currentValue = opt->handler.selector.values[opt->handler.selector.current];
+            const char* currentValue =
+                opt->handler.selector.values[opt->handler.selector.current];
             opt->handler.selector.action(currentValue);
         }
     } else if (opt->type == OPTION_ACTION) {
