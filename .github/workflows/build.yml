@@ -18,6 +18,7 @@ jobs:
         uses: RafikFarhad/clang-format-github-action@v4
         with:
           sources: "src/**/*.h,src/**/*.c"
+          style: file
 
   build:
     runs-on: windows-latest
