@@ -7,6 +7,7 @@
 1. **Prerequisites**
    - Install the **PS3 4.75 SDK Offline Installer**.
    - Install **MSYS2**.
+   - Install **LLVM** (make sure your PATH is set correctly).
    - Install **Visual Studio Code**.
 
 2. **Setup MSYS2**
@@ -15,6 +16,7 @@
    - Integrate the **MSYS2** shell into **vscode**.
 
 3. **Configure VS Code**
+   - Always work on the project by opening the `code-workspace` file.
    - Install recommended extensions.
    - In `CenturyPackage.code-workspace`, set your **console IP** and **game version**.
    - Make sure an FTP server is running on your console (e.g., via **webMAN**).
