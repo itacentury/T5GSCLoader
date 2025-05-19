@@ -41,3 +41,10 @@ clean:
 
 release:
 	$(MAKE) rebuild BUILD_TYPE=release
+
+FORMAT_SRCS := $(shell find . -type f \( -name '*.c' -o -name '*.h' \))
+
+.PHONY: format
+format:
+	@echo "Formatting all C/Headers with clang-format…"
+	@clang-format -i $(FORMAT_SRCS)

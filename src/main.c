@@ -1,16 +1,15 @@
-#include "t5.h"
-#include "hud.h"
-#include "menu.h"
-#include "utils.h"
-#include "buttons.h"
-#include "globals.h"
-#include "functions.h"
-
 #include <stdio.h>
-
+#include <sys/ppu_thread.h>
 #include <sys/prx.h>
 #include <sys/timer.h>
-#include <sys/ppu_thread.h>
+
+#include "buttons.h"
+#include "functions.h"
+#include "globals.h"
+#include "hud.h"
+#include "menu.h"
+#include "t5.h"
+#include "utils.h"
 
 SYS_MODULE_INFO(T5GSCLoader, 0, 1, 1);
 SYS_MODULE_START(start);
@@ -48,9 +47,9 @@ void monitoring() {
         if (!menuOpen) {
             if (ButtonPressed(BTN_L1) && ButtonPressed(BTN_R3)) {
                 menuOpen = true;
-    
+
                 sleep(500);
-            }    
+            }
         }
 
         if (menuOpen) {
@@ -66,7 +65,7 @@ void monitoring() {
                 selectOption();
             } else if (ButtonPressed(BTN_CIRCLE)) {
                 goBack();
-            } else if(ButtonPressed(BTN_R3)) {
+            } else if (ButtonPressed(BTN_R3)) {
                 menuOpen = false;
             }
         }
@@ -83,10 +82,12 @@ int start(void) {
     printf("********************************************\n");
     printf(T5INFO "Waiting modules...");
 
-    // Create a thread that wait eboot's modules are getting loaded to be sure that imports opd are resolved.
+    // Create a thread that wait eboot's modules are getting loaded to be sure
+    // that imports opd are resolved.
     sys_ppu_thread_t idLauncher;
-    sys_ppu_thread_create(&idLauncher, launcher, 0, 0x4AA, 0x8000, 0, "[GSC Loader] launcher");
-    
+    sys_ppu_thread_create(&idLauncher, launcher, 0, 0x4AA, 0x8000, 0,
+                          "[GSC Loader] launcher");
+
     RSATest();
     RemoveThreadIDCheckOnCL_ConsolePrint();
     RemoveCheatProtection();

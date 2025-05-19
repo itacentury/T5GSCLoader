@@ -1,51 +1,31 @@
 # Century Package + T5GSCLoader
+
 [![build](https://github.com/itacentury/T5GSCLoader/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/itacentury/T5GSCLoader/actions/workflows/build.yml)
 
-T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game scripts, call C functions from them and make possible connect to others players by patching client/server checksum.
+T5GSCLoader is a PS3 module for Black Ops 1 that allows you to load custom game scripts, call C functions from them and make possible connect to others players by patching client/server checksum. ([@iMCSx](https://github.com/iMCSx))
 
-Additionally a pregame menu was added to be able to use force host and other features.
+Additionally a pregame menu was added to be able to use force host and other features. ([@itacentury](https://github.com/itacentury))
 
 <div style="display: flex;">
   <img src="https://github.com/user-attachments/assets/8b9e51ea-e102-4bd9-9e43-e163f15e8c6e" width="45%">
   <img src="https://github.com/user-attachments/assets/9960fb35-2e37-487f-a6f3-42e5c5392036" width="45%">
 </div>
 
-## Build
-### Windows
-* Install `PS3 4.75 SDK Offline Installer` & `MSYS2`.
-* Clone the project and open `MSYS2` on it.
-* Type `make release`.
-* The module will be created in `bin/release/`.
+## Usage ([@itacentury](https://github.com/itacentury))
 
-## Usage
 Create a folder in `/dev_hdd0/tmp/T5GSCLoader/mp` and put your script in it. Beside your created folder create a .mod file that has the same name than your mod to enable it. You need to have a file in your mod folder named `main.gsc` with a `main()` function inside to get it load and started (see tmp directory for structure/examples).
 
 The pregame menu can be opened with L1 + R3.
 
-## Development
-VS Code is used for this project, you can also use Visual Studio if you prefer but you'll need to created a new solution using the VSIX from the SDK and make sure to don't forget to include the required libraries `libc.a libfs_stub.a`.
+## Reversing ([@iMCSx](https://github.com/iMCSx))
 
-For a better experience with VS Code and use the tasks:
-
-* Install C/C++ Extension.
-* MSYS2 (unix tools).
-* Integrate msys2 shell in vscode.
-* Change the console IP and game version in `.vscode/settings`, and be sure you have a ftp server running on console (e.g webMAN).
-
-You can now open the folder in VS Code and press `Ctrl+Shift+B` to build or deploy the module to console, and deploy game scripts.
-
-Deployments tasks will just create or replace any existing file by FTP commands.
-
-The outputs made with a custom `printf` can be seen in Target Manager on "Console Output" menu.
-
-# Reversing
 Everything is identical on `XBOX` and `PC`, you can easily adapt for these platforms.
 
-## Opcodes Checksum
+### Opcodes Checksum
 
 The game load and compile scripts each time that a game is started or joined (host or client). Each game scripts will be compiled and will become opcodes, Each opcodes will pass in order through few instructions that will compute a checksum:
 
-```
+```assembly
 00596FC4    lwz   r10, 8(r4)    # Load the checksum from struct
 00596FCC    slwi  r12, r10, 5   # Shift left by 5 bits (r10 << 5)   
 00596FD0    subf  r6, r10, r12  # Substract checksum from the shifted checksum 
@@ -59,7 +39,7 @@ The function signature of `Scr_GetChecksum` on PC is `8B C1 69 C9 38 10 02 00`.
 
 **Note:** The checksum on client scripts (CSC) is computed but never checked on clients.
 
-## Patching Checksum
+### Patching Checksum
 
 There is 3 values required for the client check: `checksum`, `programLen`, `substract`.
 
@@ -72,24 +52,15 @@ I thought about two ways to patch the checksum:
 
 I used the second one to don't need to worry about dumping checksums per map/gamemodes, **we can auto patch it** like this. Of course this way require additionnal hooks and code.
 
-## Calling C functions
+### Calling C functions
 
 I made a quick exemple to show how to call C functions from game script.
 You just have to make your function, and return his opd pointer from `Scr_GetFunction`, like i did for `setMemory` with hex strings. If you want to make your own function working with an entity like `self` ahead the function you need to hook `Scr_GetMethod` and use the second argument of this function (type) to return the according opd.
 
-## Why I made this now?
+### Why I made this now?
 
 I made it for some people few months ago, to help and having some memories times by doing C and PPC. Then someone release his own with closed source when he heard that i made it.
 
 Recently, by cleaning my desktop i came across that folder, I said to myself it would be a cool to share this, maybe some people are curious about how game scripts check is made.
 
 Maybe this code will be useful to someone, who knows?
-
-## Credits
-
-* iMCSx - for creating this module
-* Jo-Milk - for his work and menus
-* NickBeHaxing & Milky4444 - for the original `Snow Engine`
-* gopro_2027 - Remastering and open sourcing `Snow Engine`
-* extortionate - Code for getting current screen size
-* & anyone I missed

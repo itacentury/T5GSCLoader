@@ -1,9 +1,9 @@
 #ifndef PRINTF_H
 #define PRINTF_H
 
-#include <wchar.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <wchar.h>
 
 #define LOWORD(a) ((short)(a))
 #define HIWORD(a) ((short)(((int)(a) >> 16) & 0xFFFF))
@@ -13,16 +13,16 @@
 extern "C" {
 #endif
 
-int ttyWrite(int channel, const char *message, int length, int *written);
+int ttyWrite(int channel, const char* message, int length, int* written);
 
-int vsnprintf(char *str, size_t size, const char *format, va_list args);
-int vsprintf(char *buf, const char *fmt, va_list args);
-int sprintf(char *buffer, const char *fmt, ...);
-int snprintf(char *buffer, size_t len, const char *fmt, ...);
-int printf(const char *fmt, ...);
+int vsnprintf(char* str, size_t size, const char* format, va_list args);
+int vsprintf(char* buf, const char* fmt, va_list args);
+int sprintf(char* buffer, const char* fmt, ...);
+int snprintf(char* buffer, size_t len, const char* fmt, ...);
+int printf(const char* fmt, ...);
 
-size_t StringToWideCharacter(wchar_t *dest, const char *scr, size_t len);
-size_t WideCharacterToString(char *dest, const wchar_t *scr, size_t len);
+size_t StringToWideCharacter(wchar_t* dest, const char* scr, size_t len);
+size_t WideCharacterToString(char* dest, const wchar_t* scr, size_t len);
 
 #ifdef __cplusplus
 }

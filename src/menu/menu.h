@@ -27,22 +27,17 @@ typedef struct MenuOption {
 typedef struct Menu {
     const char* title;
     int optionCount;
-    MenuOption *options;
+    MenuOption* options;
 } Menu;
 
-static const char* toggleValues[] = { "OFF", "ON" };
-static const char* gametypeValues[]  = { 
-    "tdm", "sd",  "dom", "sab",  "koth", 
-    "ctf", "dem", "oic", "hlnd", "gun", "shrp" 
-};
-static const char* numberValues[] = {
-    "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",
-    "10", "11", "12", "13", "14", "15", "16", "17", "18"
-};
-static const char* prestigeValues[] = {
-    "0",  "1",  "2",  "3",  "4",  "5",  "6",  "7",
-    "8",  "9",  "10", "11", "12", "13", "14", "15"
-};
+static const char* toggleValues[] = {"OFF", "ON"};
+static const char* gametypeValues[] = {"tdm", "sd",  "dom",  "sab", "koth", "ctf",
+                                       "dem", "oic", "hlnd", "gun", "shrp"};
+static const char* numberValues[] = {"1",  "2",  "3",  "4",  "5",  "6",
+                                     "7",  "8",  "9",  "10", "11", "12",
+                                     "13", "14", "15", "16", "17", "18"};
+static const char* prestigeValues[] = {"0", "1", "2",  "3",  "4",  "5",  "6",  "7",
+                                       "8", "9", "10", "11", "12", "13", "14", "15"};
 
 extern MenuOption mainMenuOptions[];
 extern Menu mainMenu;

@@ -1,9 +1,9 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "defines.h"
-
 #include <stdbool.h>
+
+#include "defines.h"
 
 #define MAX_STRING_CHARS 1024
 
@@ -34,9 +34,9 @@ extern int partyMinPlayers;
 extern int partyMaxPlayers;
 
 extern bool GSC_Keyboardbool;
-extern scrVmPub_t *scrVmPub;
+extern scrVmPub_t* scrVmPub;
 
-extern gentity_s *g_entities;
-extern SessionData_s *g_serverSession;
+extern gentity_s* g_entities;
+extern SessionData_s* g_serverSession;
 
 #endif /* GLOBALS_H */
