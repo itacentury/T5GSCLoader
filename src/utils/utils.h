@@ -1,8 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <types.h>
-
 #include <sys/prx.h>
 
 // Fixing the define only to remove the annoying intellisense issue..
@@ -11,8 +9,10 @@
 #define SYS_MODULE_INFO_SECTION __attribute__((section(SYS_MODINFO_SECTION_NAME ", \"a\",@progbits#")))
 #endif
 
-extern char byteArray[100];
-extern char returnRead[100];
+enum { ARRAY_LENGTH = 100 };
+
+extern char byteArray[ARRAY_LENGTH];
+extern char returnRead[ARRAY_LENGTH];
 
 int sys_dbg_process_write(uint64_t address, const void *data, size_t size);
 size_t get_file_size(char *filePath);

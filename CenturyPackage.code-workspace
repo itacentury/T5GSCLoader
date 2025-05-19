@@ -1,0 +1,123 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "bin": true,
+            "objs": true,
+        },
+        "consoleIp": "192.168.178.127",
+        "gameVersion": "BLES01033",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "terminal.integrated.defaultProfile.windows": "MSYS2",
+        "C_Cpp.errorSquiggles": "enabled",
+        "C_Cpp.clang_format_path": "clang-format",
+        "C_Cpp.clang_format_fallbackStyle": "file",
+        "C_Cpp.default.includePath": [
+            "${workspaceFolder}/**",
+            "${workspaceFolder}/src",
+            "${workspaceFolder}/src/**",
+            "${env:SCE_PS3_ROOT}/target/ppu/include",
+            "${env:SCE_PS3_ROOT}/target/common/include",
+            "${env:SCE_PS3_ROOT}/host-win32/ppu/lib/gcc/ppu-lv2/4.1.1/include"
+        ],
+        "C_Cpp.default.browse.path": [
+            "${workspaceFolder}/src"
+        ],
+        "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+        "C_Cpp.default.compilerPath": "${env:SCE_PS3_ROOT}/host-win32/ppu/bin/ppu-lv2-gcc",
+        "files.associations": {
+            "types.h": "c",
+            "prx.h": "c"
+        },
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "clang-tidy",
+                "type": "shell",
+                "windows": {
+                    "command": "make tidy"
+                },
+                "options": {},
+                "problemMatcher": [],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "Build Debug",
+                "type": "shell",
+                "windows": {
+                    "command": "make clean && make -j"
+                },
+                "options": {},
+                "problemMatcher": [],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "Deploy Debug",
+                "type": "shell",
+                "windows": {
+                    "command": "curl -T bin/debug/${workspaceFolderBasename}.sprx --ftp-create-dirs ftp://${config:consoleIp}/dev_hdd0/tmp/SprxLoader/${config:gameVersion}/${workspaceFolderBasename}.sprx"
+                },
+                "options": {},
+                "problemMatcher": [],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "Build Release",
+                "type": "shell",
+                "windows": {
+                    "command": "make release -j"
+                },
+                "options": {},
+                "problemMatcher": [],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "Deploy Release",
+                "type": "shell",
+                "windows": {
+                    "command": "curl -T bin/release/${workspaceFolderBasename}.sprx --ftp-create-dirs ftp://${config:consoleIp}/dev_hdd0/tmp/SprxLoader/${config:gameVersion}/${workspaceFolderBasename}.sprx"
+                },
+                "options": {},
+                "problemMatcher": [],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            },
+            {
+                "label": "[GSC] Deploy scripts",
+                "type": "shell",
+                "windows": {
+                    // Be careful with ftp commands since the commands are with root privileges.
+                    // This command will only replace existing files on console.
+                    "command": "find tmp/T5GSCLoader -type f -exec curl --ftp-create-dirs -T '{}' ftp://${config:consoleIp}/dev_hdd0/'\\{}' ';'"
+                },
+                "options": {},
+                "problemMatcher": [],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            }
+        ]
+    }
+}

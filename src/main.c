@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 
-#include <sys/prx.h>
 #include <sys/timer.h>
 #include <sys/ppu_thread.h>
 

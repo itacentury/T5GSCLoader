@@ -7,9 +7,11 @@
 
 #include "defines.h"
 
-#define TRAMPOLINE_INSTRUCTIONS_COUNT 9
-#define PREHOOK_INSTRUCTIONS_COUNT 13
-#define MAX_HOOKS_FUNCTIONS 100
+enum {
+    TRAMPOLINE_INSTRUCTIONS_COUNT = 9,
+    PREHOOK_INSTRUCTIONS_COUNT = 13,
+    MAX_HOOKS_FUNCTIONS = 100,
+};
 
 #define cs_hook_install(name, type) cs_hook_create((popd32)name, (popd32)name##_Hook, (popd32*)&name##_Trampoline, true, type)
 

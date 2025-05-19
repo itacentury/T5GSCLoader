@@ -27,6 +27,14 @@ CLEANFILES 			= $(PRX_DIR)/$(PPU_SPRX_TARGET)
 
 include 			$(CELL_MK_DIR)/sdk.target.mk
 
+CLANG_TIDY     ?= clang-tidy
+TIDY_CHECKS    ?= clang-analyzer-*,modernize-*,readability-*
+TIDY_FLAGS     ?= --checks=$(TIDY_CHECKS) --warnings-as-errors=* --quiet
+PS3_SDK_PATH := $(shell cygpath -u "$(SCE_PS3_ROOT)")
+PS3_SDK_INC  := $(PS3_SDK_PATH)/target/ppu/include
+INCLUDES	   := -isystem $(PS3_SDK_INC)
+.PHONY: tidy
+
 rebuild:
 	$(MAKE) --no-print-directory clean
 	$(MAKE) --no-print-directory all
@@ -41,3 +49,16 @@ clean:
 
 release:
 	$(MAKE) rebuild BUILD_TYPE=release
+
+tidy: $(PPU_SRCS:%.c=%.tidy)
+
+%.tidy: %.c
+	@echo "==> Running clang-tidy on $<"
+	@echo "    PS3_SDK_INC = $(PS3_SDK_INC)"
+	@echo "    Full command:"
+	@echo "      $(CLANG_TIDY) $< --checks=$(TIDY_CHECKS) --warnings-as-errors=* --quiet --extra-arg=-I$(PS3_SDK_INC) -- $(PPU_CFLAGS)"
+	@$(CLANG_TIDY) $< \
+		--checks=$(TIDY_CHECKS) \
+		--warnings-as-errors=* \
+		--quiet \
+		-- $(PPU_CFLAGS) $(INCLUDES)

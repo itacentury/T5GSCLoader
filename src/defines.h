@@ -28,7 +28,23 @@
 
 #define t5o(name) (T5_##name)
 
-#define MAX_GSC_COUNT 100
+enum {
+    MAX_GSC_COUNT = 100,
+    DVAR_S_DOMAIN_SIZE = 10,
+    SCRVARPUB_UNSAFE1_SIZE = 0x38,
+    SCRVARPUB_UNSAFE2_SIZE = 0x0C,
+    SCRCOMPILEPUB_UNSAFE1_SIZE = 0x20030,
+    SCRCOMPILEPUB_UNSAFE2_SIZE = 0x1004,
+    XASSETENTRY_MARGIN_SIZE = 0x10,
+    INFLATEDATA_UNSAFE_SIZE = 0x18,
+    RAWFILEDATA_NAME_SIZE = 100,
+    RAWFILEDATA_BUFFER_SIZE = 0x20,
+    GSCLOADER_MODNAME_SIZE = 256,
+    SCRVMPUB_FUNCTION_FRAME_START = 32,
+    SCRVMPUB_STACK_SIZE = 2048,
+    GENTITY_PAD0 = 0x144,
+    GENTITY_PAD1 = 0x1B0,
+};
 
 #define T5INFO "[T5] Info: "
 #define T5WARNING "[T5] Warning: "
@@ -83,25 +99,25 @@ typedef struct dvar_s {
     DvarValue latched;
     DvarValue reset;
     DvarValue saved;
-    char domain[10];
+    char domain[DVAR_S_DOMAIN_SIZE];
     struct dvar_s *hashNext;
 } dvar_s;
 
 typedef struct scrVarPub_t {
-    char _unsafe[0x38];
+    char _unsafe[SCRVARPUB_UNSAFE1_SIZE];
     int checksum;
     int entId;
     int entFieldName;
     char *programHunkUser;
     char *programBuffer;
     char *endScriptBuffer;
-    char _unsafe2[0x0C];
+    char _unsafe2[SCRVARPUB_UNSAFE2_SIZE];
 } scrVarPub_t; // 0x58
 
 typedef struct scrCompilePub_t {
-    char _unsafe[0x20030];
+    char _unsafe[SCRCOMPILEPUB_UNSAFE1_SIZE];
     int programLen;
-    char _unsafe2[0x1004];
+    char _unsafe2[SCRCOMPILEPUB_UNSAFE2_SIZE];
 } scrCompilePub_t; // 0x21038
 
 typedef struct RawFile {
@@ -131,7 +147,7 @@ typedef struct XAssetEntry {
     uint16_t nextHash;
     uint16_t nextOverride;
     uint16_t usageFrame;
-    char margin[0x10];
+    char margin[XASSETENTRY_MARGIN_SIZE];
 } XAssetEntry;
 
 typedef union XAssetEntryPoolEntry {
@@ -143,7 +159,7 @@ typedef union XAssetEntryPoolEntry {
 typedef struct InflateData {
     char *deflatedBuffer;
     char *hunkMemoryBuffer;
-    char _unsafe[0x18];
+    char _unsafe[INFLATEDATA_UNSAFE_SIZE];
 } InflateData; // 0x20? (unknown structure, ps3 only)
 
 typedef struct opd32 {
@@ -159,10 +175,10 @@ typedef struct scrChecksum_t {
 } scrChecksum_t; // 0xC (unknown struct not in pdb)
 
 typedef struct RawFileData {
-    char name[100];
+    char name[RAWFILEDATA_NAME_SIZE];
     int inflatedSize;
     int size;
-    char buffer[0x20];
+    char buffer[RAWFILEDATA_BUFFER_SIZE];
 } RawFileData;
 
 typedef struct GSCLoaderRawfile {
@@ -172,7 +188,7 @@ typedef struct GSCLoaderRawfile {
 } GSCLoaderRawfile;
 
 typedef struct GSCLoader {
-    char currentModName[256];
+    char currentModName[GSCLOADER_MODNAME_SIZE];
     GSCLoaderRawfile rawFiles[MAX_GSC_COUNT];
 } GSCLoader;
 
@@ -226,15 +242,15 @@ typedef struct scrVmPub_t {
 	VariableValue *top;
 	unsigned int inparamcount;
 	unsigned int outparamcount;
-	function_frame_t function_frame_start[32];
-	VariableValue stack[2048];
+	function_frame_t function_frame_start[SCRVMPUB_FUNCTION_FRAME_START];
+	VariableValue stack[SCRVMPUB_STACK_SIZE];
 } scrVmPub_t;
 
 typedef void gclient_s;
 typedef struct gentity_s {
-	char pad0[0x144];
+	char pad0[GENTITY_PAD0];
 	gclient_s *client;
-	char pad1[0x1B0];
+	char pad1[GENTITY_PAD1];
 } gentity_s;
 
 typedef void SessionData_s;

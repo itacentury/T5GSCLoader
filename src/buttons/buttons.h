@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define LOCAL_BUTTONS_ADDR (int*)0x0D19800U
+
 #define CODE_CROSS           "\x01"
 #define CODE_CIRCLE          "\x02"
 #define CODE_SQUARE          "\x03"
@@ -19,8 +21,6 @@
 #define CODE_DPAD_RIGHT      "\x17"
 #define CODE_DPAD_LEFT_RIGHT "\x18"
 #define CODE_DPAD_UP_DOWN    "\x19"
-
-extern int LocalButtons;
 
 enum Buttons {
     BTN_DPAD_UP             = 0x1FF,
